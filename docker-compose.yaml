@@ -1,0 +1,9 @@
+version: "2"
+
+services:
+  image: mysql
+  ports:
+    - 3307:3306
+  environment:
+    MYSQL_DATABASE: testdb
+    MYSQL_ALLOW_EMPTY_PASSWORD: yes
