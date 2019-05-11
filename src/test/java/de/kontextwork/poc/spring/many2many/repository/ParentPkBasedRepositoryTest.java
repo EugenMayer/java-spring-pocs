@@ -35,6 +35,7 @@ class ParentPkBasedRepositoryTest {
         parent1.setChildren(
             Sets.newHashSet(child1, child2notSaved)
         );
+
         parentPkBasedRepository.saveAndFlush(parent1);
         // we should have 2 relations in here
         //noinspection SqlResolve

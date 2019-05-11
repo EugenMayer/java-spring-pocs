@@ -60,6 +60,7 @@ class ParentNaturalIdBasedRepositoryTest {
         // even though we could have written beforehand without any issues
         entityManager.refresh(parent1);
 
+        // TODO: that is where things break - the loaded entity does not load its children
         var reloaded = parentNaturalIdBasedRepository.findByParentId(parent1.getParentId()).orElseThrow();
         assertEquals(2, reloaded.getChildren().size());
     }

@@ -16,10 +16,11 @@ import lombok.Data;
 
 /**
  * this parent builds a many to may relation to the child using
- * the childs primary key child_some_id
+ * the childs non-primary (but unique) key `machine`
  *
  * Hint: the fields are custom named by design to properly show the mapping
- * without being ambivalent
+ * without being ambivalent or use auto-naming - this ensure clarity about what is
+ * where
  */
 @Entity
 @Data
