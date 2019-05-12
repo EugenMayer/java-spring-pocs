@@ -25,6 +25,8 @@ public class ParentNonPkService {
   }
 
   public ParentNonPkServiceBased save(ParentNonPkServiceBased parent) {
-    return parentNonPkServiceBasedRepository.save(parent);
+    parent = parentNonPkServiceBasedRepository.saveAndFlush(parent);
+    parent = this.getParent(parent.getParentId()).orElseThrow();
+    return parent;
   }
 }

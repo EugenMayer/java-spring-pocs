@@ -29,14 +29,14 @@ class ChildNonPkServiceBasedRepositoryTest {
 
   @Test
   void findAllByChildParentId() {
-    // one child presaved
+    // child1, yet not saved
     var child1 = new ChildNonPkServiceBased("child1");
-    // one not presaved
-    var child2notSaved = new ChildNonPkServiceBased("child2");
+    // child2, yet not saved
+    var child2 = new ChildNonPkServiceBased("child2");
 
     var parent1 = new ParentNonPkServiceBased();
     parent1.setChildren(
-        Sets.newHashSet(child1, child2notSaved)
+        Sets.newHashSet(child1, child2)
     );
     // we flush since are going to use JDBC for the db checks
     parentNonPkServiceBasedRepository.saveAndFlush(parent1);

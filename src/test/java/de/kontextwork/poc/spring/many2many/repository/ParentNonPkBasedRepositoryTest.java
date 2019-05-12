@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.many2many.domain.nonpk.ChildNonPkBased;
 import de.kontextwork.poc.spring.many2many.domain.nonpk.ParentNonPkBased;
+import de.kontextwork.poc.spring.many2many.domain.pk.ChildPkBased;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -12,8 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest()
+@DirtiesContext
 class ParentNonPkBasedRepositoryTest {
     @Autowired
     ParentNonPkBasedRepository parentNonPkBasedRepository;
@@ -26,14 +29,14 @@ class ParentNonPkBasedRepositoryTest {
 
     @Test
     void createParentWithChildren() {
-        // one child presaved
+        // child1, yet not saved
         var child1 = new ChildNonPkBased("child1");
-        // one not presaved
-        var child2notSaved = new ChildNonPkBased("child2");
+        // child2, yet not saved
+        var child2 = new ChildNonPkBased("child2");
 
         var parent1 = new ParentNonPkBased();
         parent1.setChildren(
-            Sets.newHashSet(child1, child2notSaved)
+            Sets.newHashSet(child1, child2)
         );
         // we flush since are going to use JDBC for the db checks
         parentNonPkBasedRepository.saveAndFlush(parent1);

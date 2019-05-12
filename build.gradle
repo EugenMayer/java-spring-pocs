@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.4.RELEASE'
 	id 'java'
+	id "com.adarshr.test-logger" version "1.6.0"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -18,6 +19,7 @@ configurations {
 repositories {
 	mavenCentral()
 }
+
 test {
 	useJUnitPlatform()
 }
