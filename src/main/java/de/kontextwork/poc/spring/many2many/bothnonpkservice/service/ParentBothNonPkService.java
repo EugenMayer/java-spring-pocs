@@ -19,8 +19,9 @@ public class ParentBothNonPkService {
       return parent;
     }
 
+
     var children = childBothNonPkServiceBasedRepository
-        .findAllByChildParentMachine(parent.get().getMachine());
+        .findAllByChildParentMachine(parent.orElseThrow().getMachine());
     parent.get().setChildren(children);
     return parent;
   }

@@ -33,7 +33,7 @@ class ParentBothNonPkServiceTest {
   @Test
   @DirtiesContext
   void getParent() {
-    // firt we create 3 childs without adding them to a parent for ensuring our relation respects
+    // first we create 3 children without adding them to a parent for ensuring our relation respects
     // only the one related to the parent
     childBothNonPkServiceBasedRepository.save(new ChildBothNonPkServiceBased("directSave1"));
     childBothNonPkServiceBasedRepository.save(new ChildBothNonPkServiceBased("directSave2"));

@@ -20,7 +20,7 @@ public class ParentNonPkService {
     }
 
     var children = childNonPkServiceBasedRepository
-        .findAllByChildParentId(parent.get().getParentId());
+        .findAllByChildParentId(parent.orElseThrow().getParentId());
     parent.get().setChildren(children);
     return parent;
   }
