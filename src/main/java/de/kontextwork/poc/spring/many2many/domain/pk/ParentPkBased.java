@@ -34,5 +34,5 @@ public class ParentPkBased {
       joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
       inverseJoinColumns = @JoinColumn(name = "mychild_id",  referencedColumnName = "child_some_id")
   )
-  Set<ChildPk> children;
+  Set<ChildPkBased> children;
 }

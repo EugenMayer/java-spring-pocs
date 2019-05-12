@@ -37,8 +37,8 @@ Status
 When using a non-PK key things getting a lot hard, even if the key is a unique
 key on our entity
 
-- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/domain/naturalid)
-- [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/repository/ParentNaturalIdBasedRepositoryTest.java)
+- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/domain/nonpk)
+- [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/repository/ParentNonPkBasedRepositoryTest.java)
 
 Status
  - [done] creating (Cascade) children through the parent
@@ -46,3 +46,16 @@ Status
  
  As you can see, loading the parent will not load up the child relation, see [this issue](https://github.com/EugenMayer/java-spring-pocs/issues/1)
  
+**using a non-PK key with a Service**
+
+As in `using a non-PK key` we can save those relations when build using non-pl relations
+but we cannot read them. Thus in this strategy we add a service to do that for use, handling the loading 
+using a `native` query.
+
+- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/domain/nonpkservice)
+- [Test Child Repo](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/repository/ChildNonPkServiceBasedRepositoryTest.java)
+- [Test Parent Service](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/service/ParentNonPkServiceTest.java)
+
+Status
+ - [done] creating (Cascade) children through the parent
+ - [done] loading a parent including is children

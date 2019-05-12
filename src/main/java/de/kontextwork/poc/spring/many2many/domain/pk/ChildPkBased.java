@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Data
-public class ChildPk {
+public class ChildPkBased {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name="child_some_id")
@@ -24,7 +24,7 @@ public class ChildPk {
   // through the parent, we end up having only one children since they have been "equal" in the set
   String name;
 
-  public ChildPk(final String name) {
+  public ChildPkBased(final String name) {
     this.name = name;
   }
 }

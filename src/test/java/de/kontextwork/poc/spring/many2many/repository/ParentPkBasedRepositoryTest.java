@@ -2,7 +2,7 @@ package de.kontextwork.poc.spring.many2many.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import de.kontextwork.poc.spring.many2many.domain.pk.ChildPk;
+import de.kontextwork.poc.spring.many2many.domain.pk.ChildPkBased;
 import de.kontextwork.poc.spring.many2many.domain.pk.ParentPkBased;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +27,9 @@ class ParentPkBasedRepositoryTest {
     @Test
     void createParentWithChildren() {
         // one child presaved
-        var child1 = new ChildPk("child1");
+        var child1 = new ChildPkBased("child1");
         // one not presaved
-        var child2notSaved = new ChildPk("child2");
+        var child2notSaved = new ChildPkBased("child2");
 
         var parent1 = new ParentPkBased();
         parent1.setChildren(
@@ -50,12 +50,12 @@ class ParentPkBasedRepositoryTest {
         //noinspection SqlResolve
         List<Map<String, Object>> childsExist = jdbcTemplate
             .queryForList(
-                "select * from child_pk"
+                "select * from child_pk_based"
             );
         assertEquals(2, childsExist.size());
 
         // this is important, we force the parent to be reread - this can already cause new
-        // DDL based issues like de.kontextwork.poc.spring.many2many.domain.pk.ChildPk incompatible with java.io.Serializable
+        // DDL based issues like de.kontextwork.poc.spring.many2many.domain.pk.ChildPkBased incompatible with java.io.Serializable
         // even though we could have written beforehand without any issues
         entityManager.refresh(parent1);
 
