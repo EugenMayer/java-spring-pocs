@@ -19,7 +19,8 @@ public class ParentNonPkService {
       return parent;
     }
 
-    var children = childNonPkServiceBasedRepository.findAllByChildParentId(parent.get().getParentId());
+    var children = childNonPkServiceBasedRepository
+        .findAllByChildParentId(parent.get().getParentId());
     parent.get().setChildren(children);
     return parent;
   }

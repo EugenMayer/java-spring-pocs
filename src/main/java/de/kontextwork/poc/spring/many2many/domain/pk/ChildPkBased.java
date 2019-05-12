@@ -1,6 +1,5 @@
 package de.kontextwork.poc.spring.many2many.domain.pk;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +15,8 @@ import lombok.NoArgsConstructor;
 public class ChildPkBased {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name="child_some_id")
+  @Column(name = "child_some_id")
   Long someId;
-
   // we need at least one field our children can differ after being creating
   // through the constructur, otherwise when creating to children and saving them
   // through the parent, we end up having only one children since they have been "equal" in the set

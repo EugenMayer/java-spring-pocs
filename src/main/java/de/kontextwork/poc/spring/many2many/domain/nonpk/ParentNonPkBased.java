@@ -14,26 +14,25 @@ import javax.persistence.ManyToMany;
 import lombok.Data;
 
 /**
- * this parent builds a many to may relation to the child using
- * the child's non-primary (but unique) key `machine`
+ * this parent builds a many to may relation to the child using the child's non-primary (but unique)
+ * key `machine`
  *
- * Hint: the fields are custom named by design to properly show the mapping
- * without being ambivalent or use auto-naming - this ensure clarity about what is
- * where
+ * Hint: the fields are custom named by design to properly show the mapping without being ambivalent
+ * or use auto-naming - this ensure clarity about what is where
  */
 @Entity
 @Data
 public class ParentNonPkBased {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name="parent_id")
+  @Column(name = "parent_id")
   Long parentId;
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinTable(
       name = "join_table_parent_non_pk_based",
       // name -> col field name in the join table
       joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
-      inverseJoinColumns = @JoinColumn(name = "mychild_machine",  referencedColumnName = "machine", unique = true, nullable = false)
+      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", unique = true, nullable = false)
   )
   Set<ChildNonPkBased> children;
 }

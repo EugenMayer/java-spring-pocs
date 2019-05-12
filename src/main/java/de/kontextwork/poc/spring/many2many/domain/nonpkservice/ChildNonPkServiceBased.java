@@ -23,16 +23,16 @@ import org.hibernate.annotations.NaturalId;
 public class ChildNonPkServiceBased implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name="child_some_id")
+  @Column(name = "child_some_id")
   @EqualsAndHashCode.Include
   Long someId;
-
   // defining columnDefinition = "VARCHAR(200)"
   // is mandatory or we get a "key to large" error
   @NaturalId
   @EqualsAndHashCode.Include
   @Column(columnDefinition = "VARCHAR(200)", unique = true)
   String machine;
+
   public ChildNonPkServiceBased(final String machine) {
     this.machine = machine;
   }

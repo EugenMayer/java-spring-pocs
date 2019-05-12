@@ -1,6 +1,6 @@
 package de.kontextwork.poc.spring.many2many.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.many2many.domain.nonpkservice.ChildNonPkServiceBased;
@@ -20,15 +20,12 @@ import org.springframework.test.annotation.DirtiesContext;
 class ParentNonPkServiceTest {
   @Autowired
   ParentNonPkService parentNonPkService;
-
   @Autowired
   ParentNonPkServiceBasedRepository parentNonPkServiceBasedRepository;
-
   @Autowired
   ChildNonPkServiceBasedRepository childNonPkServiceBasedRepository;
   @Autowired
   JdbcTemplate jdbcTemplate;
-
   @Autowired
   EntityManager entityManager;
 
@@ -69,14 +66,14 @@ class ParentNonPkServiceTest {
     // since jpa cannot load our non-pk based m2m relation, children are expected to be not populated
     assertEquals(
         0,
-        parentNonPkServiceBasedRepository.findById(parent1.getParentId()).orElseThrow().getChildren().size()
+        parentNonPkServiceBasedRepository.findById(parent1.getParentId()).orElseThrow()
+            .getChildren().size()
     );
 
     // using the service, it should have been populated now
     var reloaded = parentNonPkService.getParent(parent1.getParentId());
     assertEquals(2, reloaded.orElseThrow().getChildren().size());
   }
-
 
   @Test
   @DirtiesContext

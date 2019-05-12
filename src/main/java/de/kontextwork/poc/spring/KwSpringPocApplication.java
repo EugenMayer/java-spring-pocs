@@ -6,13 +6,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories(
-		basePackages = "de.kontextwork.poc.spring"
+    basePackages = "de.kontextwork.poc.spring"
 )
 public class KwSpringPocApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(KwSpringPocApplication.class, args);
-		var i = 1;
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(KwSpringPocApplication.class, args);
+  }
 }
