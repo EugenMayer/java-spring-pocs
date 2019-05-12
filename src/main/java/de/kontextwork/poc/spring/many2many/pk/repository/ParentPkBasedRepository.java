@@ -1,6 +1,6 @@
-package de.kontextwork.poc.spring.many2many.repository;
+package de.kontextwork.poc.spring.many2many.pk.repository;
 
-import de.kontextwork.poc.spring.many2many.domain.pk.ParentPkBased;
+import de.kontextwork.poc.spring.many2many.pk.domain.ParentPkBased;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

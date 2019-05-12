@@ -1,8 +1,8 @@
-package de.kontextwork.poc.spring.many2many.service;
+package de.kontextwork.poc.spring.many2many.nonpkservice.service;
 
-import de.kontextwork.poc.spring.many2many.domain.nonpkservice.ParentNonPkServiceBased;
-import de.kontextwork.poc.spring.many2many.repository.ChildNonPkServiceBasedRepository;
-import de.kontextwork.poc.spring.many2many.repository.ParentNonPkServiceBasedRepository;
+import de.kontextwork.poc.spring.many2many.nonpkservice.domain.ParentNonPkServiceBased;
+import de.kontextwork.poc.spring.many2many.nonpkservice.repository.ChildNonPkServiceBasedRepository;
+import de.kontextwork.poc.spring.many2many.nonpkservice.repository.ParentNonPkServiceBasedRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.domain.nonpkservice;
+package de.kontextwork.poc.spring.many2many.nonpk.domain;
 
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -17,26 +17,22 @@ import lombok.Data;
  * this parent builds a many to may relation to the child using the child's non-primary (but unique)
  * key `machine`
  *
- * Since reading does not work for this relation as we see in the `nonpk` moe3l we will use a
- * service to read / fill the children but still use the jointable m2m relation for all the writing
- * and updating
+ * Hint: the fields are custom named by design to properly show the mapping without being ambivalent
+ * or use auto-naming - this ensure clarity about what is where
  */
 @Entity
 @Data
-public class ParentNonPkServiceBased {
+public class ParentNonPkBased {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
   Long parentId;
-  // this is actually not build to offer readability, but rather "saveability"
-  // the former wont work, so we will use a service to load it instead
-  // but use a join-table m2m relation when writing (this actually works
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
   @JoinTable(
-      name = "join_table_parent_non_pk_service_based",
+      name = "join_table_parent_non_pk_based",
       // name -> col field name in the join table
       joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
       inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", unique = true, nullable = false)
   )
-  Set<ChildNonPkServiceBased> children;
+  Set<ChildNonPkBased> children;
 }

@@ -1,12 +1,12 @@
-package de.kontextwork.poc.spring.many2many.service;
+package de.kontextwork.poc.spring.many2many.nonpkservice.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Sets;
-import de.kontextwork.poc.spring.many2many.domain.nonpkservice.ChildNonPkServiceBased;
-import de.kontextwork.poc.spring.many2many.domain.nonpkservice.ParentNonPkServiceBased;
-import de.kontextwork.poc.spring.many2many.repository.ChildNonPkServiceBasedRepository;
-import de.kontextwork.poc.spring.many2many.repository.ParentNonPkServiceBasedRepository;
+import de.kontextwork.poc.spring.many2many.nonpkservice.domain.ChildNonPkServiceBased;
+import de.kontextwork.poc.spring.many2many.nonpkservice.domain.ParentNonPkServiceBased;
+import de.kontextwork.poc.spring.many2many.nonpkservice.repository.ChildNonPkServiceBasedRepository;
+import de.kontextwork.poc.spring.many2many.nonpkservice.repository.ParentNonPkServiceBasedRepository;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

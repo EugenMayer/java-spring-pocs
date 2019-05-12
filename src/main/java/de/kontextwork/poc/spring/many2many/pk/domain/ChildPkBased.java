@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.domain.pk;
+package de.kontextwork.poc.spring.many2many.pk.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

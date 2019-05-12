@@ -1,10 +1,10 @@
-package de.kontextwork.poc.spring.many2many.repository;
+package de.kontextwork.poc.spring.many2many.pk.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Sets;
-import de.kontextwork.poc.spring.many2many.domain.pk.ChildPkBased;
-import de.kontextwork.poc.spring.many2many.domain.pk.ParentPkBased;
+import de.kontextwork.poc.spring.many2many.pk.domain.ChildPkBased;
+import de.kontextwork.poc.spring.many2many.pk.domain.ParentPkBased;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -36,7 +36,6 @@ class ParentPkBasedRepositoryTest {
 
     parentPkBasedRepository.saveAndFlush(parent1);
     // we should have 2 relations in here
-    //noinspection SqlResolve
     List<Map<String, Object>> relationExists = jdbcTemplate
         .queryForList(
             "select * from join_table_parent_pk_based where myparent_id=?",
@@ -45,7 +44,6 @@ class ParentPkBasedRepositoryTest {
     assertEquals(2, relationExists.size());
 
     // we should have 2 children saved
-    //noinspection SqlResolve
     List<Map<String, Object>> childsExist = jdbcTemplate
         .queryForList(
             "select * from child_pk_based"
@@ -53,7 +51,7 @@ class ParentPkBasedRepositoryTest {
     assertEquals(2, childsExist.size());
 
     // this is important, we force the parent to be reread - this can already cause new
-    // DDL based issues like de.kontextwork.poc.spring.many2many.domain.pk.ChildPkBased incompatible with java.io.Serializable
+    // DDL based issues like de.kontextwork.poc.spring.many2many.pk.domain.ChildPkBased incompatible with java.io.Serializable
     // even though we could have written beforehand without any issues
     entityManager.refresh(parent1);
 

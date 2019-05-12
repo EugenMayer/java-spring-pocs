@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.domain.pk;
+package de.kontextwork.poc.spring.many2many.pk.domain;
 
 import java.util.Set;
 import javax.persistence.CascadeType;

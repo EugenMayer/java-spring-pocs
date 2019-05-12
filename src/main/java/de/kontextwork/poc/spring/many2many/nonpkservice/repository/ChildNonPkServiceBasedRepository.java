@@ -1,6 +1,6 @@
-package de.kontextwork.poc.spring.many2many.repository;
+package de.kontextwork.poc.spring.many2many.nonpkservice.repository;
 
-import de.kontextwork.poc.spring.many2many.domain.nonpkservice.ChildNonPkServiceBased;
+import de.kontextwork.poc.spring.many2many.nonpkservice.domain.ChildNonPkServiceBased;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
