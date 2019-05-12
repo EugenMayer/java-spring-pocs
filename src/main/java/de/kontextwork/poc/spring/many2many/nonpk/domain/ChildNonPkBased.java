@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import org.hibernate.annotations.NaturalId;
 
 @SuppressWarnings("unused")
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 // Indeed we need 'implements Serializable' when using the natural key for a relation
 // Interestingly this does fail when we read data, not when we write

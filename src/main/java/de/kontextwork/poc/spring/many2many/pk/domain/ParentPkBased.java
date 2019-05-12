@@ -10,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * this parent builds a many to may relation to the child using the childs primary key
@@ -20,6 +22,7 @@ import lombok.Data;
  * ambivalent
  */
 @Entity
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 public class ParentPkBased {
   @Id

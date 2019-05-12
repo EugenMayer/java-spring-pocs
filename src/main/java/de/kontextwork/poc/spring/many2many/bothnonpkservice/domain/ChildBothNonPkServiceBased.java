@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.nonpkservice.domain;
+package de.kontextwork.poc.spring.many2many.bothnonpkservice.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,13 +14,12 @@ import org.hibernate.annotations.NaturalId;
 
 @SuppressWarnings("unused")
 @Entity
-@Table(name = "child_non_pk_service_based")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
 // Indeed we need 'implements Serializable' when using the natural key for a relation
 // Interestingly this does fail when we read data, not when we write
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ChildNonPkServiceBased implements Serializable {
+public class ChildBothNonPkServiceBased implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "child_some_id")
@@ -34,7 +32,7 @@ public class ChildNonPkServiceBased implements Serializable {
   @Column(columnDefinition = "VARCHAR(200)", unique = true)
   String machine;
 
-  public ChildNonPkServiceBased(final String machine) {
+  public ChildBothNonPkServiceBased(final String machine) {
     this.machine = machine;
   }
 }

@@ -11,7 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * this parent builds a many to may relation to the child using the child's non-primary (but unique)
@@ -22,6 +24,7 @@ import lombok.Data;
  * and updating
  */
 @Entity
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 public class ParentNonPkServiceBased {
   @Id
