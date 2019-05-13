@@ -38,7 +38,9 @@ class ChildBothNonPkServiceBasedRepositoryTest {
     // we flush since are going to use JDBC for the db checks
     parentBothNonPkServiceBasedRepository.saveAndFlush(parent1);
 
-    assertEquals(2,
-        childBothNonPkServiceBasedRepository.findAllByChildParentMachine(parent1.getMachine()).size());
+    assertEquals(
+        2,
+        childBothNonPkServiceBasedRepository.findAllByChildParentMachine(parent1.getMachine()).size()
+    );
   }
 }

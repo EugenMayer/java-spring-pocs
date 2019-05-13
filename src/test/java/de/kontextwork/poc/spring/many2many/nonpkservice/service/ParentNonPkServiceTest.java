@@ -1,6 +1,7 @@
 package de.kontextwork.poc.spring.many2many.nonpkservice.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.many2many.nonpkservice.domain.ChildNonPkServiceBased;
@@ -8,10 +9,12 @@ import de.kontextwork.poc.spring.many2many.nonpkservice.domain.ParentNonPkServic
 import de.kontextwork.poc.spring.many2many.nonpkservice.repository.ChildNonPkServiceBasedRepository;
 import de.kontextwork.poc.spring.many2many.nonpkservice.repository.ParentNonPkServiceBasedRepository;
 import javax.persistence.EntityManager;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
@@ -87,5 +90,22 @@ class ParentNonPkServiceTest {
     parent1.setChildren(Sets.newHashSet(child1, child2));
     parent1 = parentNonPkService.save(parent1);
     assertEquals(2, parent1.getChildren().size());
+
+    // *** now try to remove a child again and see if that is reflected
+    parent1.getChildren().removeIf(child -> child.getMachine().equals("child1"));
+    parent1 = parentNonPkService.save(parent1);
+    assertEquals(1, parent1.getChildren().size());
+
+    // enforce all the flush and reload and try to validate it once again, to rule out gliches
+    entityManager.flush();
+    entityManager.refresh(parent1);
+
+    var reloaded = parentNonPkService.getParent(parent1.getParentId()).orElseThrow();
+    assertEquals(1, reloaded.getChildren().size());
+
+    // *** try to actually add the same child once again and ensure we get an exception
+    assertTrue( reloaded.getChildren().stream().anyMatch(child -> child.getMachine().equals("child2")));
+    reloaded.getChildren().add(new ChildNonPkServiceBased("child2"));
+    Assertions.assertThrows(DataIntegrityViolationException.class, () -> parentNonPkService.save(reloaded));
   }
 }
