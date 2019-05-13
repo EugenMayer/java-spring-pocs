@@ -20,7 +20,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
 @Import(ParentBothNonPkService.class)
-class ParentBothNonPkServiceTest {
+class ParentBothNonPkSelfServiceTest {
   @Autowired
   ParentBothNonPkService parentBothNonPkService;
   @Autowired

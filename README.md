@@ -86,3 +86,23 @@ Anything else is as we have it in `using a non-PK key (parent pk, child non pk) 
 Status
  - [done] creating (Cascade) children through the parent
  - [done] loading a parent including is children
+
+**JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance with a Service**
+
+This is like `using a both non-PK keys` above, but this time the Parent and Child subtypes using a 
+`discriminator` using a `InheritanceType.SINGLE_TABLE` - this requires us to finally build the whole
+relation ourself - saving and loading - `@joinTable` can no longer be used in this case.
+
+So we added relation and child saving in the service `save` as also a new `@Entity` for the association table
+(the actual `@joinTable`)
+
+This case would be the same when using `pk keys` - it's for both cases. If you are allowed / can,
+rather use `@MappedSuperclass` and use the classic `@joinTable` implementation with PKs or without PKs
+as shown before
+
+- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/inheritance/domain)
+- [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/inheritance/service/ParentBothNonPkSelfServiceTest.java)
+
+Status
+ - [done] creating (Cascade) children through the parent
+ - [done] loading a parent including is children

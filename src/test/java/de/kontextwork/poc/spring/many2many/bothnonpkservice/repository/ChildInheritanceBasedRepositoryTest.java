@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
-class ChildBothNonPkServiceBasedRepositoryTest {
+class ChildInheritanceBasedRepositoryTest {
   @Autowired
   ChildBothNonPkServiceBasedRepository childBothNonPkServiceBasedRepository;
   @Autowired
