@@ -1,6 +1,5 @@
-package de.kontextwork.poc.spring.many2many.inheritance.Domain.base;
+package de.kontextwork.poc.spring.many2many.inheritance.domain.base;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;

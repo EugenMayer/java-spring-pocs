@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.inheritance.Domain;
+package de.kontextwork.poc.spring.many2many.inheritance.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;

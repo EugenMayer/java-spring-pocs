@@ -30,7 +30,16 @@ public class ParentNonPkBased {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
   Long parentId;
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  // Hint: it is important to exclude CascadeType.REFRESH since we cannot do this in this case
+  @ManyToMany(
+      cascade = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.PERSIST,
+          CascadeType.REMOVE
+      }
+      , fetch = FetchType.LAZY
+  )
   @JoinTable(
       name = "join_table_parent_non_pk_based",
       // name -> col field name in the join table

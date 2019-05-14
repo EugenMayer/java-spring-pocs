@@ -4,9 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.collect.Sets;
-import de.kontextwork.poc.spring.many2many.bothnonpkservice.domain.ChildBothNonPkServiceBased;
-import de.kontextwork.poc.spring.many2many.inheritance.Domain.ChildInheritanceBased;
-import de.kontextwork.poc.spring.many2many.inheritance.Domain.ParentInheritanceBased;
+import de.kontextwork.poc.spring.many2many.inheritance.domain.ChildInheritanceBased;
+import de.kontextwork.poc.spring.many2many.inheritance.domain.ParentInheritanceBased;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

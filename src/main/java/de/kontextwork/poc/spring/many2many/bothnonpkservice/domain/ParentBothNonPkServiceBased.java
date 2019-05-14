@@ -49,7 +49,16 @@ public class ParentBothNonPkServiceBased implements Serializable {
   // this is actually not build to offer readability, but rather "saveability"
   // the former wont work, so we will use a service to load it instead
   // but use a join-table m2m relation when writing (this actually works
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  // Hint: it is important to exclude CascadeType.REFRESH since we cannot do this in this case
+  @ManyToMany(
+      cascade = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.PERSIST,
+          CascadeType.REMOVE
+      }
+      , fetch = FetchType.LAZY
+  )
   @JoinTable(
       // not using our usualy names, since they are too lon
       name = "join_table_parent_both_non_pk",

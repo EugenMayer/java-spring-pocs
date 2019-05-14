@@ -1,8 +1,8 @@
 package de.kontextwork.poc.spring.many2many.inheritance.service;
 
-import de.kontextwork.poc.spring.many2many.inheritance.Domain.ChildInheritanceBased;
-import de.kontextwork.poc.spring.many2many.inheritance.Domain.ChildParentAssociation;
-import de.kontextwork.poc.spring.many2many.inheritance.Domain.ParentInheritanceBased;
+import de.kontextwork.poc.spring.many2many.inheritance.domain.ChildInheritanceBased;
+import de.kontextwork.poc.spring.many2many.inheritance.domain.ChildParentAssociation;
+import de.kontextwork.poc.spring.many2many.inheritance.domain.ParentInheritanceBased;
 import de.kontextwork.poc.spring.many2many.inheritance.repository.ChildAssociationRepository;
 import de.kontextwork.poc.spring.many2many.inheritance.repository.ChildInheritanceBasedRepository;
 import de.kontextwork.poc.spring.many2many.inheritance.repository.ParentInheritanceBasedRepository;
@@ -19,7 +19,6 @@ public class ParentBothNonPkSelfService {
   private final ChildInheritanceBasedRepository childInheritanceBasedRepository;
   private final ParentInheritanceBasedRepository parentInheritanceBasedRepository;
 
-
   public Optional<ParentInheritanceBased> getParent(Long parentId) {
     var element = parentInheritanceBasedRepository.findById(parentId);
     if (element.isEmpty()) {
@@ -33,14 +32,14 @@ public class ParentBothNonPkSelfService {
   }
 
   public ParentInheritanceBased save(final ParentInheritanceBased parent) {
-    parentInheritanceBasedRepository
-        .saveAndFlush(parent);
+    parentInheritanceBasedRepository.save(parent);
     // remove all current associations
     childAssociationRepository.deleteById_ParentMachine(parent.getMachine());
     Set<ChildInheritanceBased> children = new HashSet<>();
     parent.getChildren().forEach(child -> {
       childInheritanceBasedRepository.save(child);
-      childAssociationRepository.save(new ChildParentAssociation(parent.getMachine(), child.getMachine()));
+      childAssociationRepository
+          .save(new ChildParentAssociation(parent.getMachine(), child.getMachine()));
       // add the child to the new set which we will set on the paren
       children.add(child);
     });

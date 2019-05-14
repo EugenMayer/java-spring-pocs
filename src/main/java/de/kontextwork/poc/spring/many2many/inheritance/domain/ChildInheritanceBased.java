@@ -1,11 +1,10 @@
-package de.kontextwork.poc.spring.many2many.inheritance.Domain;
+package de.kontextwork.poc.spring.many2many.inheritance.domain;
 
-import de.kontextwork.poc.spring.many2many.inheritance.Domain.base.BaseType;
-import java.util.Set;
+import de.kontextwork.poc.spring.many2many.inheritance.domain.base.BaseType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * this parent builds a many to may relation to the child using the child's non-primary (but unique)
@@ -20,21 +19,16 @@ import lombok.Data;
  *
  */
 @Entity
-@DiscriminatorValue("PARENT")
+@DiscriminatorValue("CHILD")
 @Data
+@EqualsAndHashCode(callSuper = true)
 // we need `implements Serializable` once again as with ChildNonPk since for non-pk relations this is mandatory
-public class ParentInheritanceBased extends BaseType {
-  // this is actually not build to offer readability, but rather "saveability"
-  // the former wont work, so we will use a service to load it instead
-  // but use a join-table m2m relation when writing (this actually works
-  @Transient
-  Set<ChildInheritanceBased> children;
-
-  public ParentInheritanceBased(final String machine) {
+public class ChildInheritanceBased extends BaseType {
+  public ChildInheritanceBased(final String machine) {
     super(machine);
   }
 
-  protected ParentInheritanceBased() {
+  protected ChildInheritanceBased() {
     super();
   }
 }
