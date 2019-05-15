@@ -99,7 +99,14 @@ class ParentNonPkServiceTest {
     // enforce all the flush and reload and try to validate it once again, to rule out gliches
     entityManager.flush();
     entityManager.refresh(parent1);
-
+    // see http://www.kubrynski.com/2017/04/understanding-jpa-l1-caching.html
+    // we do clear to simulate production use of fresh entities
+    // otherwise EM will cache our relations end e.g. reloading a entity from the database
+    // will already have the relation populated eventhough it should not be, since we did not
+    // inject them yet and have no joinTable relation - this is due the entityCache. Since in production
+    // we can have cold cache, all our code must be cold cache proove, thus clear it before doing asserts
+    // this is basically the "flush the read cache"
+    entityManager.clear();
     var reloaded = parentNonPkService.getParent(parent1.getParentId()).orElseThrow();
     assertEquals(1, reloaded.getChildren().size());
 

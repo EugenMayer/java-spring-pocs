@@ -58,7 +58,15 @@ class ParentNonPkBasedRepositoryTest {
     // DDL based issues like de.kontextwork.poc.spring.many2many.pk.domain.ChildPkBased incompatible with java.io.Serializable
     // even though we could have written beforehand without any issues
     entityManager.refresh(parent1);
-
+    entityManager.flush();
+    // see http://www.kubrynski.com/2017/04/understanding-jpa-l1-caching.html
+    // we do clear to simulate production use of fresh entities
+    // otherwise EM will cache our relations end e.g. reloading a entity from the database
+    // will already have the relation populated eventhough it should not be, since we did not
+    // inject them yet and have no joinTable relation - this is due the entityCache. Since in production
+    // we can have cold cache, all our code must be cold cache proove, thus clear it before doing asserts
+    // this is basically the "flush the read cache"
+    entityManager.clear();
     // TODO: that is where things break - the loaded entity does not load its children
     var reloaded = parentNonPkBasedRepository.findByParentId(parent1.getParentId()).orElseThrow();
     assertEquals(0, reloaded.getChildren().size(), "relation can still not be loaded");
