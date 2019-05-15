@@ -2,7 +2,7 @@
 
 # WAT
 
-Different pocs for java spring boot
+Different POCs for java spring boot
 
 ## Run integration tests
 
@@ -22,6 +22,11 @@ docker-compose up -d
 # test against mysql
 ./gradlew mysqlTest
 # or export SPRING_PROFILE_ACTIVE=mysql + ./gradlew test
+
+# test against postges
+./gradlew postgesTest
+# or export SPRING_PROFILE_ACTIVE=mysql + ./gradlew test
+
 ```
 
 We are using an non-memory h2 database in the tests to make it easier to connect and debug the DDL during a test.
