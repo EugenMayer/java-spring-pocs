@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/EugenMayer/java-spring-pocs.svg?branch=master)](https://travis-ci.org/EugenMayer/java-spring-pocs)
+
 # WAT
 
 Different pocs for java spring boot
