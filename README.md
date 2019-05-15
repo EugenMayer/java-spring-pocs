@@ -43,10 +43,10 @@ It tries to also covered needs of legacy databases or at least DDLs which have n
 #### JPA: ManyToMany relation
 pocs for building `@ManyToMany` relations. Overview:
 
- - using PKs only (both PKs)
- - using one PK, one not PK
- - using both not PK
- - using both not PK with Inheritance
+ - [works] using PKs only (both PKs) 
+ - [works] using one PK, one not PK
+ - [works] using both not PK
+ - [workarround] using both not PK with Inheritance
 
 **JPA: ManyToMany - using both PKs (parent pk / child pk)** 
 
@@ -75,26 +75,8 @@ key on our entity~~
 Status
 
  - [done] creating (Cascade) children through the parent
- - ~~[broken] loading a parent including is children~~
- - [done] loading a parent including is children
+ - [done] loading a parent including its children
  
- ~~As you can see, loading the parent will not load up the child relation, see~~
- 
-**JPA: ManyToMany - using a non-PK key (parent pk, child non pk) with a Service**
-
-!! This implementation is no longer needed since suddenly the non-pk relations can be read by JPA. Yet unexplained.
-
-~~As in `using a non-PK key` we can save those relations using this implementation but we could not read them (children are missing). 
-Thus in this strategy we add a service to do that for us, handling the loading using a `native` query.~~ 
-
-~~Hint: Right now it is a `native @Query` since we seem not to be able to create a `JPA INNER JOiN` in the `@joinTable` - for this to work we would rather
-remove the `joinTable` relation entirely and create a `association table` - but this would mean a lot more code on writing all the `save`
-methods to create the relation - seems to be a bad trade off IMHO~~ 
-
-- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/nonpkservice/domain)
-- [Test Child Repo](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/nonpkservice/repository/ChildNonPkServiceBasedRepositoryTest.java)
-- [Test Parent Service](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/nonpkservice/service/ParentNonPkServiceTest.java)~~
-
 Status
 
 - ~~[done] creating (Cascade) children through the parent~~

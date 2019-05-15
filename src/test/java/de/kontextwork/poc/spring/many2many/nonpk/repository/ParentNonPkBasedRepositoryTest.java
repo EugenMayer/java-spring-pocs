@@ -15,7 +15,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest()
-
 class ParentNonPkBasedRepositoryTest {
   @Autowired
   ParentNonPkBasedRepository parentNonPkBasedRepository;
