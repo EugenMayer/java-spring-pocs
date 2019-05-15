@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class ParentNonPkBased {
+public class ParentNonPk {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
@@ -41,10 +41,10 @@ public class ParentNonPkBased {
       , fetch = FetchType.LAZY
   )
   @JoinTable(
-      name = "join_table_parent_non_pk_based",
+      name = "join_table_parent_non_pk",
       // name -> col field name in the join table
       joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
       inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", unique = true, nullable = false)
   )
-  Set<ChildNonPkBased> children;
+  Set<ChildNonPk> children;
 }

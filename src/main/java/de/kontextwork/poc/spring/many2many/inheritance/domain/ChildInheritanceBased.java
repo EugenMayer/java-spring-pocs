@@ -28,6 +28,7 @@ public class ChildInheritanceBased extends BaseType {
     super(machine);
   }
 
+  @SuppressWarnings("unused")
   protected ChildInheritanceBased() {
     super();
   }

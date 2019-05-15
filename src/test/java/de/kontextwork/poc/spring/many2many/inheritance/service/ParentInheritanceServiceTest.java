@@ -17,10 +17,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
-@Import(ParentBothNonPkSelfService.class)
-class ParentBothNonPkSelfServiceTest {
+@Import(ParentInheritanceService.class)
+class ParentInheritanceServiceTest {
   @Autowired
-  ParentBothNonPkSelfService parentBothNonPkSelfService;
+  ParentInheritanceService parentInheritanceService;
   @Autowired
   JdbcTemplate jdbcTemplate;
   @Autowired
@@ -36,7 +36,7 @@ class ParentBothNonPkSelfServiceTest {
 
     var parent1 = new ParentInheritanceBased("parent1");
     parent1.setChildren(Sets.newHashSet(child1, child2));
-    parent1 = parentBothNonPkSelfService.save(parent1);
+    parent1 = parentInheritanceService.save(parent1);
 
     entityManager.refresh(parent1);
     entityManager.flush();
@@ -49,7 +49,7 @@ class ParentBothNonPkSelfServiceTest {
     // this is basically the "flush the read cache"
     entityManager.clear();
 
-    var reloaded = parentBothNonPkSelfService.getParent(parent1.getId()).orElseThrow();
+    var reloaded = parentInheritanceService.getParent(parent1.getId()).orElseThrow();
     assertEquals(2, reloaded.getChildren().size());
   }
 
@@ -63,13 +63,13 @@ class ParentBothNonPkSelfServiceTest {
 
     var parent1 = new ParentInheritanceBased("parent1");
     parent1.setChildren(Sets.newHashSet(child1, child2));
-    parent1 = parentBothNonPkSelfService.save(parent1);
+    parent1 = parentInheritanceService.save(parent1);
     assertEquals(2, parent1.getChildren().size());
 
 
     // *** now try to remove a child again and see if that is reflected
     parent1.getChildren().removeIf(child -> child.getMachine().equals("child1"));
-    parent1 = parentBothNonPkSelfService.save(parent1);
+    parent1 = parentInheritanceService.save(parent1);
     assertEquals(1, parent1.getChildren().size());
 
     // enforce all the flush and reload and try to validate it once again, to rule out gliches
@@ -83,12 +83,12 @@ class ParentBothNonPkSelfServiceTest {
     // we can have cold cache, all our code must be cold cache proove, thus clear it before doing asserts
     // this is basically the "flush the read cache"
     entityManager.clear();
-    var reloaded = parentBothNonPkSelfService.getParent(parent1.getId()).orElseThrow();
+    var reloaded = parentInheritanceService.getParent(parent1.getId()).orElseThrow();
     assertEquals(1, reloaded.getChildren().size());
 
     // *** try to actually add the same child once again and ensure we get an exception
     assertTrue( reloaded.getChildren().stream().anyMatch(child -> child.getMachine().equals("child2")));
     reloaded.setChildren( Sets.newHashSet(new ChildInheritanceBased("child2")));
-    Assertions.assertThrows(DataIntegrityViolationException.class, () -> parentBothNonPkSelfService.save(reloaded));
+    Assertions.assertThrows(DataIntegrityViolationException.class, () -> parentInheritanceService.save(reloaded));
   }
 }

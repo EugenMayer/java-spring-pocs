@@ -1,10 +1,10 @@
-package de.kontextwork.poc.spring.many2many.nonpk.repository;
+package de.kontextwork.poc.spring.many2many.bothnonpks.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Sets;
-import de.kontextwork.poc.spring.many2many.nonpk.domain.ChildNonPkBased;
-import de.kontextwork.poc.spring.many2many.nonpk.domain.ParentNonPkBased;
+import de.kontextwork.poc.spring.many2many.bothnonpks.domain.ChildBothNonPk;
+import de.kontextwork.poc.spring.many2many.bothnonpks.domain.ParentBothNonPk;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -15,9 +15,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest()
-class ParentNonPkBasedRepositoryTest {
+class ParentBothNonPkRepositoryTest {
   @Autowired
-  ParentNonPkBasedRepository parentNonPkBasedRepository;
+  ParentBothNonPkRepository parentBothNonPkRepository;
   @Autowired
   JdbcTemplate jdbcTemplate;
   @Autowired
@@ -27,29 +27,29 @@ class ParentNonPkBasedRepositoryTest {
   @DirtiesContext
   void createParentWithChildren() {
     // child1, yet not saved
-    var child1 = new ChildNonPkBased("child1");
+    var child1 = new ChildBothNonPk("child1");
     // child2, yet not saved
-    var child2 = new ChildNonPkBased("child2");
+    var child2 = new ChildBothNonPk("child2");
 
-    var parent1 = new ParentNonPkBased();
+    var parent1 = new ParentBothNonPk("parent1");
     parent1.setChildren(
         Sets.newHashSet(child1, child2)
     );
     // we flush since are going to use JDBC for the db checks
-    parentNonPkBasedRepository.saveAndFlush(parent1);
+    parentBothNonPkRepository.saveAndFlush(parent1);
 
     // we should have 2 relations in here
     List<Map<String, Object>> relationExists = jdbcTemplate
         .queryForList(
-            "select * from join_table_parent_non_pk_based where myparent_id=?",
-            parent1.getParentId()
+            "select * from join_table_parent_both_non_pk where myparent_machine=?",
+            parent1.getMachine()
         );
     assertEquals(2, relationExists.size());
 
     // we should have 2 children saved
     List<Map<String, Object>> childrenExist = jdbcTemplate
         .queryForList(
-            "select * from child_non_pk_based"
+            "select * from child_both_non_pk"
         );
     assertEquals(2, childrenExist.size());
 
@@ -66,7 +66,7 @@ class ParentNonPkBasedRepositoryTest {
     // we can have cold cache, all our code must be cold cache proove, thus clear it before doing asserts
     // this is basically the "flush the read cache"
     entityManager.clear();
-    var reloaded = parentNonPkBasedRepository.findByParentId(parent1.getParentId()).orElseThrow();
+    var reloaded = parentBothNonPkRepository.findByParentId(parent1.getParentId()).orElseThrow();
     assertEquals(2, reloaded.getChildren().size());
   }
 }

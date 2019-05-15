@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ParentBothNonPkSelfService {
+public class ParentInheritanceService {
   private final ChildAssociationRepository childAssociationRepository;
   private final ChildInheritanceBasedRepository childInheritanceBasedRepository;
   private final ParentInheritanceBasedRepository parentInheritanceBasedRepository;

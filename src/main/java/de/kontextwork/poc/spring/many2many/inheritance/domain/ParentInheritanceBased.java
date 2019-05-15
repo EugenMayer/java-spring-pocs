@@ -5,8 +5,10 @@ import java.util.Set;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * this parent builds a many to may relation to the child using the child's non-primary (but unique)
@@ -36,6 +38,7 @@ public class ParentInheritanceBased extends BaseType {
     super(machine);
   }
 
+  @SuppressWarnings("unused")
   protected ParentInheritanceBased() {
     super();
   }

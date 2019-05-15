@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.bothnonpkservice.domain;
+package de.kontextwork.poc.spring.many2many.bothnonpks.domain;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -34,7 +34,7 @@ import org.hibernate.annotations.NaturalId;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
 // we need `implements Serializable` once again as with ChildNonPk since for non-pk relations this is mandatory
-public class ParentBothNonPkServiceBased implements Serializable {
+public class ParentBothNonPk implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
@@ -66,10 +66,10 @@ public class ParentBothNonPkServiceBased implements Serializable {
       joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(100)"),
       inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(100)")
   )
-  Set<ChildBothNonPkServiceBased> children;
+  Set<ChildBothNonPk> children;
 
 
-  public ParentBothNonPkServiceBased(final String machine) {
+  public ParentBothNonPk(final String machine) {
     this.machine = machine;
   }
 }

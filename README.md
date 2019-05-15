@@ -53,7 +53,7 @@ pocs for building `@ManyToMany` relations. Overview:
 Building a `@ManyToMany` relation PKs is the most simple task
 in our lineup and it works for:
 
-- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/pk/domain)
+- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/pk)
 - [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/pk/repository/ParentPkBasedRepositoryTest.java)
 
 Status
@@ -63,13 +63,9 @@ Status
  
 **JPA: ManyToMany - using a non-PK key (parent pk, child non pk)**
 
-!! It suddenly started to work for all tested database - yet i cannot explain why
+Works straight forward
 
-
-~~When using a non-PK key things getting a lot hard, even if the key is a unique
-key on our entity~~
-
-- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/nonpk/domain/)
+- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/nonpk/)
 - [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/nonpk/repository/ParentNonPkBasedRepositoryTest.java)
 
 Status
@@ -77,36 +73,21 @@ Status
  - [done] creating (Cascade) children through the parent
  - [done] loading a parent including its children
  
-Status
+**JPA: ManyToMany - using a both non-PK keys (parent non pk, child non pk)**
 
-- ~~[done] creating (Cascade) children through the parent~~
-- ~~[done] loading a parent including is children~~
+Works straight forward
 
-**JPA: ManyToMany - using a both non-PK keys (parent non pk, child non pk) with a Service**
-
-!! Also this started to work out of a sudden - yet unexplained. So its just a joinTable as usual, thats it
-
-~~This time, both parent and child are in relation an `non ok key` ( on both sides). We again use a service
-for the loading part.~~ 
-
-~~In addition to the other non-pk (child) examples, we now also have to implement `Serializable` on the parent too.~~
-
-~~Anything else is as we have it in `using a non-PK key (parent pk, child non pk) with a Service`~~ 
-
-- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/bothnonpkservice/domain)
-- [Test Child Repo](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/bothnonpkservice/repository/ChildBothNonPkServiceBasedRepositoryTest.java)
-- [Test Parent Service](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/bothnonpkservice/service/ParentBothNonPkServiceTest.java)
+- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/bothnonpk)
+- [Test Child Repo](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/bothnonpk/repository/ChildBothNonPkServiceBasedRepositoryTest.java)
 
 Status
  - ~~ [done] creating (Cascade) children through the parent~~
- - ~~ [done] loading a parent including is children~~
+ - ~~ [done] loading a parent including its children~~
 
 **JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance with a Service**
 
-~~This is like `using a both non-PK keys` above~~, Actually its no longer the same, since this is really 
- not working as the old have been, but all the other started working out of a sudden. This setup is both no pk, but this time the Parent 
- and Child subtypes using a `discriminator` using a `InheritanceType.SINGLE_TABLE` - this requires us to finally build the whole
- relation ourself - saving and loading - `@joinTable` can no longer be used in this case.
+This setup is both no pk, but this time the Parent  and Child subtypes using a `discriminator` using a `InheritanceType.SINGLE_TABLE` - 
+this requires us to finally build the whole relation manually - saving and loading - `@joinTable` can no longer be used in this case.
 
 So we added relation and child saving in the service `save` as also a new `@Entity` for the association table
 (the actual `@joinTable`)
@@ -115,9 +96,9 @@ This case would be the same when using `pk keys` - it's for both cases. If you a
 rather use `@MappedSuperclass` and use the classic `@joinTable` implementation with PKs or without PKs
 as shown before
 
-- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/inheritance/domain)
+- [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/inheritance)
 - [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/inheritance/service/ParentBothNonPkSelfServiceTest.java)
 
 Status
  - [done] creating (Cascade) children through the parent
- - [done] loading a parent including is children
+ - [done] loading a parent including its children

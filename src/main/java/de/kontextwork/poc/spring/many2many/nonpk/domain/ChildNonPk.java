@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.bothnonpkservice.domain;
+package de.kontextwork.poc.spring.many2many.nonpk.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -19,7 +19,7 @@ import org.hibernate.annotations.NaturalId;
 // Indeed we need 'implements Serializable' when using the natural key for a relation
 // Interestingly this does fail when we read data, not when we write
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ChildBothNonPkServiceBased implements Serializable {
+public class ChildNonPk implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "child_some_id")
@@ -32,7 +32,7 @@ public class ChildBothNonPkServiceBased implements Serializable {
   @Column(columnDefinition = "VARCHAR(200)", unique = true)
   String machine;
 
-  public ChildBothNonPkServiceBased(final String machine) {
+  public ChildNonPk(final String machine) {
     this.machine = machine;
   }
 }
