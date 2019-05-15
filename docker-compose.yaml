@@ -1,13 +1,21 @@
 version: "2"
 
 services:
-#  mysql:
-#    image: mysql
-#    ports:
-#      - 3308:3306
-#    environment:
-#      MYSQL_DATABASE: testdb
-#      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+  postgresql:
+    image: postgres:11.3
+    ports:
+      - 15432:5432
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: "pguser"
+      POSTGRES_PASSWORD: "pgpassword"
+  mysql:
+    image: mysql:8
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_DATABASE: testdb
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
   mariadb:
     image: mariadb:10.3
     ports:

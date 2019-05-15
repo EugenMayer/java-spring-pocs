@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
 class ChildNonPkServiceBasedRepositoryTest {
@@ -23,6 +24,7 @@ class ChildNonPkServiceBasedRepositoryTest {
   EntityManager entityManager;
 
   @Test
+  @DirtiesContext
   void findAllByChildParentId() {
     // child1, yet not saved
     var child1 = new ChildNonPkServiceBased("child1");

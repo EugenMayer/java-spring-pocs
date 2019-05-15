@@ -48,11 +48,11 @@ class ParentNonPkBasedRepositoryTest {
     assertEquals(2, relationExists.size());
 
     // we should have 2 children saved
-    List<Map<String, Object>> childsExist = jdbcTemplate
+    List<Map<String, Object>> childrenExist = jdbcTemplate
         .queryForList(
             "select * from child_non_pk_based"
         );
-    assertEquals(2, childsExist.size());
+    assertEquals(2, childrenExist.size());
 
     // this is important, we force the parent to be reread - this can already cause new
     // DDL based issues like de.kontextwork.poc.spring.many2many.pk.domain.ChildPkBased incompatible with java.io.Serializable
@@ -67,9 +67,7 @@ class ParentNonPkBasedRepositoryTest {
     // we can have cold cache, all our code must be cold cache proove, thus clear it before doing asserts
     // this is basically the "flush the read cache"
     entityManager.clear();
-    // TODO: that is where things break - the loaded entity does not load its children
     var reloaded = parentNonPkBasedRepository.findByParentId(parent1.getParentId()).orElseThrow();
-    assertEquals(0, reloaded.getChildren().size(), "relation can still not be loaded");
-    //assertEquals(2, reloaded.getChildren().size());
+    assertEquals(2, reloaded.getChildren().size());
   }
 }

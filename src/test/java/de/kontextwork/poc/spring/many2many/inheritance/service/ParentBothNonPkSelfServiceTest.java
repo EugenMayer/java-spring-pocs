@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
 @Import(ParentBothNonPkSelfService.class)
@@ -26,6 +27,7 @@ class ParentBothNonPkSelfServiceTest {
   EntityManager entityManager;
 
   @Test
+  @DirtiesContext
   void getParent() {
     // one child presaved
     var child1 = new ChildInheritanceBased("child1");
@@ -52,6 +54,7 @@ class ParentBothNonPkSelfServiceTest {
   }
 
   @Test
+  @DirtiesContext
   void save() {
     // one child presaved
     var child1 = new ChildInheritanceBased("child1");
