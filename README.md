@@ -23,9 +23,9 @@ docker-compose up -d
 ./gradlew mysqlTest
 # or export SPRING_PROFILE_ACTIVE=mysql + ./gradlew test
 
-# test against postges
-./gradlew postgesTest
-# or export SPRING_PROFILE_ACTIVE=mysql + ./gradlew test
+# test against postgres
+./gradlew postgresTest
+# or export SPRING_PROFILE_ACTIVE=postgres + ./gradlew test
 
 ```
 
