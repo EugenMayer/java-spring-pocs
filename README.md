@@ -34,8 +34,14 @@ Different POCs of any kinds
 Mainly POCs for different relation types you might need.
 It tries to also covered needs of legacy databases or at least DDLs which have not been designed for spring/by spring
 
+
 #### JPA: ManyToMany relation
-pocs for building `@ManyToMany` relations
+pocs for building `@ManyToMany` relations. Overview:
+
+ - using PKs only (both PKs)
+ - using one PK, one not PK
+ - using both not PK
+ - using both not PK with Inheritance
 
 **JPA: ManyToMany - using both PKs (parent pk / child pk)** 
 
@@ -52,24 +58,26 @@ Status
  
 **JPA: ManyToMany - using a non-PK key (parent pk, child non pk)**
 
+!! It suddenly started to work for all tested database - yet i cannot explain why
+
+
 ~~When using a non-PK key things getting a lot hard, even if the key is a unique
 key on our entity~~
-
-It suddently started to work for all tested database - yet i cannot explain why
 
 - [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/nonpk/domain/)
 - [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/nonpk/repository/ParentNonPkBasedRepositoryTest.java)
 
 Status
+
  - [done] creating (Cascade) children through the parent
- ~~- [broken] loading a parent including is children~~
+ - ~~[broken] loading a parent including is children~~
  - [done] loading a parent including is children
  
  ~~As you can see, loading the parent will not load up the child relation, see~~
  
 **JPA: ManyToMany - using a non-PK key (parent pk, child non pk) with a Service**
 
-This implementation is no longer needed since suddenly the non-pk relations can be read by JPA. Yet unexplained.
+!! This implementation is no longer needed since suddenly the non-pk relations can be read by JPA. Yet unexplained.
 
 ~~As in `using a non-PK key` we can save those relations using this implementation but we could not read them (children are missing). 
 Thus in this strategy we add a service to do that for us, handling the loading using a `native` query.~~ 
@@ -84,13 +92,13 @@ methods to create the relation - seems to be a bad trade off IMHO~~
 
 Status
 
- ~~- [done] creating (Cascade) children through the parent~~
- 
- ~~- [done] loading a parent including is children~~
+- ~~[done] creating (Cascade) children through the parent~~
+- ~~[done] loading a parent including is children~~
 
 **JPA: ManyToMany - using a both non-PK keys (parent non pk, child non pk) with a Service**
 
-Also this started to work out of a sudden - yet unexplained. So its just a joinTable as usual, thats it
+!! Also this started to work out of a sudden - yet unexplained. So its just a joinTable as usual, thats it
+
 ~~This time, both parent and child are in relation an `non ok key` ( on both sides). We again use a service
 for the loading part.~~ 
 
@@ -103,8 +111,8 @@ for the loading part.~~
 - [Test Parent Service](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/bothnonpkservice/service/ParentBothNonPkServiceTest.java)
 
 Status
- ~~- [done] creating (Cascade) children through the parent~~
- ~~- [done] loading a parent including is children~~
+ - ~~ [done] creating (Cascade) children through the parent~~
+ - ~~ [done] loading a parent including is children~~
 
 **JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance with a Service**
 
