@@ -6,6 +6,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * this parent builds a many to may relation to the child using the child's non-primary (but unique)
@@ -22,6 +23,7 @@ import lombok.Data;
 @Entity
 @DiscriminatorValue("PARENT")
 @Data
+@EqualsAndHashCode(callSuper = true)
 // we need `implements Serializable` once again as with ChildNonPk since for non-pk relations this is mandatory
 public class ParentInheritanceBased extends BaseType {
   // this is actually not build to offer readability, but rather "saveability"

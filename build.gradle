@@ -33,7 +33,7 @@ dependencies {
 			'org.projectlombok:lombok',
 	)
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
-	compile 'com.h2database:h2'
+	//compile 'com.h2database:h2'
 	//runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation(
@@ -46,6 +46,7 @@ dependencies {
 	runtimeOnly (
             "com.h2database:h2",
             "mysql:mysql-connector-java",
+			"org.mariadb.jdbc:mariadb-java-client",
             "org.postgresql:postgresql:9.4-1206-jdbc42"
     )
 	testRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
