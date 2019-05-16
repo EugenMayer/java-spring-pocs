@@ -1,6 +1,7 @@
 package de.kontextwork.poc.spring.many2many.bothnonpks.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.many2many.bothnonpks.domain.ChildBothNonPk;
@@ -25,7 +26,7 @@ class ParentBothNonPkRepositoryTest {
 
   @Test
   @DirtiesContext
-  void createParentWithChildren() {
+  void crudParentWithChildren() {
     var child1 = new ChildBothNonPk("child1");
     var child2 = new ChildBothNonPk("child2");
 
@@ -66,5 +67,37 @@ class ParentBothNonPkRepositoryTest {
     entityManager.clear();
     var reloaded = parentBothNonPkRepository.findByParentId(parent1.getParentId()).orElseThrow();
     assertEquals(2, reloaded.getChildren().size());
+
+    // *** test delete operations
+    reloaded.getChildren().removeIf(child -> child.getMachine().equals("child1"));
+    parentBothNonPkRepository.save(reloaded);
+
+    entityManager.flush();
+    entityManager.refresh(reloaded);
+    entityManager.clear();
+
+    List<Map<String, Object>> deletedOnRelation = jdbcTemplate
+        .queryForList(
+            "select * from join_table_parent_both_non_pk where myparent_machine=?",
+            parent1.getMachine()
+        );
+    assertEquals(1, deletedOnRelation.size());
+
+    reloaded = parentBothNonPkRepository.findById(parent1.getParentId()).orElseThrow();
+    assertEquals(1, reloaded.getChildren().size());
+
+    // ** delete the parent
+    parentBothNonPkRepository.delete(reloaded);
+
+    entityManager.flush();
+    entityManager.clear();
+
+    List<Map<String, Object>> deletedAll = jdbcTemplate
+        .queryForList(
+            "select * from join_table_parent_both_non_pk where myparent_machine=?",
+            parent1.getMachine()
+        );
+    assertEquals(0, deletedAll.size());
+    assertTrue(parentBothNonPkRepository.findById(parent1.getParentId()).isEmpty());
   }
 }

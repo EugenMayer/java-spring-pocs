@@ -1,5 +1,6 @@
 package de.kontextwork.poc.spring.many2many.nonpk.repository;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.google.common.collect.Sets;
@@ -25,7 +26,7 @@ class ParentNonPkRepositoryTest {
 
   @Test
   @DirtiesContext
-  void createParentWithChildren() {
+  void crudParentWithChildren() {
     var child1 = new ChildNonPk("child1");
     var child2 = new ChildNonPk("child2");
 
@@ -66,5 +67,37 @@ class ParentNonPkRepositoryTest {
     entityManager.clear();
     var reloaded = parentNonPkBasedRepository.findByParentId(parent1.getParentId()).orElseThrow();
     assertEquals(2, reloaded.getChildren().size());
+
+    // *** test delete operations
+    reloaded.getChildren().removeIf(child -> child.getMachine().equals("child1"));
+    parentNonPkBasedRepository.save(reloaded);
+
+    entityManager.flush();
+    entityManager.refresh(reloaded);
+    entityManager.clear();
+
+    List<Map<String, Object>> deletedOnRelation = jdbcTemplate
+        .queryForList(
+            "select * from join_table_parent_non_pk where myparent_id=?",
+            parent1.getParentId()
+        );
+    assertEquals(1, deletedOnRelation.size());
+
+    reloaded = parentNonPkBasedRepository.findById(parent1.getParentId()).orElseThrow();
+    assertEquals(1, reloaded.getChildren().size());
+
+    // ** delete the parent
+    parentNonPkBasedRepository.delete(reloaded);
+
+    entityManager.flush();
+    entityManager.clear();
+
+    List<Map<String, Object>> deletedAll = jdbcTemplate
+        .queryForList(
+            "select * from join_table_parent_non_pk where myparent_id=?",
+            parent1.getParentId()
+        );
+    assertEquals(0, deletedAll.size());
+    assertTrue(parentNonPkBasedRepository.findById(parent1.getParentId()).isEmpty());
   }
 }

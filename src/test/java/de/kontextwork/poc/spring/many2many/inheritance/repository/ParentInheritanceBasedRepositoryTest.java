@@ -25,7 +25,7 @@ class ParentInheritanceBasedRepositoryTest {
 
 
   @Test
-  void findById() {
+  void crudParentWithChildren() {
     var child1 = new ChildInheritanceBased("child1");
     var child2 = new ChildInheritanceBased("child2");
 
@@ -56,6 +56,38 @@ class ParentInheritanceBasedRepositoryTest {
 
     var reloaded = parentInheritanceBasedRepository.findById(parent1.getId()).orElseThrow();
     assertEquals(2, reloaded.getChildren().size());
+
+    // *** test delete operations
+    reloaded.getChildren().removeIf(child -> child.getMachine().equals("child1"));
+    parentInheritanceBasedRepository.save(reloaded);
+
+    entityManager.flush();
+    entityManager.refresh(reloaded);
+    entityManager.clear();
+
+    List<Map<String, Object>> deletedOnRelation = jdbcTemplate
+        .queryForList(
+            "select * from join_table_inheritance where myparent_machine=?",
+            parent1.getMachine()
+        );
+    assertEquals(1, deletedOnRelation.size());
+
+    reloaded = parentInheritanceBasedRepository.findById(parent1.getId()).orElseThrow();
+    assertEquals(1, reloaded.getChildren().size());
+
+    // ** delete the parent now
+    parentInheritanceBasedRepository.delete(reloaded);
+    entityManager.flush();
+    entityManager.clear();
+
+    List<Map<String, Object>> deletedAll = jdbcTemplate
+        .queryForList(
+            "select * from join_table_inheritance where myparent_machine=?",
+            parent1.getMachine()
+        );
+    assertEquals(0, deletedAll.size());
+    assertTrue(parentInheritanceBasedRepository.findById(parent1.getId()).isEmpty());
+
 
   }
 }
