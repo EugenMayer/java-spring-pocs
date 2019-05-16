@@ -47,7 +47,7 @@ pocs for building `@ManyToMany` relations. Overview:
  - [works] using one PK, one not PK
  - [works] using both not PK
  - [works*] using both not PK with Inheritance (*fields are moved)
-
+ - [tba] using both PK with Inheritance 
 **JPA: ManyToMany - using both PKs (parent pk / child pk)** 
 
 Building a `@ManyToMany` relation PKs is the most simple task
@@ -95,8 +95,6 @@ field/column on the `BaseType` Entity - we have to move (and duplicate) that fie
 This let's us create a `joinTable` relation which would otherwise not be possible since we get a 
 "no mapped field for type"
 
-The question here is, what if we would have mapped using the PK? We cannot move the PK, so this is
-basically impossible?
 
 - [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/inheritance)
 - [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/inheritance/repository/)
