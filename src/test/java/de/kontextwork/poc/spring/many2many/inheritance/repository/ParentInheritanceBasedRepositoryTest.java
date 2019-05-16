@@ -1,6 +1,7 @@
 package de.kontextwork.poc.spring.many2many.inheritance.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.many2many.inheritance.domain.ChildInheritanceBased;
@@ -17,12 +18,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 class ParentInheritanceBasedRepositoryTest {
   @Autowired
   ParentInheritanceBasedRepository parentInheritanceBasedRepository;
-
   @Autowired
   JdbcTemplate jdbcTemplate;
   @Autowired
   EntityManager entityManager;
-
 
   @Test
   void crudParentWithChildren() {
@@ -52,7 +51,6 @@ class ParentInheritanceBasedRepositoryTest {
             parent1.getMachine()
         );
     assertEquals(2, relationExists.size());
-
 
     var reloaded = parentInheritanceBasedRepository.findById(parent1.getId()).orElseThrow();
     assertEquals(2, reloaded.getChildren().size());
@@ -87,7 +85,5 @@ class ParentInheritanceBasedRepositoryTest {
         );
     assertEquals(0, deletedAll.size());
     assertTrue(parentInheritanceBasedRepository.findById(parent1.getId()).isEmpty());
-
-
   }
 }

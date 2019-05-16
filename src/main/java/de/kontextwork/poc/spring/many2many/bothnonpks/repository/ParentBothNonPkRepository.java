@@ -5,6 +5,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ParentBothNonPkRepository extends
-                                                   JpaRepository<ParentBothNonPk, Long> {
+                                           JpaRepository<ParentBothNonPk, Long> {
   Optional<ParentBothNonPk> findByParentId(Long parentId);
 }
