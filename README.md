@@ -48,7 +48,8 @@ pocs for building `@ManyToMany` relations. Overview:
  - [works] using both not PK
  - [works*] using both not PK with Inheritance (*fields are moved)
  - [tba] using both PK with Inheritance 
-**JPA: ManyToMany - using both PKs (parent pk / child pk)** 
+ 
+##### JPA: ManyToMany - using both PKs (parent pk / child pk) 
 
 Building a `@ManyToMany` relation PKs is the most simple task
 in our lineup and it works for:
@@ -61,7 +62,7 @@ Status
  - [done] loading a parent including is children
  
  
-**JPA: ManyToMany - using a non-PK key (parent pk, child non pk)**
+##### JPA: ManyToMany - using a non-PK key (parent pk, child non pk)
 
 Works straight forward
 
@@ -73,7 +74,7 @@ Status
  - [done] creating (Cascade) children through the parent
  - [done] loading a parent including its children
  
-**JPA: ManyToMany - using a both non-PK keys (parent non pk, child non pk)**
+##### JPA: ManyToMany - using a both non-PK keys (parent non pk, child non pk)
 
 Works straight forward
 
@@ -84,7 +85,7 @@ Status
  - [done] creating (Cascade) children through the parent
  - [done] loading a parent including its children
 
-**JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance**
+##### JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance
 
 This setup is both no pk, but this time the Parent  and Child subtypes using a `discriminator` using a `InheritanceType.SINGLE_TABLE` - 
 In this case, the important hint is, where to put the non-primary join key we have in common on our subtypes.
