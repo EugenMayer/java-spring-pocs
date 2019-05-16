@@ -46,7 +46,7 @@ pocs for building `@ManyToMany` relations. Overview:
  - [works] using PKs only (both PKs) 
  - [works] using one PK, one not PK
  - [works] using both not PK
- - [workarround] using both not PK with Inheritance
+ - [works*] using both not PK with Inheritance (*fields are moved)
 
 **JPA: ManyToMany - using both PKs (parent pk / child pk)** 
 
@@ -84,14 +84,15 @@ Status
  - [done] creating (Cascade) children through the parent
  - [done] loading a parent including its children
 
-**JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance with a Service**
+**JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance**
 
 This setup is both no pk, but this time the Parent  and Child subtypes using a `discriminator` using a `InheritanceType.SINGLE_TABLE` - 
 In this case, the important hint is, where to put the non-primary join key we have in common on our subtypes.
-Even though all subtypes (Child/Parent) have the field `machine` we are not allowed to define that is a 
-field/column on the `BaseType` - we have to move (and duplicate) that field into each subtype
 
-This lets us create a `joinTable` relation which would otherwise not be possible since we get a 
+Even though all subtypes (Child/Parent) have the field `machine` we are not allowed to define that as 
+field/column on the `BaseType` Entity - we have to move (and duplicate) that field into each subtype.
+
+This let's us create a `joinTable` relation which would otherwise not be possible since we get a 
 "no mapped field for type"
 
 The question here is, what if we would have mapped using the PK? We cannot move the PK, so this is
