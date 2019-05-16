@@ -81,8 +81,8 @@ Works straight forward
 - [Test Child Repo](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/bothnonpk/repository/ChildBothNonPkServiceBasedRepositoryTest.java)
 
 Status
- - ~~ [done] creating (Cascade) children through the parent~~
- - ~~ [done] loading a parent including its children~~
+ - [done] creating (Cascade) children through the parent
+ - [done] loading a parent including its children
 
 **JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance with a Service**
 
