@@ -1,14 +1,17 @@
 package de.kontextwork.poc.spring.many2many.inheritance.domain;
 
-import de.kontextwork.poc.spring.many2many.inheritance.domain.base.BaseType;
+import java.io.Serializable;
 import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Transient;
-import lombok.AccessLevel;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * this parent builds a many to may relation to the child using the child's non-primary (but unique)
@@ -27,15 +30,36 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = true)
 // we need `implements Serializable` once again as with ChildNonPk since for non-pk relations this is mandatory
-public class ParentInheritanceBased extends BaseType {
+public class ParentInheritanceBased extends BaseType implements Serializable {
   // this is actually not build to offer readability, but rather "saveability"
   // the former wont work, so we will use a service to load it instead
   // but use a join-table m2m relation when writing (this actually works
-  @Transient
+  //@Transient
+    @ManyToMany(
+      cascade = {
+          CascadeType.DETACH,
+          CascadeType.MERGE,
+          CascadeType.PERSIST,
+          CascadeType.REMOVE
+      },
+      fetch = FetchType.LAZY
+  )
+  @JoinTable(
+      name = "join_table_inheritance",
+      joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine"),
+      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine")
+  )
   Set<ChildInheritanceBased> children;
 
+  // HINT: this is the important part - instead of defining that in BaseType - we have to move it
+  // to our subtypes so that JPA can later understand the different "machine" fields in the joinTable
+  @EqualsAndHashCode.Include
+  @Column(columnDefinition = "VARCHAR(200)", unique = true)
+  protected String machine;
+
   public ParentInheritanceBased(final String machine) {
-    super(machine);
+    super();
+    this.machine = machine;
   }
 
   @SuppressWarnings("unused")

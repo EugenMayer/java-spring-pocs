@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.inheritance.domain.base;
+package de.kontextwork.poc.spring.many2many.inheritance.domain;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -45,14 +45,12 @@ public class BaseType {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   Long id;
-  // defining columnDefinition = "VARCHAR(200)"
-  // is mandatory or we get a "key to large" error
-  @NaturalId
-  @EqualsAndHashCode.Include
-  @Column(columnDefinition = "VARCHAR(200)", unique = true)
-  protected String machine;
 
-  public BaseType(final String machine) {
-    this.machine = machine;
-  }
+  // HINT: even though semantically it belongs here, defining this in the base-type would let us now longer
+  // be able to create a joinTable, since JPA cannot distinguish between the different machine of child and parent
+  // and gives us an error of a "field not mapped to a single entity" error
+  // moving this field to the subtypes fixes that
+  //  @EqualsAndHashCode.Include
+  //  @Column(columnDefinition = "VARCHAR(200)", unique = true)
+  //  protected String machine;
 }

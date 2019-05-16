@@ -87,17 +87,18 @@ Status
 **JPA: ManyToMany - using a both non-PK keys (or PKs) with Parent/Child in inheritance with a Service**
 
 This setup is both no pk, but this time the Parent  and Child subtypes using a `discriminator` using a `InheritanceType.SINGLE_TABLE` - 
-this requires us to finally build the whole relation manually - saving and loading - `@joinTable` can no longer be used in this case.
+In this case, the important hint is, where to put the non-primary join key we have in common on our subtypes.
+Even though all subtypes (Child/Parent) have the field `machine` we are not allowed to define that is a 
+field/column on the `BaseType` - we have to move (and duplicate) that field into each subtype
 
-So we added relation and child saving in the service `save` as also a new `@Entity` for the association table
-(the actual `@joinTable`)
+This lets us create a `joinTable` relation which would otherwise not be possible since we get a 
+"no mapped field for type"
 
-This case would be the same when using `pk keys` - it's for both cases. If you are allowed / can,
-rather use `@MappedSuperclass` and use the classic `@joinTable` implementation with PKs or without PKs
-as shown before
+The question here is, what if we would have mapped using the PK? We cannot move the PK, so this is
+basically impossible?
 
 - [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/inheritance)
-- [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/inheritance/service/ParentBothNonPkSelfServiceTest.java)
+- [Test](https://github.com/EugenMayer/java-spring-pocs/blob/master/src/test/java/de/kontextwork/poc/spring/many2many/inheritance/repository/)
 
 Status
  - [done] creating (Cascade) children through the parent

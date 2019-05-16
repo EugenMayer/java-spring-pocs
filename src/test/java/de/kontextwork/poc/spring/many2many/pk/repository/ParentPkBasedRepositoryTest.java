@@ -26,9 +26,7 @@ class ParentPkBasedRepositoryTest {
   @Test
   @DirtiesContext
   void createParentWithChildren() {
-    // child1, yet not saved
     var child1 = new ChildPkBased("child1");
-    // child2, yet not saved
     var child2 = new ChildPkBased("child2");
 
     var parent1 = new ParentPkBased();

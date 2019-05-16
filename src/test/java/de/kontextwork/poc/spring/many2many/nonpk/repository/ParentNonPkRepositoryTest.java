@@ -26,9 +26,7 @@ class ParentNonPkRepositoryTest {
   @Test
   @DirtiesContext
   void createParentWithChildren() {
-    // child1, yet not saved
     var child1 = new ChildNonPk("child1");
-    // child2, yet not saved
     var child2 = new ChildNonPk("child2");
 
     var parent1 = new ParentNonPk();
