@@ -42,9 +42,7 @@ public class ParentBothNonPk implements Serializable {
   @EqualsAndHashCode.Include
   @Column(columnDefinition = "VARCHAR(200)", unique = true)
   String machine;
-  // this is actually not build to offer readability, but rather "saveability"
-  // the former wont work, so we will use a service to load it instead
-  // but use a join-table m2m relation when writing (this actually works
+
   // Hint: it is important to exclude CascadeType.REFRESH since we cannot do this in this case
   @ManyToMany(
       cascade = {
@@ -58,9 +56,9 @@ public class ParentBothNonPk implements Serializable {
   @JoinTable(
       // not using our usualy names, since they are too lon
       name = "join_table_parent_both_non_pk",
-      // HINT: we have to define the columnDefinition or we get an index key too long exception
-      joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(100)"),
-      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(100)")
+      // VARCHAR(120) since we have a max auf 3072 for the index
+      joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)"),
+      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)")
   )
   Set<ChildBothNonPk> children;
 

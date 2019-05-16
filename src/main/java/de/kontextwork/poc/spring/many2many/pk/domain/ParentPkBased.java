@@ -32,7 +32,6 @@ public class ParentPkBased {
   @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(
       name = "join_table_parent_pk_based",
-      // name -> col field name in the join table
       joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
       inverseJoinColumns = @JoinColumn(name = "mychild_id", referencedColumnName = "child_some_id")
   )

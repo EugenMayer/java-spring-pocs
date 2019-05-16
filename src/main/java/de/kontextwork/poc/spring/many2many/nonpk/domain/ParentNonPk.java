@@ -40,11 +40,12 @@ public class ParentNonPk {
       }
       , fetch = FetchType.LAZY
   )
+
   @JoinTable(
       name = "join_table_parent_non_pk",
-      // name -> col field name in the join table
       joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
-      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", unique = true, nullable = false)
+      // VARCHAR(240) is required since it will defined as a index and kan be 3072 as total
+      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(240)", unique = true, nullable = false)
   )
   Set<ChildNonPk> children;
 }

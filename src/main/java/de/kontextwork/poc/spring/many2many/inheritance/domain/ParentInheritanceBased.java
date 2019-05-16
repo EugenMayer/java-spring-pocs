@@ -33,9 +33,7 @@ public class ParentInheritanceBased extends BaseType implements Serializable {
   @EqualsAndHashCode.Include
   @Column(columnDefinition = "VARCHAR(200)", unique = true)
   protected String machine;
-  // this is actually not build to offer readability, but rather "saveability"
-  // the former wont work, so we will use a service to load it instead
-  // but use a join-table m2m relation when writing (this actually works
+
   //@Transient
   @ManyToMany(
       cascade = {
@@ -48,8 +46,9 @@ public class ParentInheritanceBased extends BaseType implements Serializable {
   )
   @JoinTable(
       name = "join_table_inheritance",
-      joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine"),
-      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine")
+      // VARCHAR(120) since we have a max auf 3072 for the index
+      joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)"),
+      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)")
   )
   Set<ChildInheritanceBased> children;
 
