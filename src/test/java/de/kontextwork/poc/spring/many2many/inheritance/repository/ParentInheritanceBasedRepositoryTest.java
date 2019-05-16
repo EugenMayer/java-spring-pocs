@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 
 @DataJpaTest
 class ParentInheritanceBasedRepositoryTest {
@@ -24,6 +25,7 @@ class ParentInheritanceBasedRepositoryTest {
   EntityManager entityManager;
 
   @Test
+  @DirtiesContext
   void crudParentWithChildren() {
     var child1 = new ChildInheritanceBased("child1");
     var child2 = new ChildInheritanceBased("child2");
