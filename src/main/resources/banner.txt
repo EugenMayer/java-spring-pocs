@@ -1,0 +1,8 @@
+
+  Spring POCs
+
+  Profiles active:  ${spring.profiles.active:n/a}
+
+  DB Datasource:    ${spring.datasource.url:n/a}
+  DB Dialect:       ${spring.jpa.properties.hibernate.dialect:n/a}
+  DB DDL auto:      ${spring.jpa.hibernate.ddl-auto:n/a}
