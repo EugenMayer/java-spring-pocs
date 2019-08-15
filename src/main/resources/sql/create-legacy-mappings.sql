@@ -1,8 +1,3 @@
-TRUNCATE TABLE na_space;
-TRUNCATE TABLE na_space_role;
-TRUNCATE TABLE na_user_account;
-TRUNCATE TABLE na_legacy_mapping;
-
 INSERT INTO na_space (name) VALUES ('Black');
 INSERT INTO na_space (name) VALUES ('Blue');
 INSERT INTO na_space (name) VALUES ('Green');

@@ -7,18 +7,24 @@ import de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRol
 import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccount;
 import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccountRepository;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.jdbc.SqlGroup;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@Sql("/sql/create-legacy-mappings.sql")
+@SqlGroup({
+  @Sql(scripts = "/sql/create-legacy-mappings.sql",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
+  @Sql(scripts = "/sql/clear-legacy-mappings.sql",
+    executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+})
 class LegacyMappingRepositoryTest
 {
   @Autowired

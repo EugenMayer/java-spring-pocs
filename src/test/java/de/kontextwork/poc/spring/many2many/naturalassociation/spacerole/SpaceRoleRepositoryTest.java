@@ -1,7 +1,5 @@
 package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
 
-import de.kontextwork.poc.spring.many2many.naturalassociation.LegacyMapping;
-import de.kontextwork.poc.spring.many2many.naturalassociation.LegacyMappingRepository;
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.SpaceRepository;
 import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccount;
@@ -14,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.jdbc.SqlGroup;
 
 import static de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRoleRepository.Specifications.branchForSpace;
 import static de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRoleRepository.Specifications.branchForUserAccount;
@@ -21,7 +21,12 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @DataJpaTest
-@Sql("/sql/create-legacy-mappings.sql")
+@SqlGroup({
+  @Sql(scripts = "/sql/create-legacy-mappings.sql",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
+  @Sql(scripts = "/sql/clear-legacy-mappings.sql",
+    executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+})
 class SpaceRoleRepositoryTest
 {
   @Autowired
