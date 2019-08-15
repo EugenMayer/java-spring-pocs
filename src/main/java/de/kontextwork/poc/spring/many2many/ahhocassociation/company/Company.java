@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.compositepk.company;
+package de.kontextwork.poc.spring.many2many.ahhocassociation.company;
 
 import javax.persistence.*;
 import lombok.*;

@@ -1,6 +1,6 @@
-package de.kontextwork.poc.spring.many2many.compositepk.role;
+package de.kontextwork.poc.spring.many2many.ahhocassociation.role;
 
-import de.kontextwork.poc.spring.many2many.compositepk.user.User;
+import de.kontextwork.poc.spring.many2many.ahhocassociation.person.Person;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
@@ -21,7 +21,7 @@ public class Role
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(name = "assignment",
     joinColumns = @JoinColumn(name = "role_id"),
-    inverseJoinColumns = @JoinColumn(name = "user_id")
+    inverseJoinColumns = @JoinColumn(name = "person_id")
   )
-  private List<User> members;
+  private List<Person> members;
 }

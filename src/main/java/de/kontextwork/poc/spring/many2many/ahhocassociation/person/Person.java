@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.compositepk.user;
+package de.kontextwork.poc.spring.many2many.ahhocassociation.person;
 
 import javax.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User
+public class Person
 {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

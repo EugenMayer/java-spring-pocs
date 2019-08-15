@@ -1,11 +1,11 @@
-package de.kontextwork.poc.spring.many2many.compositepk;
+package de.kontextwork.poc.spring.many2many.ahhocassociation;
 
-import de.kontextwork.poc.spring.many2many.compositepk.company.Company;
-import de.kontextwork.poc.spring.many2many.compositepk.company.CompanyRepository;
-import de.kontextwork.poc.spring.many2many.compositepk.role.Role;
-import de.kontextwork.poc.spring.many2many.compositepk.role.RoleRepository;
-import de.kontextwork.poc.spring.many2many.compositepk.user.User;
-import de.kontextwork.poc.spring.many2many.compositepk.user.UserRepository;
+import de.kontextwork.poc.spring.many2many.ahhocassociation.company.Company;
+import de.kontextwork.poc.spring.many2many.ahhocassociation.company.CompanyRepository;
+import de.kontextwork.poc.spring.many2many.ahhocassociation.role.Role;
+import de.kontextwork.poc.spring.many2many.ahhocassociation.role.RoleRepository;
+import de.kontextwork.poc.spring.many2many.ahhocassociation.person.Person;
+import de.kontextwork.poc.spring.many2many.ahhocassociation.person.PersonRepository;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -26,7 +26,7 @@ class AssignmentTest
   private RoleRepository roleRepository;
 
   @Autowired
-  private UserRepository userRepository;
+  private PersonRepository personRepository;
 
   @Autowired
   private AssignmentRepository assignmentRepository;
@@ -39,32 +39,32 @@ class AssignmentTest
   @DisplayName("Should generate Test Data")
   public void shouldGenerateTestData()
   {
-    // Create Apple Realm
+    // Create Apple Space
     final Company apple = Company.builder().name("Apple").build();
-    final User steveJobs = User.builder().firstName("Steve").lastName("Jobs").build();
-    final User steveWozniak = User.builder().firstName("Steve").lastName("Wozniak").build();
+    final Person steveJobs = Person.builder().firstName("Steve").lastName("Jobs").build();
+    final Person steveWozniak = Person.builder().firstName("Steve").lastName("Wozniak").build();
 
     companyRepository.saveAndFlush(apple);
-    userRepository.saveAndFlush(steveJobs);
-    userRepository.saveAndFlush(steveWozniak);
+    personRepository.saveAndFlush(steveJobs);
+    personRepository.saveAndFlush(steveWozniak);
 
-    // Create Microsoft Realm
+    // Create Microsoft Space
     final Company microsoft = Company.builder().name("Microsoft").build();
-    final User billGates = User.builder().firstName("Bill").lastName("Gates").build();
-    final User adamNathan = User.builder().firstName("Adam").lastName("Nathan").build();
+    final Person billGates = Person.builder().firstName("Bill").lastName("Gates").build();
+    final Person adamNathan = Person.builder().firstName("Adam").lastName("Nathan").build();
 
     companyRepository.saveAndFlush(microsoft);
-    userRepository.saveAndFlush(billGates);
-    userRepository.saveAndFlush(adamNathan);
+    personRepository.saveAndFlush(billGates);
+    personRepository.saveAndFlush(adamNathan);
 
-    // Create Facebook Realm
+    // Create Facebook Space
     final Company facebook = Company.builder().name("Facebook").build();
-    final User markZuckerberg = User.builder().firstName("Mark").lastName("Zuckerberg").build();
-    final User danAbramov = User.builder().firstName("Dan").lastName("Abramov").build();
+    final Person markZuckerberg = Person.builder().firstName("Mark").lastName("Zuckerberg").build();
+    final Person danAbramov = Person.builder().firstName("Dan").lastName("Abramov").build();
 
     companyRepository.saveAndFlush(facebook);
-    userRepository.saveAndFlush(markZuckerberg);
-    userRepository.saveAndFlush(danAbramov);
+    personRepository.saveAndFlush(markZuckerberg);
+    personRepository.saveAndFlush(danAbramov);
 
     // Create Roles
     final Role ceo = Role.builder().name("Chief Executive Officer").build();
@@ -76,7 +76,7 @@ class AssignmentTest
     // Pre check entries
     assertEquals(2L, roleRepository.count(), "Should have two roles persisted");
     assertEquals(3L, companyRepository.count(), "Should have three groups persisted");
-    assertEquals(6L, userRepository.count(), "Should have six users persisted");
+    assertEquals(6L, personRepository.count(), "Should have six users persisted");
 
     // Create entries which emulates our legacy table
     assignmentRepository.saveAll(List.of(
@@ -105,14 +105,14 @@ class AssignmentTest
    * This will create entries for our `legacy` association table.
    *
    * @param company {@link Company} relation
-   * @param user {@link User} relation
+   * @param person {@link Person} relation
    * @param role {@link Role} relation
    */
-  private Assignment createAssignment(Company company, User user, Role role)
+  private Assignment createAssignment(Company company, Person person, Role role)
   {
     AssignmentId compositeId = AssignmentId.builder()
       .companyId(company.getId())
-      .userId(user.getId())
+      .personId(person.getId())
       .roleId(role.getId())
       .build();
 
