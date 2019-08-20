@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation.useraccount;
+package de.kontextwork.poc.spring.many2many.naturalassociation.user;
 
 import javax.persistence.*;
 import lombok.*;
@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "na_user_account")
-public class UserAccount
+public class User
 {
   @Id
   @Column(length = 10)

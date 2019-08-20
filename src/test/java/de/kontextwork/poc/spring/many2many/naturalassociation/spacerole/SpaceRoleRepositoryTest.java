@@ -2,8 +2,8 @@ package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
 
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.SpaceRepository;
-import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccount;
-import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccountRepository;
+import de.kontextwork.poc.spring.many2many.naturalassociation.user.User;
+import de.kontextwork.poc.spring.many2many.naturalassociation.user.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +36,7 @@ class SpaceRoleRepositoryTest
   private SpaceRoleRepository spaceRoleRepository;
 
   @Autowired
-  private UserAccountRepository userAccountRepository;
+  private UserRepository userRepository;
 
   @Test
   @Order(0)
@@ -58,7 +58,7 @@ class SpaceRoleRepositoryTest
   public void shouldLoadSpaceRolesForUserAccount()
   {
     final Space red = spaceRepository.getOne("Red");
-    final UserAccount sullrich = userAccountRepository.getOne("sullrich");
+    final User sullrich = userRepository.getOne("sullrich");
 
     final List<SpaceRole> suSpaceRoles = spaceRoleRepository.findAll(
       where(branchForUserAccount(sullrich).and(branchForSpace(red))));

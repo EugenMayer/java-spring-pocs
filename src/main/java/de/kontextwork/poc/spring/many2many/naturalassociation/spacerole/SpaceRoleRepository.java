@@ -2,7 +2,7 @@ package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
 
 import de.kontextwork.poc.spring.many2many.naturalassociation.LegacyMapping;
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
-import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccount;
+import de.kontextwork.poc.spring.many2many.naturalassociation.user.User;
 import javax.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,11 +23,11 @@ public interface SpaceRoleRepository extends JpaRepository<SpaceRole, String>,
       };
     }
 
-    public static Specification<SpaceRole> branchForUserAccount(UserAccount userAccount)
+    public static Specification<SpaceRole> branchForUserAccount(User user)
     {
       return (root, query, cb) -> {
         Join<SpaceRole, LegacyMapping> legacyMappingJoin = root.join("legacyMappings");
-        return cb.equal(legacyMappingJoin.get("userAccount"), userAccount);
+        return cb.equal(legacyMappingJoin.get("user"), user);
       };
     }
   }

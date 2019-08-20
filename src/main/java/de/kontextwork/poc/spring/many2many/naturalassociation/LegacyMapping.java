@@ -2,7 +2,7 @@ package de.kontextwork.poc.spring.many2many.naturalassociation;
 
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
 import de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRole;
-import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccount;
+import de.kontextwork.poc.spring.many2many.naturalassociation.user.User;
 import javax.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,7 @@ public class LegacyMapping
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("userAccountUsername")
-  private UserAccount userAccount;
+  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("spaceRoleName")
@@ -39,7 +39,7 @@ public class LegacyMapping
   public String toString()
   {
     return String.format("%s/%s/%s",
-      userAccount.getUsername(),
+      user.getUsername(),
       space.getName(),
       spaceRole.getName());
   }

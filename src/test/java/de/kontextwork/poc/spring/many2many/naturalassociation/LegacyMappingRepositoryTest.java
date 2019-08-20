@@ -4,8 +4,8 @@ import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.SpaceRepository;
 import de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRole;
 import de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRoleRepository;
-import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccount;
-import de.kontextwork.poc.spring.many2many.naturalassociation.useraccount.UserAccountRepository;
+import de.kontextwork.poc.spring.many2many.naturalassociation.user.User;
+import de.kontextwork.poc.spring.many2many.naturalassociation.user.UserRepository;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ class LegacyMappingRepositoryTest
   private SpaceRoleRepository spaceRoleRepository;
 
   @Autowired
-  private UserAccountRepository userAccountRepository;
+  private UserRepository userRepository;
 
   @Autowired
   private LegacyMappingRepository legacyMappingRepository;
@@ -47,7 +47,7 @@ class LegacyMappingRepositoryTest
     // Check if test data have been inserted
     assertEquals(5L, spaceRepository.count());
     assertEquals(3L, spaceRoleRepository.count());
-    assertEquals(2L, userAccountRepository.count());
+    assertEquals(2L, userRepository.count());
     assertEquals(4L, legacyMappingRepository.count());
   }
 
@@ -86,15 +86,15 @@ class LegacyMappingRepositoryTest
 
   @Test
   @Order(4)
-  @DisplayName("Should persist new Space/Role assignment for new UserAccount")
+  @DisplayName("Should persist new Space/Role assignment for new User")
   public void shouldPersistNewSpaceRoleAssignmentForNewUserAccount()
   {
-    UserAccount mMuster = userAccountRepository.save(new UserAccount("mmuster", "Max", "Muster"));
+    User mMuster = userRepository.save(new User("mmuster", "Max", "Muster"));
     SpaceRole reader = spaceRoleRepository.getOne("Reader");
     Space black = spaceRepository.getOne("Black");
 
     LegacyMapping musterPermission = LegacyMapping.builder()
-      .userAccount(mMuster)
+      .user(mMuster)
       .spaceRole(reader)
       .space(black)
       .build();
