@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "na_legacy_mapping")
+@Table(name = "na_space_role_membership")
 public class SpaceRoleMembership
 {
   @EmbeddedId
@@ -19,14 +19,17 @@ public class SpaceRoleMembership
   private SpaceRoleMembershipPk spaceRoleMembershipPk = new SpaceRoleMembershipPk();
 
   @ManyToOne(fetch = FetchType.LAZY)
+  // that does reference the field-name in SpaceRoleMembershipPk, not the actual column name
   @MapsId("spaceName")
   private Space space;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @MapsId("userAccountUsername")
+  // that does reference the field-name in SpaceRoleMembershipPk, not the actual column name
+  @MapsId("userUsername")
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  // that does reference the field-name in SpaceRoleMembershipPk, not the actual column name
   @MapsId("spaceRoleName")
   private SpaceRole spaceRole;
 

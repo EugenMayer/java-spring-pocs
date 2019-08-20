@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @SqlGroup({
-  @Sql(scripts = "/sql/create-legacy-mappings.sql",
+  @Sql(scripts = "/sql/prefill-natural-association-data.sql",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
-  @Sql(scripts = "/sql/clear-legacy-mappings.sql",
+  @Sql(scripts = "/sql/clear-natural-association-data.sql.sql",
     executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
 class SpaceRoleMembershipRepositoryTest
@@ -59,7 +59,7 @@ class SpaceRoleMembershipRepositoryTest
     assertThat(spaceRoleRepository.getOne("Admin").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
-      .containsExactlyInAnyOrder("sullrich/Red/Admin", "jpretzel/Green/Admin");
+      .containsExactlyInAnyOrder("sull/Red/Admin", "jpre/Green/Admin");
   }
 
   @Test
@@ -70,7 +70,7 @@ class SpaceRoleMembershipRepositoryTest
     assertThat(spaceRoleRepository.getOne("Reader").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
-      .containsExactly("jpretzel/Red/Reader");
+      .containsExactly("jpre/Red/Reader");
   }
 
   @Test
@@ -81,7 +81,7 @@ class SpaceRoleMembershipRepositoryTest
     assertThat(spaceRoleRepository.getOne("Author").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
-      .containsExactly("sullrich/Green/Author");
+      .containsExactly("sull/Green/Author");
   }
 
   @Test
@@ -105,6 +105,6 @@ class SpaceRoleMembershipRepositoryTest
     assertThat(spaceRoleRepository.getOne("Reader").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
-      .containsExactlyInAnyOrder("jpretzel/Red/Reader", "mmuster/Black/Reader");
+      .containsExactlyInAnyOrder("jpre/Red/Reader", "mmuster/Black/Reader");
   }
 }

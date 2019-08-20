@@ -22,9 +22,9 @@ import static org.springframework.data.jpa.domain.Specification.where;
 
 @DataJpaTest
 @SqlGroup({
-  @Sql(scripts = "/sql/create-legacy-mappings.sql",
+  @Sql(scripts = "/sql/prefill-natural-association-data.sql",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
-  @Sql(scripts = "/sql/clear-legacy-mappings.sql",
+  @Sql(scripts = "/sql/clear-natural-association-data.sql.sql",
     executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
 class SpaceRoleRepositoryTest
@@ -54,17 +54,17 @@ class SpaceRoleRepositoryTest
 
   @Test
   @Order(1)
-  @DisplayName("Should load SpaceRoles of Space 'Red' for 'sullrich'")
+  @DisplayName("Should load SpaceRoles of Space 'Red' for 'sull'")
   public void shouldLoadSpaceRolesForUserAccount()
   {
     final Space red = spaceRepository.getOne("Red");
-    final User sullrich = userRepository.getOne("sullrich");
+    final User sull = userRepository.getOne("sull");
 
     final List<SpaceRole> suSpaceRoles = spaceRoleRepository.findAll(
-      where(branchForUserAccount(sullrich).and(branchForSpace(red))));
+      where(branchForUserAccount(sull).and(branchForSpace(red))));
 
     // Be aware that this secs only apply on SpaceRole!
-    // This is not a filtered sub graph where only sullrich is associated!
+    // This is not a filtered sub graph where only sull is associated!
     assertThat(suSpaceRoles.stream()
       .map(SpaceRole::getName)
       .collect(Collectors.toList()))
