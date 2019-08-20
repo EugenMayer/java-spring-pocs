@@ -92,11 +92,15 @@ class AssignmentTest
     assignmentRepository.flush();
     assertEquals(6L, assignmentRepository.count(), "Should have six assignments persisted");
 
-    // Clear Hibernates L1 cache
-    entityManager.clear();
-
     final List<Role> roles = roleRepository.findAll();
     assertEquals(2L, roles.size());
+
+    // Clear Hibernates L1 cache
+    // This needs to be done, otherwise roles.get(0).getMembers() is NULL, since the adhoc relation is not updated
+    // and somehow the L1 cache is yet not valid
+    // FIXME: This is most probably due to the fact, that we have no bi-directional relation between the assigment
+    //  and the role, so hibernate does not understand what is actually mapped to it and does not update the L1 cache
+    entityManager.clear();
     assertEquals(3L, roles.get(0).getMembers().size());
     assertEquals(3L, roles.get(1).getMembers().size());
   }
