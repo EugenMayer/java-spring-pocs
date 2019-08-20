@@ -12,11 +12,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "na_legacy_mapping")
-public class LegacyMapping
+public class SpaceRoleMembership
 {
   @EmbeddedId
   @Builder.Default
-  private LegacyMappingId legacyMappingId = new LegacyMappingId();
+  private SpaceRoleMembershipPk spaceRoleMembershipPk = new SpaceRoleMembershipPk();
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("spaceName")

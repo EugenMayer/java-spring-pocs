@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
   @Sql(scripts = "/sql/clear-legacy-mappings.sql",
     executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
-class LegacyMappingRepositoryTest
+class SpaceRoleMembershipRepositoryTest
 {
   @Autowired
   private SpaceRepository spaceRepository;
@@ -37,7 +37,7 @@ class LegacyMappingRepositoryTest
   private UserRepository userRepository;
 
   @Autowired
-  private LegacyMappingRepository legacyMappingRepository;
+  private SpaceRoleMembershipRepository spaceRoleMembershipRepository;
 
   @Test
   @Order(0)
@@ -48,7 +48,7 @@ class LegacyMappingRepositoryTest
     assertEquals(5L, spaceRepository.count());
     assertEquals(3L, spaceRoleRepository.count());
     assertEquals(2L, userRepository.count());
-    assertEquals(4L, legacyMappingRepository.count());
+    assertEquals(4L, spaceRoleMembershipRepository.count());
   }
 
   @Test
@@ -56,8 +56,8 @@ class LegacyMappingRepositoryTest
   @DisplayName("Should have Jan assigned as Admin for Space Green, Sebastian as Admin for Space Red")
   public void shouldHaveAdminsAssigned()
   {
-    assertThat(spaceRoleRepository.getOne("Admin").getLegacyMappings().stream()
-      .map(LegacyMapping::toString)
+    assertThat(spaceRoleRepository.getOne("Admin").getSpaceRoleMemberships().stream()
+      .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
       .containsExactlyInAnyOrder("sullrich/Red/Admin", "jpretzel/Green/Admin");
   }
@@ -67,8 +67,8 @@ class LegacyMappingRepositoryTest
   @DisplayName("Should only have Jan assigned as Reader for Space Red")
   public void shouldHaveOnlyJanAssignedAsAuthor()
   {
-    assertThat(spaceRoleRepository.getOne("Reader").getLegacyMappings().stream()
-      .map(LegacyMapping::toString)
+    assertThat(spaceRoleRepository.getOne("Reader").getSpaceRoleMemberships().stream()
+      .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
       .containsExactly("jpretzel/Red/Reader");
   }
@@ -78,8 +78,8 @@ class LegacyMappingRepositoryTest
   @DisplayName("Should only have Sebastian assigned as Author for Space Green")
   public void shouldHaveSebastianAssignedAsReader()
   {
-    assertThat(spaceRoleRepository.getOne("Author").getLegacyMappings().stream()
-      .map(LegacyMapping::toString)
+    assertThat(spaceRoleRepository.getOne("Author").getSpaceRoleMemberships().stream()
+      .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
       .containsExactly("sullrich/Green/Author");
   }
@@ -93,17 +93,17 @@ class LegacyMappingRepositoryTest
     SpaceRole reader = spaceRoleRepository.getOne("Reader");
     Space black = spaceRepository.getOne("Black");
 
-    LegacyMapping musterPermission = LegacyMapping.builder()
+    SpaceRoleMembership musterPermission = SpaceRoleMembership.builder()
       .user(mMuster)
       .spaceRole(reader)
       .space(black)
       .build();
 
-    legacyMappingRepository.saveAndFlush(musterPermission);
+    spaceRoleMembershipRepository.saveAndFlush(musterPermission);
 
     // Reload Reader Role and check assignments
-    assertThat(spaceRoleRepository.getOne("Reader").getLegacyMappings().stream()
-      .map(LegacyMapping::toString)
+    assertThat(spaceRoleRepository.getOne("Reader").getSpaceRoleMemberships().stream()
+      .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
       .containsExactlyInAnyOrder("jpretzel/Red/Reader", "mmuster/Black/Reader");
   }

@@ -1,6 +1,6 @@
 package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
 
-import de.kontextwork.poc.spring.many2many.naturalassociation.LegacyMapping;
+import de.kontextwork.poc.spring.many2many.naturalassociation.SpaceRoleMembership;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
@@ -17,5 +17,5 @@ public class SpaceRole
   private String name;
 
   @OneToMany(mappedBy = "spaceRole", cascade = CascadeType.ALL)
-  private List<LegacyMapping> legacyMappings;
+  private List<SpaceRoleMembership> spaceRoleMemberships;
 }
