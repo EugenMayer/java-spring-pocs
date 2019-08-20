@@ -12,7 +12,7 @@ class SpaceRoleMembershipPk implements Serializable
   @Column(name = "space_name", length = 10)
   private String spaceName;
 
-  @Column(name = "user_account_username", length = 10)
+  @Column(name = "user_username", length = 10)
   private String userAccountUsername;
 
   @Column(name = "space_role_name", length = 10)
