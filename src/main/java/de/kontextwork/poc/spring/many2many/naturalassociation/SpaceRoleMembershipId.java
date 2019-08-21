@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Embeddable
-class SpaceRoleMembershipPk implements Serializable
+class SpaceRoleMembershipId implements Serializable
 {
   @Column(name = "space_name", length = 10)
   private String spaceName;

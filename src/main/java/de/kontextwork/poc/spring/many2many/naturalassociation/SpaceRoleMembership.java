@@ -16,20 +16,20 @@ public class SpaceRoleMembership
 {
   @EmbeddedId
   @Builder.Default
-  private SpaceRoleMembershipPk spaceRoleMembershipPk = new SpaceRoleMembershipPk();
+  private SpaceRoleMembershipId spaceRoleMembershipId = new SpaceRoleMembershipId();
 
   @ManyToOne(fetch = FetchType.LAZY)
-  // that does reference the field-name in SpaceRoleMembershipPk, not the actual column name
+  // that does reference the field-name in SpaceRoleMembershipId, not the actual column name
   @MapsId("spaceName")
   private Space space;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  // that does reference the field-name in SpaceRoleMembershipPk, not the actual column name
+  // that does reference the field-name in SpaceRoleMembershipId, not the actual column name
   @MapsId("userUsername")
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  // that does reference the field-name in SpaceRoleMembershipPk, not the actual column name
+  // that does reference the field-name in SpaceRoleMembershipId, not the actual column name
   @MapsId("spaceRoleName")
   private SpaceRole spaceRole;
 

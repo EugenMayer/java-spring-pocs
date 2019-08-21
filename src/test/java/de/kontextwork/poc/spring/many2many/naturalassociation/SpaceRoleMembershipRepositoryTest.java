@@ -41,7 +41,7 @@ class SpaceRoleMembershipRepositoryTest
 
   @Test
   @Order(0)
-  @DisplayName("Should load test data from `create-legacy-mappings.sql`")
+  @DisplayName("Should load test data from `prefill-natural-association-data.sql`")
   public void shouldLoadTestData()
   {
     // Check if test data have been inserted
