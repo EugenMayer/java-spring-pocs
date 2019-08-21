@@ -1,6 +1,6 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
+package de.kontextwork.poc.spring.many2many.composite.spacerole;
 
-import de.kontextwork.poc.spring.many2many.naturalassociation.SpaceRoleMembership;
+import de.kontextwork.poc.spring.many2many.composite.SpaceRoleMembership;
 import java.util.*;
 import javax.persistence.*;
 import lombok.*;

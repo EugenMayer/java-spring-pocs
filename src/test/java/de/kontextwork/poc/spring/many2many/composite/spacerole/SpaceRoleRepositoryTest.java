@@ -1,9 +1,9 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
+package de.kontextwork.poc.spring.many2many.composite.spacerole;
 
-import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
-import de.kontextwork.poc.spring.many2many.naturalassociation.space.SpaceRepository;
-import de.kontextwork.poc.spring.many2many.naturalassociation.user.User;
-import de.kontextwork.poc.spring.many2many.naturalassociation.user.UserRepository;
+import de.kontextwork.poc.spring.many2many.composite.space.Space;
+import de.kontextwork.poc.spring.many2many.composite.space.SpaceRepository;
+import de.kontextwork.poc.spring.many2many.composite.user.User;
+import de.kontextwork.poc.spring.many2many.composite.user.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
@@ -15,8 +15,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
 
-import static de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRoleRepository.Specifications.branchForSpace;
-import static de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRoleRepository.Specifications.branchForUserAccount;
+import static de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRoleRepository.Specifications.branchForSpace;
+import static de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRoleRepository.Specifications.branchForUserAccount;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.data.jpa.domain.Specification.where;
 

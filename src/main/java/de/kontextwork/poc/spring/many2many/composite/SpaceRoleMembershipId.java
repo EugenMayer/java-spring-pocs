@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation;
+package de.kontextwork.poc.spring.many2many.composite;
 
 import java.io.Serializable;
 import javax.persistence.Column;

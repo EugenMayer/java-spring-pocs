@@ -1,12 +1,11 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation;
+package de.kontextwork.poc.spring.many2many.composite;
 
-import com.google.common.collect.Lists;
-import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
-import de.kontextwork.poc.spring.many2many.naturalassociation.space.SpaceRepository;
-import de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRole;
-import de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRoleRepository;
-import de.kontextwork.poc.spring.many2many.naturalassociation.user.User;
-import de.kontextwork.poc.spring.many2many.naturalassociation.user.UserRepository;
+import de.kontextwork.poc.spring.many2many.composite.space.Space;
+import de.kontextwork.poc.spring.many2many.composite.space.SpaceRepository;
+import de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRole;
+import de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRoleRepository;
+import de.kontextwork.poc.spring.many2many.composite.user.User;
+import de.kontextwork.poc.spring.many2many.composite.user.UserRepository;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
+package de.kontextwork.poc.spring.many2many.composite.spacerole;
 
-import de.kontextwork.poc.spring.many2many.naturalassociation.SpaceRoleMembership;
-import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
-import de.kontextwork.poc.spring.many2many.naturalassociation.user.User;
+import de.kontextwork.poc.spring.many2many.composite.SpaceRoleMembership;
+import de.kontextwork.poc.spring.many2many.composite.space.Space;
+import de.kontextwork.poc.spring.many2many.composite.user.User;
 import javax.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation.user;
+package de.kontextwork.poc.spring.many2many.composite.user;
 
 import javax.persistence.*;
 import lombok.*;

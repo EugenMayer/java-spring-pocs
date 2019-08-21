@@ -9,7 +9,7 @@ before_install:
   - docker-compose up -d
 
 script:
-  - ./gradlew h2Test
+  # - ./gradlew h2Test
   - ./gradlew mariadbTest
   - ./gradlew mysqlTest
   - ./gradlew postgresTest

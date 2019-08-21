@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.many2many.naturalassociation.space;
+package de.kontextwork.poc.spring.many2many.composite.space;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
