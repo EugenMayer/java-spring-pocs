@@ -112,7 +112,11 @@ The latter is the reason we need a composite key using `EmbeddedId` and also usi
 
 A lot of different examples for derived keys can be found [here](https://jeddict.github.io/page.html?l=tutorial/DerivedIdentities#E1B)
 
+The important learning is using a custom setter on SpaceRoleMembership to maintain our bi-directional relationship in the L1
+cache, which Hibernate will not do automatically ( only if the Entity is reloaded in the persistent layer)
 
 - [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/naturalassociation)
 - [Test](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/test/java/de/kontextwork/poc/spring/many2many/naturalassociation)
 
+Status
+ - [done] ensure the L1 cache is consistent even without clearing it
