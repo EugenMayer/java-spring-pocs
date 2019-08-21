@@ -115,6 +115,9 @@ A lot of different examples for derived keys can be found [here](https://jeddict
 The important learning is using a custom setter on SpaceRoleMembership to maintain our bi-directional relationship in the L1
 cache, which Hibernate will not do automatically ( only if the Entity is reloaded in the persistent layer)
 
+The second important lesson is, the implementation of Equals for the composite is mandatory and important, otherwise Hibernate
+will not be able to properly merge object through the complex composite id field, which will not be properly
+compareble
 - [Implementation](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/main/java/de/kontextwork/poc/spring/many2many/naturalassociation)
 - [Test](https://github.com/EugenMayer/java-spring-pocs/tree/master/src/test/java/de/kontextwork/poc/spring/many2many/naturalassociation)
 

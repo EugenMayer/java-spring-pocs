@@ -14,15 +14,16 @@ import org.springframework.core.annotation.Order;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @SqlGroup({
-  @Sql(scripts = "/sql/prefill-natural-association-data.sql",
+  @Sql(scripts = "/sql/prefill-composite-data.sql",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
-  @Sql(scripts = "/sql/clear-natural-association-data.sql.sql",
+  @Sql(scripts = "/sql/clear-composite-data.sql",
     executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
 class SpaceRoleMembershipRepositoryTest
@@ -54,39 +55,43 @@ class SpaceRoleMembershipRepositoryTest
   @Test
   @Order(1)
   @DisplayName("Should have Jan assigned as Admin for Space Green, Sebastian as Admin for Space Red")
+  @Transactional
   public void shouldHaveAdminsAssigned()
   {
     assertThat(spaceRoleRepository.getOne("Admin").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
-      .collect(Collectors.toList()))
+      .collect(Collectors.toSet()))
       .containsExactlyInAnyOrder("sull/Red/Admin", "jpre/Green/Admin");
   }
 
   @Test
   @Order(2)
   @DisplayName("Should only have Jan assigned as Reader for Space Red")
+  @Transactional
   public void shouldHaveOnlyJanAssignedAsAuthor()
   {
     assertThat(spaceRoleRepository.getOne("Reader").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
-      .collect(Collectors.toList()))
+      .collect(Collectors.toSet()))
       .containsExactly("jpre/Red/Reader");
   }
 
   @Test
   @Order(3)
   @DisplayName("Should only have Sebastian assigned as Author for Space Green")
+  @Transactional
   public void shouldHaveSebastianAssignedAsReader()
   {
     assertThat(spaceRoleRepository.getOne("Author").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
-      .collect(Collectors.toList()))
+      .collect(Collectors.toSet()))
       .containsExactly("sull/Green/Author");
   }
 
   @Test
   @Order(4)
   @DisplayName("Should persist new Space/Role assignment for new User")
+  @Transactional
   public void shouldPersistNewSpaceRoleAssignmentForNewUserAccount()
   {
     User mMuster = userRepository.saveAndFlush(new User("mmuster", "Max", "Muster"));
@@ -103,7 +108,7 @@ class SpaceRoleMembershipRepositoryTest
     // Reload Reader Role and check roleMemberships
     assertThat(spaceRoleRepository.getOne("ShinyRole").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
-      .collect(Collectors.toList()))
+      .collect(Collectors.toSet()))
       .containsExactlyInAnyOrder("mmuster/ShinySpace/ShinyRole");
   }
 }

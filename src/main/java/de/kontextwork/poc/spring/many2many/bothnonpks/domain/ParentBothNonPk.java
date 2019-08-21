@@ -30,6 +30,7 @@ import org.hibernate.annotations.NaturalId;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 // we need `implements Serializable` once again as with ChildNonPk since for non-pk relations this is mandatory
 public class ParentBothNonPk implements Serializable {
   @Id

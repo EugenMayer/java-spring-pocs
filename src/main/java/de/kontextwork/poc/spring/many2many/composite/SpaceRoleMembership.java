@@ -3,6 +3,7 @@ package de.kontextwork.poc.spring.many2many.composite;
 import de.kontextwork.poc.spring.many2many.composite.space.Space;
 import de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRole;
 import de.kontextwork.poc.spring.many2many.composite.user.User;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 
@@ -11,9 +12,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "na_space_role_membership")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class SpaceRoleMembership
 {
   @EmbeddedId
+  @EqualsAndHashCode.Include
   private SpaceRoleMembershipId spaceRoleMembershipId = new SpaceRoleMembershipId();
 
   @ManyToOne(fetch = FetchType.LAZY)
