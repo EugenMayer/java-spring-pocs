@@ -1,7 +1,7 @@
 package de.kontextwork.poc.spring.many2many.naturalassociation.spacerole;
 
 import de.kontextwork.poc.spring.many2many.naturalassociation.SpaceRoleMembership;
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
 import lombok.*;
 
@@ -16,6 +16,11 @@ public class SpaceRole
   @Column(length = 10)
   private String name;
 
-  @OneToMany(mappedBy = "spaceRole", cascade = CascadeType.ALL)
-  private List<SpaceRoleMembership> spaceRoleMemberships;
+  public SpaceRole(final String name)
+  {
+    this.name = name;
+  }
+
+  @OneToMany(mappedBy = "spaceRole")
+  private Set<SpaceRoleMembership> spaceRoleMemberships = new HashSet<>();
 }

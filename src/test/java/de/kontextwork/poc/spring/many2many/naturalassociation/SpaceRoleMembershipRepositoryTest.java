@@ -1,5 +1,6 @@
 package de.kontextwork.poc.spring.many2many.naturalassociation;
 
+import com.google.common.collect.Lists;
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.Space;
 import de.kontextwork.poc.spring.many2many.naturalassociation.space.SpaceRepository;
 import de.kontextwork.poc.spring.many2many.naturalassociation.spacerole.SpaceRole;
@@ -89,22 +90,21 @@ class SpaceRoleMembershipRepositoryTest
   @DisplayName("Should persist new Space/Role assignment for new User")
   public void shouldPersistNewSpaceRoleAssignmentForNewUserAccount()
   {
-    User mMuster = userRepository.save(new User("mmuster", "Max", "Muster"));
-    SpaceRole reader = spaceRoleRepository.getOne("Reader");
-    Space black = spaceRepository.getOne("Black");
+    User mMuster = userRepository.saveAndFlush(new User("mmuster", "Max", "Muster"));
+    SpaceRole shinyRole = spaceRoleRepository.saveAndFlush(new SpaceRole("ShinyRole"));
+    Space shinySpace = spaceRepository.saveAndFlush(new Space("ShinySpace"));
 
-    SpaceRoleMembership musterPermission = SpaceRoleMembership.builder()
-      .user(mMuster)
-      .spaceRole(reader)
-      .space(black)
-      .build();
+    SpaceRoleMembership musterPermission = new SpaceRoleMembership();
+    musterPermission.setUser(mMuster);
+    musterPermission.setSpaceRole(shinyRole);
+    musterPermission.setSpace(shinySpace);
 
     spaceRoleMembershipRepository.saveAndFlush(musterPermission);
 
-    // Reload Reader Role and check assignments
-    assertThat(spaceRoleRepository.getOne("Reader").getSpaceRoleMemberships().stream()
+    // Reload Reader Role and check roleMemberships
+    assertThat(spaceRoleRepository.getOne("ShinyRole").getSpaceRoleMemberships().stream()
       .map(SpaceRoleMembership::toString)
       .collect(Collectors.toList()))
-      .containsExactlyInAnyOrder("jpre/Red/Reader", "mmuster/Black/Reader");
+      .containsExactlyInAnyOrder("mmuster/ShinySpace/ShinyRole");
   }
 }
