@@ -1,7 +1,43 @@
+buildscript {
+    ext {
+        // db / hibernate
+        // @see https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
+        mariadbConnectorVersion = '2.4.3'
+
+        postgresqlConnectorVersion = '9.4-1206-jdbc42'
+
+        // see https://www.jetbrains.com/help/idea/annotating-source-code.html
+        // @see https://mvnrepository.com/artifact/org.jetbrains/annotations
+        jetbrainsAnnoations = '17.0.0'
+
+        // we specify a custom groovy version since the included in thymeleaf-joda-dialect is too old
+        // for j11 (reflection warnings)
+        // fixed with 3.0.0-alpha4 https://issues.apache.org/jira/browse/GROOVY-8843
+        // fixed with 3.0.0-beta1 https://issues.apache.org/jira/browse/GROOVY-8339
+        // @see https://mvnrepository.com/artifact/org.codehaus.groovy/groovy
+        groovy = "3.0.0-beta-3"
+
+        // @see https://mvnrepository.com/artifact/org.projectlombok/lombok
+        lombokVersion = '1.18.8'
+
+        // @see https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
+        swaggerVersion = '2.9.2'
+
+        // @see https://mvnrepository.com/artifact/org.mockito/mockito-core
+        mockitoVersion = '3.0.0'
+
+        // @see https://mvnrepository.com/artifact/com.google.guava/guava
+        googleGuava = '28.0-jre'
+
+        // @see https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+        modelMapper = '2.3.5'
+    }
+}
+
 plugins {
-	id 'org.springframework.boot' version '2.1.4.RELEASE'
+	id 'org.springframework.boot' version '2.1.7.RELEASE'
 	id 'java'
-	id "com.adarshr.test-logger" version "1.6.0"
+	id "com.adarshr.test-logger" version "1.7.0"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -9,6 +45,8 @@ apply plugin: 'io.spring.dependency-management'
 group = 'de.kontextwork.poc'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
+
+ext['junit-jupiter.version'] = '5.5.1'
 
 configurations {
 	compileOnly {
@@ -54,8 +92,13 @@ task postgresTest(type: Test) {
 dependencies {
 	implementation (
 			'org.springframework.boot:spring-boot-starter-data-jpa',
-			"com.google.guava:guava:27.1-jre",
-	)
+            "org.springframework.boot:spring-boot-starter-web",
+            'org.springframework.boot:spring-boot-starter-data-rest',
+            "com.google.guava:guava:$googleGuava",
+            "org.jetbrains:annotations:$jetbrainsAnnoations",
+            "org.modelmapper:modelmapper:$modelMapper",
+            "org.codehaus.groovy:groovy:$groovy"
+    )
 	compileOnly(
 			'org.projectlombok:lombok',
 	)
@@ -64,17 +107,17 @@ dependencies {
 	//runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation(
-			"org.springframework.boot:spring-boot-starter-test",
-			"org.junit.jupiter:junit-jupiter-api:5.3.2",
-			"org.junit.jupiter:junit-jupiter-params:5.3.2",
-			"org.mockito:mockito-core:2.24.0",
-			"org.mockito:mockito-junit-jupiter:2.24.0",
+            "org.springframework.boot:spring-boot-starter-test",
+            "org.junit.jupiter:junit-jupiter-api",
+            "org.junit.platform:junit-platform-runner",
+            "org.mockito:mockito-core:$mockitoVersion",
+            "org.mockito:mockito-junit-jupiter:$mockitoVersion",
 	)
 	runtimeOnly (
             "com.h2database:h2",
             "mysql:mysql-connector-java",
-			"org.mariadb.jdbc:mariadb-java-client",
-            "org.postgresql:postgresql:9.4-1206-jdbc42"
+			"org.mariadb.jdbc:mariadb-java-client:$mariadbConnectorVersion",
+            "org.postgresql:postgresql:$postgresqlConnectorVersion"
     )
-	testRuntime("org.junit.jupiter:junit-jupiter-engine:5.3.2")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine")
 }

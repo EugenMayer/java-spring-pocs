@@ -1,15 +1,7 @@
 package de.kontextwork.poc.spring.many2many.pk.domain;
 
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,7 +21,8 @@ public class ParentPkBased {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
   Long parentId;
-  @ManyToMany(cascade = CascadeType.ALL)
+  
+  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(
       name = "join_table_parent_pk_based",
       joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
