@@ -63,28 +63,24 @@ test {
 
 task h2Test(type: Test) {
 	systemProperty 'spring.profiles.active', 'h2'
-	// We need to load the tenants for the tests too
 	useJUnitPlatform {
 	}
 }
 
 task mariadbTest(type: Test) {
 	systemProperty 'spring.profiles.active', 'mariadb'
-	// We need to load the tenants for the tests too
 	useJUnitPlatform {
 	}
 }
 
 task mysqlTest(type: Test) {
 	systemProperty 'spring.profiles.active', 'mysql'
-	// We need to load the tenants for the tests too
 	useJUnitPlatform {
 	}
 }
 
 task postgresTest(type: Test) {
 	systemProperty 'spring.profiles.active', 'postgres'
-	// We need to load the tenants for the tests too
 	useJUnitPlatform {
 	}
 }

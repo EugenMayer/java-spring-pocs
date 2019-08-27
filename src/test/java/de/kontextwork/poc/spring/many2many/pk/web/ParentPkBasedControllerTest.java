@@ -22,7 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(properties = {
-  "spring.jpa.hibernate.ddl-auto=create-drop"
+  "spring.jpa.hibernate.ddl-auto=create-drop",
+  // this is the main point for this test, disabling the Transaction in the view should
+  // break the lazy mode here
+  "spring.jpa.open-in-view=false"
 })
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -39,8 +42,7 @@ class ParentPkBasedControllerTest
   ParentPkBasedRepository parentPkBasedRepository;
 
   @Test
-  @DisplayName("Ensure we can retrieve the projection including lazy load in a rest controller")
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @DisplayName("Ensure we can retrieve the projection including lazy load in a rest controller while spring.jpa.open-in-view=false")
   void getAllParents() throws Exception
   {
     var parent1 = new ParentPkBased();
@@ -57,8 +59,8 @@ class ParentPkBasedControllerTest
 
     // Ensure our L1 cache is empty before we triggerthe controller
     // to load the entities, so we ensure lazy is used and nothing is populated
-    entityManager.flush();
-    entityManager.clear();
+    //entityManager.flush();
+    //entityManager.clear();
 
     mockMvc
       .perform(
