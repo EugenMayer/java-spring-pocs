@@ -25,12 +25,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
   "spring.jpa.hibernate.ddl-auto=create-drop",
   // this is the main point for this test, disabling the Transaction in the view should
   // break the lazy mode here
+  // @see https://sudonull.com/posts/964-Open-Session-In-View-in-Spring-Boot-Hidden-Threat
   "spring.jpa.open-in-view=false"
 })
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-class ParentPkBasedControllerTest
+class ParentPkBasedLazyFetchOSIV
 {
   @Autowired
   private MockMvc mockMvc;
@@ -43,7 +44,7 @@ class ParentPkBasedControllerTest
 
   @Test
   @DisplayName("Ensure we can retrieve the projection including lazy load in a rest controller while spring.jpa.open-in-view=false")
-  void getAllParents() throws Exception
+  void reproduceLazyFetchingExceptionWithOSIV() throws Exception
   {
     var parent1 = new ParentPkBased();
     parent1.setChildren(
@@ -57,16 +58,13 @@ class ParentPkBasedControllerTest
     );
     parentPkBasedRepository.saveAndFlush(parent2);
 
-    // Ensure our L1 cache is empty before we triggerthe controller
-    // to load the entities, so we ensure lazy is used and nothing is populated
-    //entityManager.flush();
-    //entityManager.clear();
-
+    // This will end up being a 500 due to the lazy exception
+    // FIXME: can we actually ensure that this very specific exception is thrown?
     mockMvc
       .perform(
         get("/pk/parent")
       )
       .andDo(print())
-      .andExpect(status().isOk());
+      .andExpect(status().is5xxServerError());
   }
 }

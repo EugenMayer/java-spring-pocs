@@ -123,3 +123,16 @@ compareble
 
 Status
  - [done] ensure the L1 cache is consistent even without clearing it
+ 
+ 
+##### JPA: OSIV disabled and the issue with projections
+
+Since Spring Boot 2.0 enabling OSIV is discouraged, throws a warning, other sources:
+
+ - https://sudonull.com/posts/964-Open-Session-In-View-in-Spring-Boot-Hidden-Threat
+ - https://vladmihalcea.com/the-best-way-to-handle-the-lazyinitializationexception/
+ 
+The problem with that is, when you are using Projections and this includes a lazy field - since we wont have
+a open Transaction in the View Layer, where toJson is called basically, expanding the lazy field will throw an exception.
+
+See `de.kontextwork.poc.spring.many2many.pk.web.ParentPkBasedLazyFetchOSIV`
