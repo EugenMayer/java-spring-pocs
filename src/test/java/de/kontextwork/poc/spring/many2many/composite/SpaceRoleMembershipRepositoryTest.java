@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @SqlGroup({
-  @Sql(scripts = "/sql/prefill-composite-data.sql",
+  @Sql(scripts = "/prefill-composite-data.sql",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
-  @Sql(scripts = "/sql/clear-composite-data.sql",
+  @Sql(scripts = "/clear-composite-data.sql",
     executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
 class SpaceRoleMembershipRepositoryTest

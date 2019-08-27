@@ -22,19 +22,19 @@ public class SpaceRoleMembership
   @ManyToOne(fetch = FetchType.LAZY)
   // that does reference the field-name in SpaceRoleMembershipId, not the actual column name
   @MapsId("spaceName")
-  @JoinColumn(name = "space_name", columnDefinition = "INT(10)")
+  @JoinColumn(name = "space_name", columnDefinition = "VARCHAR(10)")
   private Space space;
 
   @ManyToOne(fetch = FetchType.LAZY)
   // that does reference the field-name in SpaceRoleMembershipId, not the actual column name
   @MapsId("userUsername")
-  @JoinColumn(name = "user_username", columnDefinition = "INT(10)")
+  @JoinColumn(name = "user_username", columnDefinition = "VARCHAR(10)")
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   // that does reference the field-name in SpaceRoleMembershipId, not the actual column name
   @MapsId("spaceRoleName")
-  @JoinColumn(name = "space_role_name", columnDefinition = "INT(10)")
+  @JoinColumn(name = "space_role_name", columnDefinition = "VARCHAR(10)")
   private SpaceRole spaceRole;
 
   @Column(name = "comment", length = 50)

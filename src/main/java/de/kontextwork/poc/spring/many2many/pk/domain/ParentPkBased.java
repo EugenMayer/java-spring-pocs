@@ -2,9 +2,7 @@ package de.kontextwork.poc.spring.many2many.pk.domain;
 
 import java.util.Set;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * this parent builds a many to may relation to the child using the childs primary key
@@ -16,10 +14,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ParentPkBased {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
+  @EqualsAndHashCode.Include
   Long parentId;
   
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
