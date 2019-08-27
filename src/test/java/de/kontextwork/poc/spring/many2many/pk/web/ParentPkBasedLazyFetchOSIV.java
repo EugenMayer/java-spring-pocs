@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Propagation;
@@ -48,6 +49,7 @@ class ParentPkBasedLazyFetchOSIV
   // because now the Transaction Session of our test-method here will handle the lazy loading, because it is
   // reproduceLazyFetchingExceptionWithOSIV -> OSIV -> Servlet -> rest-controller-method
   // @Transactional
+  @DirtiesContext
   void reproduceLazyFetchingExceptionWithOSIV() throws Exception
   {
     var parent1 = new ParentPkBased();
