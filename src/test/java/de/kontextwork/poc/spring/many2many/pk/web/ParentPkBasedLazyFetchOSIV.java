@@ -44,6 +44,7 @@ class ParentPkBasedLazyFetchOSIV
 
   @Test
   @DisplayName("Ensure we can retrieve the projection including lazy load in a rest controller while spring.jpa.open-in-view=false")
+  @Transactional
   void reproduceLazyFetchingExceptionWithOSIV() throws Exception
   {
     var parent1 = new ParentPkBased();

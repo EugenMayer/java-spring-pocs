@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 @DataJpaTest
 class ParentPkBasedRepositoryTest {
@@ -25,7 +26,7 @@ class ParentPkBasedRepositoryTest {
   EntityManager entityManager;
 
   @Test
-  @DirtiesContext
+  @Transactional
   void crudParentWithChildren() {
     var child1 = new ChildPkBased("child1");
     var child2 = new ChildPkBased("child2");
