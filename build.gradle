@@ -78,62 +78,6 @@ configurations {
 }
 
 repositories {
-    // that offers us they way to either authenticate using the ENV vars or the ~/.gradle/gradle.properties
-    // ENV: NEXUS_KW_CI_USER, NEXUS_KW_CI_PASSWORd, NEXUS_KW_CI_READ_USER, NEXUS_KW_CI_READ_PASSWORD
-    // gradle.properties: nexusAuthorUser,nexusAuthorPassword,nexusReaderUser,nexusReaderPassword
-    def ourNexusAuthorUser = ''
-    def ourNexusAuthorPassword = ''
-    def ourNexusReaderUser = ''
-    def ourNexusReaderPassword = ''
-
-    if (System.getenv('NEXUS_KW_CI_USER') != null) {
-        ourNexusAuthorUser = System.getenv('NEXUS_KW_CI_USER')
-        ourNexusAuthorPassword = System.getenv('NEXUS_KW_CI_PASSWORD')
-    } else if (project.hasProperty('nexusAuthorUser')) {
-        ourNexusAuthorUser = "$nexusAuthorUser"
-        ourNexusAuthorPassword = "$nexusAuthorPassword"
-    }
-
-    // since login is mandatory anyway, this will fail in gradle if neither ~/.gradle/gradle.properties is set
-    // nor the ENV VAR
-    if (System.getenv('NEXUS_KW_CI_READ_USER') != null) {
-        ourNexusReaderUser = System.getenv('NEXUS_KW_CI_READ_USER')
-        ourNexusReaderPassword = System.getenv('NEXUS_KW_CI_READ_PASSWORD')
-    } else if (project.hasProperty('nexusReaderUser')) {
-        ourNexusReaderUser = "$nexusReaderUser"
-        ourNexusReaderPassword = "$nexusReaderPassword"
-    } else {
-        throw new GradleException('nexusReaderUser / nexusReaderPassword not set in ~/.gradle/gradle.properties nor as env vars NEXUS_KW_CI_READ_USER / NEXUS_KW_CI_READ_PASSWORD ')
-    }
-
-
-    // mirror
-    maven {
-        url = 'https://nexus.kw.kontextwork.com/repository/kw-maven-proxy-group'
-        credentials(PasswordCredentials) {
-            username "$ourNexusReaderUser"
-            password "$ourNexusReaderPassword"
-        }
-    }
-
-    maven {
-        name = 'kw-maven-releases'
-        url = 'https://nexus.kw.kontextwork.com/repository/kw-maven-releases'
-        credentials(PasswordCredentials) {
-            username "$ourNexusReaderUser"
-            password "$ourNexusReaderPassword"
-        }
-    }
-
-    maven {
-        name = 'kw-maven-snapshots'
-        url = 'https://nexus.kw.kontextwork.com/repository/kw-maven-snapshots'
-        credentials(PasswordCredentials) {
-            username "$ourNexusReaderUser"
-            password "$ourNexusReaderPassword"
-        }
-    }
-
     mavenCentral()
 }
 
