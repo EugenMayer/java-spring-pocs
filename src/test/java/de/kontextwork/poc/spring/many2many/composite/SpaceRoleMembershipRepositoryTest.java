@@ -1,5 +1,7 @@
 package de.kontextwork.poc.spring.many2many.composite;
 
+import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
+import de.kontextwork.poc.spring.configuration.HibernateConfiguration;
 import de.kontextwork.poc.spring.many2many.composite.space.Space;
 import de.kontextwork.poc.spring.many2many.composite.space.SpaceRepository;
 import de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRole;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
@@ -27,6 +30,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
   @Sql(scripts = "/clear-composite-data.sql",
     executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
+@Import(
+  {
+    HibernateConfiguration.class,
+    BlazePersistenceConfiguration.class
+  }
+)
 class SpaceRoleMembershipRepositoryTest
 {
   @Autowired

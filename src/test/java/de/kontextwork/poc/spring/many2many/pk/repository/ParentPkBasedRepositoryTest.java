@@ -1,6 +1,8 @@
 package de.kontextwork.poc.spring.many2many.pk.repository;
 
 import com.google.common.collect.Sets;
+import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
+import de.kontextwork.poc.spring.configuration.HibernateConfiguration;
 import de.kontextwork.poc.spring.many2many.pk.domain.ChildPkBased;
 import de.kontextwork.poc.spring.many2many.pk.domain.ParentPkBased;
 import java.util.List;
@@ -9,6 +11,7 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,12 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
+@Import(
+  {
+    HibernateConfiguration.class,
+    BlazePersistenceConfiguration.class
+  }
+)
 class ParentPkBasedRepositoryTest
 {
   @Autowired
