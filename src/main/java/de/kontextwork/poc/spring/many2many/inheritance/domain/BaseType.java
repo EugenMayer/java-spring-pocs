@@ -1,19 +1,7 @@
 package de.kontextwork.poc.spring.many2many.inheritance.domain;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import lombok.*;
 
 /**
  * this parent builds a many to may relation to the child using the child's non-primary (but unique)
@@ -28,15 +16,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "inheritance_base_type")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
-    name = "discriminator",
-    discriminatorType = DiscriminatorType.STRING,
-    length = 32
+  name = "discriminator",
+  discriminatorType = DiscriminatorType.STRING,
+  length = 32
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 // we need `implements Serializable` once again as with BaseType since for non-pk relations this is mandatory
-public class BaseType {
+public class BaseType
+{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")

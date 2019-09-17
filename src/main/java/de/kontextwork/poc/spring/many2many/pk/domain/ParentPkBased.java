@@ -15,19 +15,20 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ParentPkBased {
+public class ParentPkBased
+{
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
   @EqualsAndHashCode.Include
   Long parentId;
-  
+
   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinTable(
-      name = "join_table_parent_pk_based",
-      joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
-      inverseJoinColumns = @JoinColumn(name = "mychild_id", referencedColumnName = "child_some_id")
+    name = "join_table_parent_pk_based",
+    joinColumns = @JoinColumn(name = "myparent_id", referencedColumnName = "parent_id"),
+    inverseJoinColumns = @JoinColumn(name = "mychild_id", referencedColumnName = "child_some_id")
   )
   Set<ChildPkBased> children;
 }

@@ -18,7 +18,7 @@ buildscript {
         groovy = "3.0.0-beta-3"
 
         // @see https://mvnrepository.com/artifact/org.projectlombok/lombok
-        lombokVersion = '1.18.8'
+        lombokVersion = '1.18.10'
 
         // @see https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
         swaggerVersion = '2.9.2'
@@ -27,7 +27,7 @@ buildscript {
         mockitoVersion = '3.0.0'
 
         // @see https://mvnrepository.com/artifact/com.google.guava/guava
-        googleGuava = '28.0-jre'
+        googleGuava = '28.1-jre'
 
         // @see https://mvnrepository.com/artifact/org.modelmapper/modelmapper
         modelMapper = '2.3.5'
@@ -35,7 +35,7 @@ buildscript {
 }
 
 plugins {
-	id 'org.springframework.boot' version '2.1.7.RELEASE'
+	id 'org.springframework.boot' version '2.1.8.RELEASE'
 	id 'java'
 	id "com.adarshr.test-logger" version "1.7.0"
 }
@@ -52,6 +52,17 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+
+    developmentOnly
+
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+
+    // needed to get lombok working in our tests
+    testImplementation {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
@@ -98,22 +109,28 @@ dependencies {
 	compileOnly(
 			'org.projectlombok:lombok',
 	)
-	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	//compile 'com.h2database:h2'
 	//runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation(
             "org.springframework.boot:spring-boot-starter-test",
             "org.junit.jupiter:junit-jupiter-api",
-            "org.junit.platform:junit-platform-runner",
             "org.mockito:mockito-core:$mockitoVersion",
             "org.mockito:mockito-junit-jupiter:$mockitoVersion",
 	)
-	runtimeOnly (
+
+    testAnnotationProcessor(
+            "org.projectlombok:lombok:$lombokVersion",
+    )
+    testRuntime("org.junit.jupiter:junit-jupiter-engine")
+
+    runtimeOnly (
             "com.h2database:h2",
             "mysql:mysql-connector-java",
 			"org.mariadb.jdbc:mariadb-java-client:$mariadbConnectorVersion",
             "org.postgresql:postgresql:$postgresqlConnectorVersion"
     )
-	testRuntime("org.junit.jupiter:junit-jupiter-engine")
+
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+
 }

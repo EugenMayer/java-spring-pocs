@@ -1,7 +1,6 @@
 package de.kontextwork.poc.spring.many2many.composite;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ParentInheritanceBasedRepository extends
-                                                  JpaRepository<ParentInheritanceBased, Long> {
+  JpaRepository<ParentInheritanceBased, Long>
+{
   Optional<ParentInheritanceBased> findById(Long id);
 }

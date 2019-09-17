@@ -1,8 +1,5 @@
 package de.kontextwork.poc.spring.many2many.inheritance.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.many2many.inheritance.domain.ChildInheritanceBased;
 import de.kontextwork.poc.spring.many2many.inheritance.domain.ParentInheritanceBased;
@@ -15,8 +12,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @DataJpaTest
-class ParentInheritanceBasedRepositoryTest {
+class ParentInheritanceBasedRepositoryTest
+{
   @Autowired
   ParentInheritanceBasedRepository parentInheritanceBasedRepository;
   @Autowired
@@ -26,7 +27,8 @@ class ParentInheritanceBasedRepositoryTest {
 
   @Test
   @DirtiesContext
-  void crudParentWithChildren() {
+  void crudParentWithChildren()
+  {
     var child1 = new ChildInheritanceBased("child1");
     var child2 = new ChildInheritanceBased("child2");
 
@@ -48,10 +50,10 @@ class ParentInheritanceBasedRepositoryTest {
 
     // we should have 2 relations in here
     List<Map<String, Object>> relationExists = jdbcTemplate
-        .queryForList(
-            "select * from join_table_inheritance where myparent_machine=?",
-            parent1.getMachine()
-        );
+      .queryForList(
+        "select * from join_table_inheritance where myparent_machine=?",
+        parent1.getMachine()
+      );
     assertEquals(2, relationExists.size());
 
     var reloaded = parentInheritanceBasedRepository.findById(parent1.getId()).orElseThrow();
@@ -66,10 +68,10 @@ class ParentInheritanceBasedRepositoryTest {
     entityManager.clear();
 
     List<Map<String, Object>> deletedOnRelation = jdbcTemplate
-        .queryForList(
-            "select * from join_table_inheritance where myparent_machine=?",
-            parent1.getMachine()
-        );
+      .queryForList(
+        "select * from join_table_inheritance where myparent_machine=?",
+        parent1.getMachine()
+      );
     assertEquals(1, deletedOnRelation.size());
 
     reloaded = parentInheritanceBasedRepository.findById(parent1.getId()).orElseThrow();
@@ -81,10 +83,10 @@ class ParentInheritanceBasedRepositoryTest {
     entityManager.clear();
 
     List<Map<String, Object>> deletedAll = jdbcTemplate
-        .queryForList(
-            "select * from join_table_inheritance where myparent_machine=?",
-            parent1.getMachine()
-        );
+      .queryForList(
+        "select * from join_table_inheritance where myparent_machine=?",
+        parent1.getMachine()
+      );
     assertEquals(0, deletedAll.size());
     assertTrue(parentInheritanceBasedRepository.findById(parent1.getId()).isEmpty());
   }

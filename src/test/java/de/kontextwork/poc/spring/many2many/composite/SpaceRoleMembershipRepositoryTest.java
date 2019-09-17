@@ -7,7 +7,8 @@ import de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRoleReposito
 import de.kontextwork.poc.spring.many2many.composite.user.User;
 import de.kontextwork.poc.spring.many2many.composite.user.UserRepository;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.annotation.Order;
@@ -17,7 +18,7 @@ import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @SqlGroup({

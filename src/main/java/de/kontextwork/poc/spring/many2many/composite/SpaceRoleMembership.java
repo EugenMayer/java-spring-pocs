@@ -3,7 +3,6 @@ package de.kontextwork.poc.spring.many2many.composite;
 import de.kontextwork.poc.spring.many2many.composite.space.Space;
 import de.kontextwork.poc.spring.many2many.composite.spacerole.SpaceRole;
 import de.kontextwork.poc.spring.many2many.composite.user.User;
-import java.util.Objects;
 import javax.persistence.*;
 import lombok.*;
 
@@ -56,8 +55,6 @@ public class SpaceRoleMembership
    * This is important, otherwise the L1 cache will not be updated for our SpaceRole, loading the entity
    * using a repository would then not return any relations yet, we would need to either clear the L1 cache
    * before loading the spaceRole or fixing it like defined
-   *
-   * @param spaceRole
    */
   public void setSpaceRole(final SpaceRole spaceRole)
   {

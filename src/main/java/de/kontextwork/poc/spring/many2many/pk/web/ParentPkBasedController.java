@@ -17,6 +17,6 @@ public class ParentPkBasedController
   @GetMapping
   public ResponseEntity<List<ParentPkBasedDTO>> getAllParents()
   {
-      return ResponseEntity.ok(parentPkBasedService.getAllParentsProjected());
+    return ResponseEntity.ok(parentPkBasedService.getAllParentsProjected());
   }
 }

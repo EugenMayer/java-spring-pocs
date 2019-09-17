@@ -1,7 +1,6 @@
 package de.kontextwork.poc.spring.many2many.composite.space;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import lombok.*;
 
 @Data

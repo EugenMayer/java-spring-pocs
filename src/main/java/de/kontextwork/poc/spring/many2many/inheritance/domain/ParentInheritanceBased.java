@@ -2,14 +2,7 @@ package de.kontextwork.poc.spring.many2many.inheritance.domain;
 
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,7 +20,8 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 // we need `implements Serializable` once again as with ChildNonPk since for non-pk relations this is mandatory
-public class ParentInheritanceBased extends BaseType implements Serializable {
+public class ParentInheritanceBased extends BaseType implements Serializable
+{
   // HINT: this is the important part - instead of defining that in BaseType - we have to move it
   // to our subtypes so that JPA can later understand the different "machine" fields in the joinTable
   @EqualsAndHashCode.Include
@@ -36,29 +30,33 @@ public class ParentInheritanceBased extends BaseType implements Serializable {
 
   //@Transient
   @ManyToMany(
-      cascade = {
-          CascadeType.DETACH,
-          CascadeType.MERGE,
-          CascadeType.PERSIST,
-          CascadeType.REMOVE
-      },
-      fetch = FetchType.LAZY
+    cascade = {
+      CascadeType.DETACH,
+      CascadeType.MERGE,
+      CascadeType.PERSIST,
+      CascadeType.REMOVE
+    },
+    fetch = FetchType.LAZY
   )
   @JoinTable(
-      name = "join_table_inheritance",
-      // VARCHAR(120) since we have a max auf 3072 for the index
-      joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)"),
-      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)")
+    name = "join_table_inheritance",
+    // VARCHAR(120) since we have a max auf 3072 for the index
+    joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition =
+      "VARCHAR(120)"),
+    inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition =
+      "VARCHAR(120)")
   )
   Set<ChildInheritanceBased> children;
 
-  public ParentInheritanceBased(final String machine) {
+  public ParentInheritanceBased(final String machine)
+  {
     super();
     this.machine = machine;
   }
 
   @SuppressWarnings("unused")
-  protected ParentInheritanceBased() {
+  protected ParentInheritanceBased()
+  {
     super();
   }
 }

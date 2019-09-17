@@ -1,15 +1,8 @@
 package de.kontextwork.poc.spring.many2many.nonpk.domain;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.NaturalId;
 
 @SuppressWarnings("unused")
@@ -19,7 +12,8 @@ import org.hibernate.annotations.NaturalId;
 // Indeed we need 'implements Serializable' when using the natural key for a relation
 // Interestingly this does fail when we read data, not when we write
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ChildNonPk implements Serializable {
+public class ChildNonPk implements Serializable
+{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "child_some_id")
@@ -32,7 +26,8 @@ public class ChildNonPk implements Serializable {
   @Column(columnDefinition = "VARCHAR(200)", unique = true)
   String machine;
 
-  public ChildNonPk(final String machine) {
+  public ChildNonPk(final String machine)
+  {
     this.machine = machine;
   }
 }

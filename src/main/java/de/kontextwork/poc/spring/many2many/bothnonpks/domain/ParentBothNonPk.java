@@ -2,20 +2,8 @@ package de.kontextwork.poc.spring.many2many.bothnonpks.domain;
 
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.NaturalId;
 
 /**
@@ -32,7 +20,8 @@ import org.hibernate.annotations.NaturalId;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 // we need `implements Serializable` once again as with ChildNonPk since for non-pk relations this is mandatory
-public class ParentBothNonPk implements Serializable {
+public class ParentBothNonPk implements Serializable
+{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "parent_id")
@@ -46,24 +35,27 @@ public class ParentBothNonPk implements Serializable {
 
   // Hint: it is important to exclude CascadeType.REFRESH since we cannot do this in this case
   @ManyToMany(
-      cascade = {
-          CascadeType.DETACH,
-          CascadeType.MERGE,
-          CascadeType.PERSIST,
-          CascadeType.REMOVE
-      }
-      , fetch = FetchType.LAZY
+    cascade = {
+      CascadeType.DETACH,
+      CascadeType.MERGE,
+      CascadeType.PERSIST,
+      CascadeType.REMOVE
+    }
+    , fetch = FetchType.LAZY
   )
   @JoinTable(
-      // not using our usualy names, since they are too lon
-      name = "join_table_parent_both_non_pk",
-      // VARCHAR(120) since we have a max auf 3072 for the index
-      joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)"),
-      inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition = "VARCHAR(120)")
+    // not using our usualy names, since they are too lon
+    name = "join_table_parent_both_non_pk",
+    // VARCHAR(120) since we have a max auf 3072 for the index
+    joinColumns = @JoinColumn(name = "myparent_machine", referencedColumnName = "machine", columnDefinition =
+      "VARCHAR(120)"),
+    inverseJoinColumns = @JoinColumn(name = "mychild_machine", referencedColumnName = "machine", columnDefinition =
+      "VARCHAR(120)")
   )
   Set<ChildBothNonPk> children;
 
-  public ParentBothNonPk(final String machine) {
+  public ParentBothNonPk(final String machine)
+  {
     this.machine = machine;
   }
 }

@@ -15,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -35,16 +33,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ParentPkBasedLazyFetchOSIV
 {
   @Autowired
-  private MockMvc mockMvc;
-
-  @Autowired
   EntityManager entityManager;
-
   @Autowired
   ParentPkBasedRepository parentPkBasedRepository;
+  @Autowired
+  private MockMvc mockMvc;
 
   @Test
-  @DisplayName("Ensure we can retrieve the projection including lazy load in a rest controller while spring.jpa.open-in-view=false")
+  @DisplayName("Ensure we can retrieve the projection including lazy load in a rest controller while spring.jpa"
+    + ".open-in-view=false")
   // Important, if you use transactional here, you "fix" the OSIV issue accidently
   // because now the Transaction Session of our test-method here will handle the lazy loading, because it is
   // reproduceLazyFetchingExceptionWithOSIV -> OSIV -> Servlet -> rest-controller-method

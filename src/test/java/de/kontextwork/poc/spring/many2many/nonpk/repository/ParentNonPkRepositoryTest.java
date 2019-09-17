@@ -1,8 +1,5 @@
 package de.kontextwork.poc.spring.many2many.nonpk.repository;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.many2many.nonpk.domain.ChildNonPk;
 import de.kontextwork.poc.spring.many2many.nonpk.domain.ParentNonPk;
@@ -15,8 +12,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @DataJpaTest()
-class ParentNonPkRepositoryTest {
+class ParentNonPkRepositoryTest
+{
   @Autowired
   ParentNonPkRepository parentNonPkBasedRepository;
   @Autowired
@@ -26,34 +27,36 @@ class ParentNonPkRepositoryTest {
 
   @Test
   @DirtiesContext
-  void crudParentWithChildren() {
+  void crudParentWithChildren()
+  {
     var child1 = new ChildNonPk("child1");
     var child2 = new ChildNonPk("child2");
 
     var parent1 = new ParentNonPk();
     parent1.setChildren(
-        Sets.newHashSet(child1, child2)
+      Sets.newHashSet(child1, child2)
     );
     // we flush since are going to use JDBC for the db checks
     parentNonPkBasedRepository.saveAndFlush(parent1);
 
     // we should have 2 relations in here
     List<Map<String, Object>> relationExists = jdbcTemplate
-        .queryForList(
-            "select * from join_table_parent_non_pk where myparent_id=?",
-            parent1.getParentId()
-        );
+      .queryForList(
+        "select * from join_table_parent_non_pk where myparent_id=?",
+        parent1.getParentId()
+      );
     assertEquals(2, relationExists.size());
 
     // we should have 2 children saved
     List<Map<String, Object>> childrenExist = jdbcTemplate
-        .queryForList(
-            "select * from child_non_pk"
-        );
+      .queryForList(
+        "select * from child_non_pk"
+      );
     assertEquals(2, childrenExist.size());
 
     // this is important, we force the parent to be reread - this can already cause new
-    // DDL based issues like de.kontextwork.poc.spring.many2many.pk.domain.ChildPkBased incompatible with java.io.Serializable
+    // DDL based issues like de.kontextwork.poc.spring.many2many.pk.domain.ChildPkBased incompatible with java.io
+    // .Serializable
     // even though we could have written beforehand without any issues
     entityManager.refresh(parent1);
     entityManager.flush();
@@ -77,10 +80,10 @@ class ParentNonPkRepositoryTest {
     entityManager.clear();
 
     List<Map<String, Object>> deletedOnRelation = jdbcTemplate
-        .queryForList(
-            "select * from join_table_parent_non_pk where myparent_id=?",
-            parent1.getParentId()
-        );
+      .queryForList(
+        "select * from join_table_parent_non_pk where myparent_id=?",
+        parent1.getParentId()
+      );
     assertEquals(1, deletedOnRelation.size());
 
     reloaded = parentNonPkBasedRepository.findById(parent1.getParentId()).orElseThrow();
@@ -93,10 +96,10 @@ class ParentNonPkRepositoryTest {
     entityManager.clear();
 
     List<Map<String, Object>> deletedAll = jdbcTemplate
-        .queryForList(
-            "select * from join_table_parent_non_pk where myparent_id=?",
-            parent1.getParentId()
-        );
+      .queryForList(
+        "select * from join_table_parent_non_pk where myparent_id=?",
+        parent1.getParentId()
+      );
     assertEquals(0, deletedAll.size());
     assertTrue(parentNonPkBasedRepository.findById(parent1.getParentId()).isEmpty());
   }

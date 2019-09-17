@@ -14,7 +14,8 @@ public class ParentPkBasedService
   final ParentPkBasedRepository parentPkBasedRepository;
 
   @Transactional
-  public List<ParentPkBasedDTO> getAllParentsProjected() {
+  public List<ParentPkBasedDTO> getAllParentsProjected()
+  {
     return parentPkBasedRepository.findAllProjectedBy(ParentPkBasedDTO.class);
   }
 }

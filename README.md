@@ -127,7 +127,7 @@ Status
  
 ##### JPA: OSIV disabled and the issue with projections
 
-Since Spring Boot 2.0 enabling OSIV is discouraged, throws a warning, other sources:
+Since Spring Boot 2.0 enabling OSIV is discouraged **but it is enabled by default**, throws a warning, other sources:
 
  - https://sudonull.com/posts/964-Open-Session-In-View-in-Spring-Boot-Hidden-Threat
  - https://vladmihalcea.com/the-best-way-to-handle-the-lazyinitializationexception/
