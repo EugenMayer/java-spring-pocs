@@ -10,9 +10,9 @@ before_install:
 
 script:
   - ./gradlew h2Test
-  - ./gradlew mariadbTest
-  - ./gradlew mysqlTest
-  - ./gradlew postgresTest
+  - ./gradlew mariadbTest --info
+  - ./gradlew mysqlTest --info
+  - ./gradlew postgresTest --info
 
 after_script:
   - docker-compose down -v
