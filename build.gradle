@@ -31,27 +31,39 @@ buildscript {
 
         // @see https://mvnrepository.com/artifact/org.modelmapper/modelmapper
         modelMapper = '2.3.5'
+
+        // javax.annotation needed when compiling against > Java 8 since it is no longer included
+        // @see https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
+        javaxAnnotations = '1.3.2'
+
+        // @see // https://mvnrepository.com/artifact/com.blazebit/blaze-persistence-core-api
+        blazePersistence = '1.4.0-Alpha1'
     }
 }
 
 plugins {
-	id 'org.springframework.boot' version '2.1.8.RELEASE'
-	id 'java'
-	id "com.adarshr.test-logger" version "1.7.0"
+    id 'java-library'
+    id 'maven'
+    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'java'
+    id "com.adarshr.test-logger" version "1.7.0"
+    // @see  https://plugins.gradle.org/plugin/com.gradle.build-scan
+    id "com.gradle.build-scan" version "2.4.2"
 }
 
 apply plugin: 'io.spring.dependency-management'
 
 group = 'de.kontextwork.poc'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
-
-ext['junit-jupiter.version'] = '5.5.1'
-
+sourceCompatibility = 11
+targetCompatibility = 11
+ext['junit-jupiter.version'] = '5.5.2'
+// @see https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
+ext['hamcrest.version'] = '2.1'
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 
     developmentOnly
 
@@ -66,71 +78,148 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
+    // that offers us they way to either authenticate using the ENV vars or the ~/.gradle/gradle.properties
+    // ENV: NEXUS_KW_CI_USER, NEXUS_KW_CI_PASSWORd, NEXUS_KW_CI_READ_USER, NEXUS_KW_CI_READ_PASSWORD
+    // gradle.properties: nexusAuthorUser,nexusAuthorPassword,nexusReaderUser,nexusReaderPassword
+    def ourNexusAuthorUser = ''
+    def ourNexusAuthorPassword = ''
+    def ourNexusReaderUser = ''
+    def ourNexusReaderPassword = ''
+
+    if (System.getenv('NEXUS_KW_CI_USER') != null) {
+        ourNexusAuthorUser = System.getenv('NEXUS_KW_CI_USER')
+        ourNexusAuthorPassword = System.getenv('NEXUS_KW_CI_PASSWORD')
+    } else if (project.hasProperty('nexusAuthorUser')) {
+        ourNexusAuthorUser = "$nexusAuthorUser"
+        ourNexusAuthorPassword = "$nexusAuthorPassword"
+    }
+
+    // since login is mandatory anyway, this will fail in gradle if neither ~/.gradle/gradle.properties is set
+    // nor the ENV VAR
+    if (System.getenv('NEXUS_KW_CI_READ_USER') != null) {
+        ourNexusReaderUser = System.getenv('NEXUS_KW_CI_READ_USER')
+        ourNexusReaderPassword = System.getenv('NEXUS_KW_CI_READ_PASSWORD')
+    } else if (project.hasProperty('nexusReaderUser')) {
+        ourNexusReaderUser = "$nexusReaderUser"
+        ourNexusReaderPassword = "$nexusReaderPassword"
+    } else {
+        throw new GradleException('nexusReaderUser / nexusReaderPassword not set in ~/.gradle/gradle.properties nor as env vars NEXUS_KW_CI_READ_USER / NEXUS_KW_CI_READ_PASSWORD ')
+    }
+
+
+    // mirror
+    maven {
+        url = 'https://nexus.kw.kontextwork.com/repository/kw-maven-proxy-group'
+        credentials(PasswordCredentials) {
+            username "$ourNexusReaderUser"
+            password "$ourNexusReaderPassword"
+        }
+    }
+
+    maven {
+        name = 'kw-maven-releases'
+        url = 'https://nexus.kw.kontextwork.com/repository/kw-maven-releases'
+        credentials(PasswordCredentials) {
+            username "$ourNexusReaderUser"
+            password "$ourNexusReaderPassword"
+        }
+    }
+
+    maven {
+        name = 'kw-maven-snapshots'
+        url = 'https://nexus.kw.kontextwork.com/repository/kw-maven-snapshots'
+        credentials(PasswordCredentials) {
+            username "$ourNexusReaderUser"
+            password "$ourNexusReaderPassword"
+        }
+    }
+
+    mavenCentral()
 }
+
 
 test {
 }
 
 task h2Test(type: Test) {
-	systemProperty 'spring.profiles.active', 'h2'
-	useJUnitPlatform {
-	}
+    systemProperty 'spring.profiles.active', 'h2'
+    useJUnitPlatform {
+    }
 }
 
 task mariadbTest(type: Test) {
-	systemProperty 'spring.profiles.active', 'mariadb'
-	useJUnitPlatform {
-	}
+    systemProperty 'spring.profiles.active', 'mariadb'
+    useJUnitPlatform {
+    }
 }
 
 task mysqlTest(type: Test) {
-	systemProperty 'spring.profiles.active', 'mysql'
-	useJUnitPlatform {
-	}
+    systemProperty 'spring.profiles.active', 'mysql'
+    useJUnitPlatform {
+    }
 }
 
 task postgresTest(type: Test) {
-	systemProperty 'spring.profiles.active', 'postgres'
-	useJUnitPlatform {
-	}
+    systemProperty 'spring.profiles.active', 'postgres'
+    useJUnitPlatform {
+    }
 }
 
 dependencies {
-	implementation (
-			'org.springframework.boot:spring-boot-starter-data-jpa',
+    implementation(
+            'org.springframework.boot:spring-boot-starter-data-jpa',
             "org.springframework.boot:spring-boot-starter-web",
             'org.springframework.boot:spring-boot-starter-data-rest',
             "com.google.guava:guava:$googleGuava",
             "org.jetbrains:annotations:$jetbrainsAnnoations",
             "org.modelmapper:modelmapper:$modelMapper",
-            "org.codehaus.groovy:groovy:$groovy"
+            "org.codehaus.groovy:groovy:$groovy",
+            "com.blazebit:blaze-persistence-core-api:${blazePersistence}",
+            "com.blazebit:blaze-persistence-core-impl:${blazePersistence}",
+            "com.blazebit:blaze-persistence-entity-view-api:${blazePersistence}",
+            "com.blazebit:blaze-persistence-entity-view-impl:${blazePersistence}",
+            "com.blazebit:blaze-persistence-integration-spring-data-2.0:${blazePersistence}",
+            // already included in the spring-data-2.0 package
+            //"com.blazebit:blaze-persistence-integration-entity-view-spring:${blazePersistence}",
+            "com.blazebit:blaze-persistence-integration-hibernate-5.3:${blazePersistence}",
+            // already included in the spring-data-2.0 package
+
+            //"com.blazebit:blaze-persistence-jpa-criteria-api:${blazePersistence}",
+            //"com.blazebit:blaze-persistence-jpa-criteria-impl:${blazePersistence}"
     )
-	compileOnly(
-			'org.projectlombok:lombok',
-	)
-	//compile 'com.h2database:h2'
-	//runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation(
+    compileOnly(
+            'org.projectlombok:lombok',
+            "org.springframework.boot:spring-boot-configuration-processor"
+    )
+
+    annotationProcessor(
+            "javax.annotation:javax.annotation-api:$javaxAnnotations",
+            "org.projectlombok:lombok:$lombokVersion"
+    )
+
+    testImplementation(
             "org.springframework.boot:spring-boot-starter-test",
             "org.junit.jupiter:junit-jupiter-api",
             "org.mockito:mockito-core:$mockitoVersion",
             "org.mockito:mockito-junit-jupiter:$mockitoVersion",
-	)
+    )
 
     testAnnotationProcessor(
             "org.projectlombok:lombok:$lombokVersion",
     )
     testRuntime("org.junit.jupiter:junit-jupiter-engine")
 
-    runtimeOnly (
+    runtimeOnly(
             "com.h2database:h2",
             "mysql:mysql-connector-java",
-			"org.mariadb.jdbc:mariadb-java-client:$mariadbConnectorVersion",
+            "org.mariadb.jdbc:mariadb-java-client:$mariadbConnectorVersion",
             "org.postgresql:postgresql:$postgresqlConnectorVersion"
     )
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+}
 
+buildScan {
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
 }
