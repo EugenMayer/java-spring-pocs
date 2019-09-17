@@ -110,6 +110,9 @@ task postgresTest(type: Test) {
 }
 
 dependencies {
+    implementation("com.blazebit:blaze-persistence-integration-spring-data-2.0:${blazePersistence}") {
+        exclude group: 'org.jenkins-ci', module: 'annotation-indexer'
+    }
     implementation(
             'org.springframework.boot:spring-boot-starter-data-jpa',
             "org.springframework.boot:spring-boot-starter-web",
@@ -122,7 +125,6 @@ dependencies {
             "com.blazebit:blaze-persistence-core-impl:${blazePersistence}",
             "com.blazebit:blaze-persistence-entity-view-api:${blazePersistence}",
             "com.blazebit:blaze-persistence-entity-view-impl:${blazePersistence}",
-            "com.blazebit:blaze-persistence-integration-spring-data-2.0:${blazePersistence}",
             // already included in the spring-data-2.0 package
             //"com.blazebit:blaze-persistence-integration-entity-view-spring:${blazePersistence}",
             "com.blazebit:blaze-persistence-integration-hibernate-5.3:${blazePersistence}",
