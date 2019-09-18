@@ -79,6 +79,8 @@ configurations {
 
 repositories {
     mavenCentral()
+    // needed for our development version of blaze
+    mavenLocal()
 }
 
 
@@ -111,8 +113,31 @@ task postgresTest(type: Test) {
 
 dependencies {
     implementation("com.blazebit:blaze-persistence-integration-spring-data-2.0:${blazePersistence}") {
+        // fixes wrong scoped dependency on annotation-indexer, maybe fixed with Alpha2
         exclude group: 'org.jenkins-ci', module: 'annotation-indexer'
     }
+
+    implementation(
+            "com.blazebit:blaze-persistence-core-api:${blazePersistence}",
+            "com.blazebit:blaze-persistence-core-impl:${blazePersistence}",
+            "com.blazebit:blaze-persistence-entity-view-api:${blazePersistence}",
+            "com.blazebit:blaze-persistence-entity-view-impl:${blazePersistence}",
+            "com.blazebit:blaze-persistence-integration-entity-view-spring:${blazePersistence}",
+            "com.blazebit:blaze-persistence-integration-hibernate-5.3:${blazePersistence}"
+    )
+
+    constraints {
+        implementation("com.blazebit:blaze-persistence-integration-hibernate-base:latest.integration") {
+            because "fixing https://github.com/Blazebit/blaze-persistence/pull/843"
+            force = true
+        }
+
+        implementation("com.blazebit:blaze-persistence-integration-spring-data-base:latest.integration") {
+            because "fixing https://github.com/Blazebit/blaze-persistence/pull/843"
+            force = true
+        }
+    }
+
     implementation(
             'org.springframework.boot:spring-boot-starter-data-jpa',
             "org.springframework.boot:spring-boot-starter-web",
@@ -121,17 +146,6 @@ dependencies {
             "org.jetbrains:annotations:$jetbrainsAnnoations",
             "org.modelmapper:modelmapper:$modelMapper",
             "org.codehaus.groovy:groovy:$groovy",
-            "com.blazebit:blaze-persistence-core-api:${blazePersistence}",
-            "com.blazebit:blaze-persistence-core-impl:${blazePersistence}",
-            "com.blazebit:blaze-persistence-entity-view-api:${blazePersistence}",
-            "com.blazebit:blaze-persistence-entity-view-impl:${blazePersistence}",
-            // already included in the spring-data-2.0 package
-            //"com.blazebit:blaze-persistence-integration-entity-view-spring:${blazePersistence}",
-            "com.blazebit:blaze-persistence-integration-hibernate-5.3:${blazePersistence}",
-            // already included in the spring-data-2.0 package
-
-            //"com.blazebit:blaze-persistence-jpa-criteria-api:${blazePersistence}",
-            //"com.blazebit:blaze-persistence-jpa-criteria-impl:${blazePersistence}"
     )
     compileOnly(
             'org.projectlombok:lombok',
