@@ -87,6 +87,13 @@ repositories {
 test {
 }
 
+task bpTest(type: Test) {
+    systemProperty 'blazepersistance.enabled', 'true'
+    systemProperty 'spring.profiles.active', 'h2'
+    useJUnitPlatform {
+    }
+}
+
 task h2Test(type: Test) {
     systemProperty 'spring.profiles.active', 'h2'
     useJUnitPlatform {
