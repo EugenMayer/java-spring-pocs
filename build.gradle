@@ -38,7 +38,8 @@ buildscript {
 
         // @see // https://mvnrepository.com/artifact/com.blazebit/blaze-persistence-core-api
         //blazePersistence = '1.4.0-Alpha2'
-        // pick the latest local snapshot right now
+        // pick the latest local snapshot right now, building
+        // https://github.com/Blazebit/blaze-persistence/pull/843
         blazePersistence = 'latest.integration'
     }
 }
