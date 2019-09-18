@@ -121,7 +121,7 @@ task postgresTest(type: Test) {
 }
 
 dependencies {
-    implementation("com.blazebit:blaze-persistence-integration-spring-data-2.0:${blazePersistence}") {
+    implementation("com.blazebit:blaze-persistence-integration-spring-data-2.1:${blazePersistence}") {
         // fixes wrong scoped dependency on annotation-indexer, maybe fixed with Alpha2
         exclude group: 'org.jenkins-ci', module: 'annotation-indexer'
     }
