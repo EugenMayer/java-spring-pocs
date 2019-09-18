@@ -27,6 +27,8 @@ docker-compose up -d
 ./gradlew postgresTest
 # or export SPRING_PROFILE_ACTIVE=postgres + ./gradlew test
 
+# run blaze-persistance injected tests against h2
+./gradlew bpTest
 ```
 
 We are using an non-memory h2 database in the tests to make it easier to connect and debug the DDL during a test.
