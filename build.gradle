@@ -37,7 +37,9 @@ buildscript {
         javaxAnnotations = '1.3.2'
 
         // @see // https://mvnrepository.com/artifact/com.blazebit/blaze-persistence-core-api
-        blazePersistence = '1.4.0-Alpha1'
+        //blazePersistence = '1.4.0-Alpha2'
+        // pick the latest local snapshot right now
+        blazePersistence = 'latest.integration'
     }
 }
 
@@ -125,25 +127,8 @@ dependencies {
     }
 
     implementation(
-            "com.blazebit:blaze-persistence-core-api:${blazePersistence}",
-            "com.blazebit:blaze-persistence-core-impl:${blazePersistence}",
-            "com.blazebit:blaze-persistence-entity-view-api:${blazePersistence}",
-            "com.blazebit:blaze-persistence-entity-view-impl:${blazePersistence}",
-            "com.blazebit:blaze-persistence-integration-entity-view-spring:${blazePersistence}",
             "com.blazebit:blaze-persistence-integration-hibernate-5.3:${blazePersistence}"
     )
-
-    constraints {
-        implementation("com.blazebit:blaze-persistence-integration-hibernate-base:latest.integration") {
-            because "fixing https://github.com/Blazebit/blaze-persistence/pull/843"
-            force = true
-        }
-
-        implementation("com.blazebit:blaze-persistence-integration-spring-data-base:latest.integration") {
-            because "fixing https://github.com/Blazebit/blaze-persistence/pull/843"
-            force = true
-        }
-    }
 
     implementation(
             'org.springframework.boot:spring-boot-starter-data-jpa',
