@@ -63,6 +63,8 @@ targetCompatibility = 11
 ext['junit-jupiter.version'] = '5.5.2'
 // @see https://mvnrepository.com/artifact/org.hamcrest/hamcrest-library
 ext['hamcrest.version'] = '2.1'
+ext['hibernate.version'] = '5.4.5.Final'
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -122,13 +124,9 @@ task postgresTest(type: Test) {
 }
 
 dependencies {
-    implementation("com.blazebit:blaze-persistence-integration-spring-data-2.1:${blazePersistence}") {
-        // fixes wrong scoped dependency on annotation-indexer, maybe fixed with Alpha3
-        exclude group: 'org.jenkins-ci', module: 'annotation-indexer'
-    }
-
     implementation(
-            "com.blazebit:blaze-persistence-integration-hibernate-5.3:${blazePersistence}"
+            "com.blazebit:blaze-persistence-integration-spring-data-2.1:${blazePersistence}",
+            "com.blazebit:blaze-persistence-integration-hibernate-5.4:${blazePersistence}"
     )
 
     implementation(
