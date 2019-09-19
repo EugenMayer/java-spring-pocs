@@ -1,7 +1,7 @@
 package de.kontextwork.poc.spring.many2many.composite.spacerole;
 
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
-import de.kontextwork.poc.spring.configuration.HibernateConfiguration;
+import de.kontextwork.poc.spring.configuration.JpaConfiguration;
 import de.kontextwork.poc.spring.many2many.composite.space.Space;
 import de.kontextwork.poc.spring.many2many.composite.space.SpaceRepository;
 import de.kontextwork.poc.spring.many2many.composite.user.User;
@@ -32,7 +32,7 @@ import static org.springframework.data.jpa.domain.Specification.where;
 })
 @Import(
   {
-    HibernateConfiguration.class,
+    JpaConfiguration.class,
     BlazePersistenceConfiguration.class
   }
 )

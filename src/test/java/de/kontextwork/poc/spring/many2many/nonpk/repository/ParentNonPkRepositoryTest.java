@@ -2,7 +2,7 @@ package de.kontextwork.poc.spring.many2many.nonpk.repository;
 
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
-import de.kontextwork.poc.spring.configuration.HibernateConfiguration;
+import de.kontextwork.poc.spring.configuration.JpaConfiguration;
 import de.kontextwork.poc.spring.many2many.nonpk.domain.ChildNonPk;
 import de.kontextwork.poc.spring.many2many.nonpk.domain.ParentNonPk;
 import java.util.List;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 @Import(
   {
-    HibernateConfiguration.class,
+    JpaConfiguration.class,
     BlazePersistenceConfiguration.class
   }
 )

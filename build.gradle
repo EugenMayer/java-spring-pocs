@@ -91,7 +91,7 @@ test {
 }
 
 task bpTest(type: Test) {
-    systemProperty 'blazepersistance.enabled', 'true'
+    systemProperty 'blazepersistence.enabled', 'true'
     systemProperty 'spring.profiles.active', 'h2'
     useJUnitPlatform {
     }

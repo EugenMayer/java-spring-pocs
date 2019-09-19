@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
   value = "blazepersistance.enabled",
   havingValue = "false",
   matchIfMissing = true)
-public class HibernateConfiguration
+public class JpaConfiguration
 {
 }
