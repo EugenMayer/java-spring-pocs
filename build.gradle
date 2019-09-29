@@ -79,13 +79,14 @@ configurations {
     // needed to get lombok working in our tests
     testImplementation {
         extendsFrom annotationProcessor
+        // exclude juni4/asserj since we use junit5/hamcrest
+        exclude module: 'junit'
+        exclude group: 'org.assertj'
     }
 }
 
 repositories {
     mavenCentral()
-    // needed for our development version of blaze
-    mavenLocal()
 }
 
 
