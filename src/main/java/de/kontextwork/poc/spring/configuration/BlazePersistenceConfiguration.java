@@ -26,7 +26,7 @@ public class BlazePersistenceConfiguration
   @Bean
   @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
   @Lazy(false)
-  public CriteriaBuilderFactory createCriteriaBuilderFactory()
+  public CriteriaBuilderFactory criteriaBuilderFactory()
   {
     CriteriaBuilderConfiguration config = Criteria.getDefault();
     // do some configuration
@@ -38,7 +38,7 @@ public class BlazePersistenceConfiguration
   @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
   @Lazy(false)
   // inject the criteria builder factory which will be used along with the entity view manager
-  public EntityViewManager createEntityViewManager(
+  public EntityViewManager entityViewManager(
     CriteriaBuilderFactory cbf,
     EntityViewConfiguration entityViewConfiguration
   )

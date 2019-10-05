@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
@@ -53,7 +53,7 @@ class SpaceRoleMembershipRepositoryTest
   @Test
   @Order(0)
   @DisplayName("Should load test data from `prefill-natural-association-data.sql`")
-  public void shouldLoadTestData()
+  void shouldLoadTestData()
   {
     // Check if test data have been inserted
     assertEquals(5L, spaceRepository.count());

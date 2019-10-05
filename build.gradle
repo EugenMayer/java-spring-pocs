@@ -37,17 +37,18 @@ buildscript {
         javaxAnnotations = '1.3.2'
 
         // @see // https://mvnrepository.com/artifact/com.blazebit/blaze-persistence-core-api
-        //blazePersistence = '1.4.0-Alpha2'
-        // pick the latest local snapshot right now, building
-        // https://github.com/Blazebit/blaze-persistence/pull/843
-        blazePersistence = 'latest.integration'
+        //blazePersistence = '1.4.0-SNAPSHOT'
+        blazePersistence = '9.14-SNAPSHOT'
+
+        // @see https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen
+        hibernateJpaModelGen = '5.4.5.Final'
     }
 }
 
 plugins {
     id 'java-library'
     id 'maven'
-    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'org.springframework.boot' version '2.1.9.RELEASE'
     id 'java'
     id "com.adarshr.test-logger" version "1.7.0"
     // @see  https://plugins.gradle.org/plugin/com.gradle.build-scan
@@ -66,8 +67,14 @@ ext['hamcrest.version'] = '2.1'
 ext['hibernate.version'] = '5.4.5.Final'
 
 configurations {
+
     compileOnly {
         extendsFrom annotationProcessor
+    }
+
+    // du to blaze persistence miss configuration
+    implementation {
+        exclude group: 'org.jenkins-ci', module: 'annotation-indexer'
     }
 
     developmentOnly
@@ -81,14 +88,33 @@ configurations {
         extendsFrom annotationProcessor
         // exclude juni4/asserj since we use junit5/hamcrest
         exclude module: 'junit'
-        exclude group: 'org.assertj'
+        exclude group: 'org.hamcrest', module: 'hamcrest-library'
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
     }
 }
 
 repositories {
     mavenCentral()
+    mavenLocal()
+
+    // for blaze persistence
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
 }
 
+// needed for hibernate jpa annotation generation
+tasks.withType(JavaCompile) {
+    options.annotationProcessorGeneratedSourcesDirectory = file("src/generated/java/generated")
+}
+
+sourceSets {
+    generated {
+        java {
+            srcDirs = ['src/generated/java/generated']
+        }
+    }
+}
 
 test {
 }
@@ -146,7 +172,8 @@ dependencies {
 
     annotationProcessor(
             "javax.annotation:javax.annotation-api:$javaxAnnotations",
-            "org.projectlombok:lombok:$lombokVersion"
+            "org.projectlombok:lombok:$lombokVersion",
+            "org.hibernate:hibernate-jpamodelgen:$hibernateJpaModelGen"
     )
 
     testImplementation(
@@ -158,7 +185,9 @@ dependencies {
 
     testAnnotationProcessor(
             "org.projectlombok:lombok:$lombokVersion",
+            "org.hibernate:hibernate-jpamodelgen:$hibernateJpaModelGen"
     )
+
     testRuntime("org.junit.jupiter:junit-jupiter-engine")
 
     runtimeOnly(
