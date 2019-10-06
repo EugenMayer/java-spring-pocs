@@ -1,7 +1,6 @@
 package de.kontextwork.poc.spring.blaze.model.domain;
 
-import com.blazebit.persistence.view.CreatableEntityView;
-import com.blazebit.persistence.view.EntityView;
+import com.blazebit.persistence.view.*;
 import de.kontextwork.poc.spring.blaze.model.jpa.BlazeUser;
 
 @EntityView(BlazeUser.class)
@@ -9,6 +8,7 @@ import de.kontextwork.poc.spring.blaze.model.jpa.BlazeUser;
 public interface BlazeUserIdView
 {
   @SuppressWarnings("unused")
+  @IdMapping
   Integer getUid();
 
   void setUid(Integer uid);
