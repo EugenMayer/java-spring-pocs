@@ -38,7 +38,7 @@ buildscript {
 
         // @see // https://mvnrepository.com/artifact/com.blazebit/blaze-persistence-core-api
         blazePersistence = '1.4.0-SNAPSHOT'
-        //blazePersistence = '9.14-SNAPSHOT'
+        //blazePersistence = '9.15-SNAPSHOT'
 
         // @see https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen
         hibernateJpaModelGen = '5.4.5.Final'
