@@ -1,7 +1,6 @@
-package de.kontextwork.poc.spring.blaze;
+package de.kontextwork.poc.spring.blaze.user;
 
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.user.BlazeService;
 import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserIdView;
 import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserProfileUpdateView;
 import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
