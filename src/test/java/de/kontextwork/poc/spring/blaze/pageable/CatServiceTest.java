@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.IntFunction;
 import java.util.stream.*;
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
@@ -78,8 +77,11 @@ class CatServiceTest
     Page<Cat> catsSpringDataPage = catService.read(pageRequest);
 
     // Fetch paged results the BlazePersistence way
-    List<CatExcerptView> catsBlazePersistencePage = catService.readExcerpt(pageRequest);
+    Page<CatExcerptView> catsBlazePersistencePage = catService.readExcerpt(pageRequest);
 
     assertThat(catsSpringDataPage).hasSameSizeAs(catsBlazePersistencePage);
+    assertThat(catsSpringDataPage.getTotalPages()).isEqualTo(catsBlazePersistencePage.getTotalPages());
+    assertThat(catsSpringDataPage.getTotalElements()).isEqualTo(catsBlazePersistencePage.getTotalElements());
+    assertThat(catsSpringDataPage.getNumber()).isEqualTo(catsBlazePersistencePage.getNumber());
   }
 }

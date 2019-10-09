@@ -1,15 +1,17 @@
 package de.kontextwork.poc.spring.blaze.pageable;
 
 import com.blazebit.persistence.*;
-import com.blazebit.persistence.view.EntityViewManager;
-import com.blazebit.persistence.view.EntityViewSetting;
+import com.blazebit.persistence.view.*;
 import de.kontextwork.poc.spring.blaze.pageable.model.domain.CatExcerptView;
 import de.kontextwork.poc.spring.blaze.pageable.model.jpa.Cat;
+import de.kontextwork.poc.spring.blaze.pageable.model.page.EntityViewPage;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,7 +43,7 @@ public class CatService
   }
 
   @Transactional
-  public PagedList<CatExcerptView> readExcerpt(Pageable pageable)
+  public Page<CatExcerptView> readExcerpt(Pageable pageable)
   {
     int firstResult = pageable.getPageNumber() * pageable.getPageSize();
     int maxResults = pageable.getPageSize();
@@ -49,11 +51,21 @@ public class CatService
     EntityViewSetting<CatExcerptView, PaginatedCriteriaBuilder<CatExcerptView>> setting =
       EntityViewSetting.create(CatExcerptView.class, firstResult, maxResults);
 
-    CriteriaBuilder<CatExcerptView> catExcerptViewCriteriaBuilder = criteriaBuilderFactory
-      .create(entityManager, CatExcerptView.class)
-      .setMaxResults(maxResults);
+    CriteriaBuilder<Cat> catExcerptViewCriteriaBuilder = criteriaBuilderFactory
+      .create(entityManager, Cat.class);
 
-    return entityViewManager.applySetting(setting, catExcerptViewCriteriaBuilder)
+    applySorting(pageable, catExcerptViewCriteriaBuilder);
+
+    final PagedList<CatExcerptView> resultList = entityViewManager.applySetting(setting, catExcerptViewCriteriaBuilder)
       .getResultList();
+    
+    return EntityViewPage.of(resultList, pageable);
+  }
+
+  private void applySorting(Pageable source, CriteriaBuilder<?> target)
+  {
+    for (Order sort : source.getSort()) {
+      target.orderBy(sort.getProperty(), Direction.ASC == sort.getDirection(), false);
+    }
   }
 }
