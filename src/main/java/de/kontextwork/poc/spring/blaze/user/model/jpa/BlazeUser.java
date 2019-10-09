@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.blaze.model.jpa;
+package de.kontextwork.poc.spring.blaze.user.model.jpa;
 
 import javax.persistence.*;
 import lombok.Data;

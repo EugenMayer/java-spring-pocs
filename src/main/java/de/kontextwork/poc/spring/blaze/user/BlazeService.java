@@ -1,12 +1,12 @@
-package de.kontextwork.poc.spring.blaze;
+package de.kontextwork.poc.spring.blaze.user;
 
 import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.model.domain.BlazeUserIdView;
-import de.kontextwork.poc.spring.blaze.model.domain.BlazeUserProfileUpdateView;
-import de.kontextwork.poc.spring.blaze.model.jpa.BlazeUser;
+import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserIdView;
+import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserProfileUpdateView;
+import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;

@@ -1,9 +1,10 @@
 package de.kontextwork.poc.spring.blaze;
 
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.model.domain.BlazeUserIdView;
-import de.kontextwork.poc.spring.blaze.model.domain.BlazeUserProfileUpdateView;
-import de.kontextwork.poc.spring.blaze.model.jpa.BlazeUser;
+import de.kontextwork.poc.spring.blaze.user.BlazeService;
+import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserIdView;
+import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserProfileUpdateView;
+import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
 import java.util.Random;

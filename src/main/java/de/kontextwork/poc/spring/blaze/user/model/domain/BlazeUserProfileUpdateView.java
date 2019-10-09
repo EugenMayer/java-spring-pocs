@@ -1,8 +1,8 @@
-package de.kontextwork.poc.spring.blaze.model.domain;
+package de.kontextwork.poc.spring.blaze.user.model.domain;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.UpdatableEntityView;
-import de.kontextwork.poc.spring.blaze.model.jpa.BlazeUser;
+import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
 
 @SuppressWarnings("unused")
 @EntityView(BlazeUser.class)

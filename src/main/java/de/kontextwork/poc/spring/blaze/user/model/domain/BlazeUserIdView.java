@@ -1,7 +1,7 @@
-package de.kontextwork.poc.spring.blaze.model.domain;
+package de.kontextwork.poc.spring.blaze.user.model.domain;
 
 import com.blazebit.persistence.view.*;
-import de.kontextwork.poc.spring.blaze.model.jpa.BlazeUser;
+import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
 
 @EntityView(BlazeUser.class)
 @CreatableEntityView
