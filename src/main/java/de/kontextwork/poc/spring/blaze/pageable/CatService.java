@@ -44,7 +44,7 @@ public class CatService
   public PagedList<CatExcerptView> readExcerpt(Pageable pageable)
   {
     int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-    int maxResults = firstResult + pageable.getPageSize();
+    int maxResults = pageable.getPageSize();
 
     EntityViewSetting<CatExcerptView, PaginatedCriteriaBuilder<CatExcerptView>> setting =
       EntityViewSetting.create(CatExcerptView.class, firstResult, maxResults);
