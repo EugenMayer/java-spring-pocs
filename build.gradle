@@ -42,6 +42,9 @@ buildscript {
 
         // @see https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen
         hibernateJpaModelGen = '5.4.5.Final'
+
+        // @see https://github.com/DiUS/java-faker
+        fakerVersion = '1.0.1'
     }
 }
 
@@ -181,6 +184,7 @@ dependencies {
             "org.junit.jupiter:junit-jupiter-api",
             "org.mockito:mockito-core:$mockitoVersion",
             "org.mockito:mockito-junit-jupiter:$mockitoVersion",
+            "com.github.javafaker:javafaker:$fakerVersion"
     )
 
     testAnnotationProcessor(
