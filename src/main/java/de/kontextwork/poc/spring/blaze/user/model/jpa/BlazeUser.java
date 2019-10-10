@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 public class BlazeUser
 {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer uid;
   private String userName;
   private String firstName;

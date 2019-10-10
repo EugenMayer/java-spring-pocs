@@ -1,12 +1,13 @@
 package de.kontextwork.poc.spring.blaze.user;
 
+import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserIdView;
-import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserProfileUpdateView;
+import de.kontextwork.poc.spring.blaze.user.model.domain.*;
 import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
 import java.util.Random;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ class BlazeServiceTest
   @Autowired
   EntityManager entityManager;
 
+  @Autowired
+  EntityViewManager entityViewManager;
+
   BlazeUser buildUser()
   {
     return (new BlazeUser()
@@ -42,6 +46,14 @@ class BlazeServiceTest
       .setLastName("lastName1")
       .setUid(new Random().nextInt())
     );
+  }
+
+  @Test
+  void createByView()
+  {
+    final BlazeUserCreateView blazeUserCreateView = entityViewManager.create(BlazeUserCreateView.class);
+    blazeUserCreateView.setUserName(UUID.randomUUID().toString());
+    blazeService.create(blazeUserCreateView);
   }
 
   @Test
