@@ -10,6 +10,4 @@ public interface BlazeUserIdView
   @SuppressWarnings("unused")
   @IdMapping
   Integer getUid();
-
-  void setUid(Integer uid);
 }

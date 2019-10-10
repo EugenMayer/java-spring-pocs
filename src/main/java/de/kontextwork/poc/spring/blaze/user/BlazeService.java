@@ -4,8 +4,7 @@ import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserIdView;
-import de.kontextwork.poc.spring.blaze.user.model.domain.BlazeUserProfileUpdateView;
+import de.kontextwork.poc.spring.blaze.user.model.domain.*;
 import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -26,6 +25,13 @@ public class BlazeService
   {
     CriteriaBuilder<BlazeUser> cb = criteriaBuilderFactory.create(entityManager, BlazeUser.class);
     return entityViewManager.applySetting(settings, cb);
+  }
+
+  @Transactional
+  public BlazeUserIdView create(BlazeUserCreateView createView)
+  {
+    entityViewManager.update(entityManager, createView);
+    return entityViewManager.convert(createView, BlazeUserIdView.class);
   }
 
   @Transactional
