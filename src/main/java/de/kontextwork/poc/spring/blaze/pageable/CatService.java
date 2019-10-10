@@ -1,17 +1,16 @@
 package de.kontextwork.poc.spring.blaze.pageable;
 
 import com.blazebit.persistence.*;
-import com.blazebit.persistence.view.*;
+import com.blazebit.persistence.view.EntityViewSetting;
+import de.kontextwork.poc.spring.blaze.core.EntityViewSettingFactory;
+import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.pageable.model.domain.CatExcerptView;
 import de.kontextwork.poc.spring.blaze.pageable.model.jpa.Cat;
-import de.kontextwork.poc.spring.blaze.pageable.model.page.EntityViewPage;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,10 +18,9 @@ import org.springframework.stereotype.Service;
 public class CatService
 {
   private final EntityManager entityManager;
-  private final EntityViewManager entityViewManager;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
-
   private final CatRepository catRepository;
+  private final PageableEntityViewRepository<Cat> pageableEntityViewRepository;
 
   @Transactional
   public Cat create(Cat cat)
@@ -43,29 +41,30 @@ public class CatService
   }
 
   @Transactional
-  public Page<CatExcerptView> readExcerpt(Pageable pageable)
+  public Page<CatExcerptView> getAll(Pageable pageable)
   {
-    int firstResult = pageable.getPageNumber() * pageable.getPageSize();
-    int maxResults = pageable.getPageSize();
-
-    EntityViewSetting<CatExcerptView, PaginatedCriteriaBuilder<CatExcerptView>> setting =
-      EntityViewSetting.create(CatExcerptView.class, firstResult, maxResults);
-
-    CriteriaBuilder<Cat> catExcerptViewCriteriaBuilder = criteriaBuilderFactory
-      .create(entityManager, Cat.class);
-
-    applySorting(pageable, catExcerptViewCriteriaBuilder);
-
-    final PagedList<CatExcerptView> resultList = entityViewManager.applySetting(setting, catExcerptViewCriteriaBuilder)
-      .getResultList();
-    
-    return EntityViewPage.of(resultList, pageable);
+    var setting = EntityViewSettingFactory.create(CatExcerptView.class, pageable);
+    return pageableEntityViewRepository.findAll(Cat.class, CatExcerptView.class, setting, pageable);
   }
 
-  private void applySorting(Pageable source, CriteriaBuilder<?> target)
+  @Transactional
+  public Page<CatExcerptView> getAll(
+    EntityViewSetting<CatExcerptView, PaginatedCriteriaBuilder<CatExcerptView>> setting,
+    Pageable pageable
+  )
   {
-    for (Order sort : source.getSort()) {
-      target.orderBy(sort.getProperty(), Direction.ASC == sort.getDirection(), false);
-    }
+    return pageableEntityViewRepository.findAll(Cat.class, CatExcerptView.class, setting, pageable);
+  }
+
+  @Transactional
+  public Page<CatExcerptView> getAllBlackCats(
+    EntityViewSetting<CatExcerptView, PaginatedCriteriaBuilder<CatExcerptView>> setting,
+    Pageable pageable
+  )
+  {
+    final CriteriaBuilder<Cat> catCriteriaBuilder = criteriaBuilderFactory.create(entityManager, Cat.class);
+    catCriteriaBuilder.where("color").eq("black");
+
+    return pageableEntityViewRepository.findAll(Cat.class, CatExcerptView.class, setting, catCriteriaBuilder, pageable);
   }
 }
