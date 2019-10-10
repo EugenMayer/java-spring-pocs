@@ -14,8 +14,6 @@ public interface BlazeUserCreateView extends BlazeUserIdView
     setFirstName("");
   }
 
-  void setUid(Integer uid);
-
   String getLastName();
 
   void setLastName(String lastName);
