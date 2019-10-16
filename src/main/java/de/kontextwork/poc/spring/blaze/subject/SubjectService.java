@@ -3,10 +3,12 @@ package de.kontextwork.poc.spring.blaze.subject;
 import com.blazebit.persistence.*;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
+import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.group.GroupSubjectView;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.subject.SubjectView;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.user.UserSubjectView;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ public class SubjectService
   private final PageableEntityViewRepository<User> userViewRepository;
   private final PageableEntityViewRepository<Group> groupViewRepository;
   private final PageableEntityViewRepository<Subject> subjectViewRepository;
+  private final RegularEntityViewRepository<Subject, Long> regularEntityViewRepository;
 
   public User create(final User user)
   {
@@ -71,5 +74,13 @@ public class SubjectService
     Class<SubjectView> viewClass = setting.getEntityViewClass();
     CriteriaBuilder<Subject> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Subject.class);
     return subjectViewRepository.findAll(Subject.class, viewClass, setting, criteriaBuilder, pageable);
+  }
+
+  public Set<SubjectView> getSubjects(
+    EntityViewSetting<SubjectView, CriteriaBuilder<SubjectView>> setting
+  )
+  {
+    CriteriaBuilder<Subject> criteriaBuilder = regularEntityViewRepository.entityCriteriaBuilder(Subject.class);
+    return regularEntityViewRepository.findAll(setting, criteriaBuilder);
   }
 }

@@ -1,8 +1,8 @@
 package de.kontextwork.poc.spring.blaze.subject;
 
+import com.blazebit.persistence.view.EntityViewSetting;
 import com.github.javafaker.Faker;
-import de.kontextwork.poc.spring.blaze.core.EntityViewSettingFactory;
-import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
+import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.group.GroupSubjectView;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.subject.SubjectView;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.user.UserSubjectView;
@@ -29,7 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
   SubjectService.class,
   JpaBlazeConfiguration.class,
   BlazePersistenceConfiguration.class,
-  PageableEntityViewRepository.class
+  PageableEntityViewRepository.class,
+  RegularEntityViewRepository.class
 })
 @AutoConfigureDataJdbc
 @DataJpaTest(properties = {"blazepersistance.enabled=true"})
@@ -89,12 +90,25 @@ class SubjectServiceTest
   }
 
   @Test
-  @DisplayName("Should resolve Subject")
+  @DisplayName("Should resolve Subject as List")
   @Sql(
     statements = "alter table kontextwork_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
-  void shouldResolveSubjects()
+  void shouldResolveSubjectsAsList()
+  {
+    var subjectSetting = EntityViewSetting.create(SubjectView.class);
+    final Set<SubjectView> subjects = subjectService.getSubjects(subjectSetting);
+    assertThat(subjects).hasSize(15);
+  }
+
+  @Test
+  @DisplayName("Should resolve paginated Subjects")
+  @Sql(
+    statements = "alter table kontextwork_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void shouldResolvePaginatedSubjects()
   {
     PageRequest pageRequest = PageRequest.of(0, 50, Direction.DESC, "id");
     var subjectSetting = EntityViewSettingFactory.create(SubjectView.class, pageRequest);
