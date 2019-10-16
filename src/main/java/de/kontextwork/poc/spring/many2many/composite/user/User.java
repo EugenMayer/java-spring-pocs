@@ -4,10 +4,10 @@ import javax.persistence.*;
 import lombok.*;
 
 @Data
-@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity(name = "NaUser")
 @Table(name = "na_user")
 public class User
 {

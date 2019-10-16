@@ -27,6 +27,7 @@ public class SubjectService
   private final PageableEntityViewRepository<User> userViewRepository;
   private final PageableEntityViewRepository<Group> groupViewRepository;
   private final PageableEntityViewRepository<Subject> subjectViewRepository;
+  private final PageableEntityViewRepository<RoleMember> roleMemberViewRepository;
   private final RegularEntityViewRepository<Subject, Long> regularEntityViewRepository;
 
   public User create(final User user)

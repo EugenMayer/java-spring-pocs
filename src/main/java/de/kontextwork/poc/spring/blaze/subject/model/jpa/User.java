@@ -10,9 +10,8 @@ import static org.hibernate.annotations.GenerationTime.INSERT;
 @Data
 @Entity
 @Accessors(chain = true)
-@RequiredArgsConstructor
 @DiscriminatorValue("USER")
-@Table(name = "kontextwork_user")
+@Table(name = "subject_user")
 @EqualsAndHashCode(callSuper = true)
 public class User extends Subject
 {
@@ -24,6 +23,12 @@ public class User extends Subject
   @Column(unique = true, nullable = false, insertable = false, updatable = false)
   private Long uid;
 
-  private final String firstName;
-  private final String lastName;
+  private String firstName;
+  private String lastName;
+
+  public User(final String firstName, final String lastName)
+  {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
 }

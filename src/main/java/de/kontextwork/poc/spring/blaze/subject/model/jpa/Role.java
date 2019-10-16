@@ -1,20 +1,26 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa;
 
 import javax.persistence.*;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 @Data
 @Entity
-@RequiredArgsConstructor
 @Accessors(chain = true)
-@Table(name = "kontextwork_role")
+@Table(name = "subject_role")
 public class Role
 {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private final String name;
+  private String name;
+
+  @OneToOne(mappedBy = "role", fetch = FetchType.LAZY)
+  private RoleMember roleMember;
+
+  public Role(final String name)
+  {
+    this.name = name;
+  }
 }

@@ -68,7 +68,7 @@ class SubjectServiceTest
   @Test
   @DisplayName("Should create Users and Groups as Subjects")
   @Sql(
-    statements = "alter table kontextwork_user modify uid bigint auto_increment;",
+    statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
   void shouldCreateUsersAndGroupsAsSubjects()
@@ -92,29 +92,47 @@ class SubjectServiceTest
   @Test
   @DisplayName("Should resolve Subject as List")
   @Sql(
-    statements = "alter table kontextwork_user modify uid bigint auto_increment;",
+    statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
   void shouldResolveSubjectsAsList()
   {
     var subjectSetting = EntityViewSetting.create(SubjectView.class);
     final Set<SubjectView> subjects = subjectService.getSubjects(subjectSetting);
+
     assertThat(subjects).hasSize(15);
   }
 
   @Test
   @DisplayName("Should resolve paginated Subjects")
   @Sql(
-    statements = "alter table kontextwork_user modify uid bigint auto_increment;",
+    statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
   void shouldResolvePaginatedSubjects()
   {
     PageRequest pageRequest = PageRequest.of(0, 50, Direction.DESC, "id");
     var subjectSetting = EntityViewSettingFactory.create(SubjectView.class, pageRequest);
-
     final Page<SubjectView> subjects = subjectService.getSubjects(subjectSetting, pageRequest);
+
     assertThat(subjects.getNumberOfElements()).isEqualTo(15);
+  }
+
+  @Test
+  @DisplayName("Should resolve Subjects with given Role")
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void shouldResolveSubjectsWithGivenRole()
+  {
+    PageRequest pageRequest = PageRequest.of(0, 50, Direction.DESC, "id");
+
+    var userRoleSetting = EntityViewSettingFactory.create(SubjectView.class, pageRequest);
+    userRoleSetting.addViewFilter("userRoleFiler");
+
+    final Page<SubjectView> subjects = subjectService.getSubjects(userRoleSetting, pageRequest);
+    assertThat(subjects.getNumberOfElements()).isEqualTo(1);
   }
 
   private Set<User> randomTeam()

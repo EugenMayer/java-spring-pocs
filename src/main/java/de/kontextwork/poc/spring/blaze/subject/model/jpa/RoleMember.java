@@ -2,14 +2,12 @@ package de.kontextwork.poc.spring.blaze.subject.model.jpa;
 
 import javax.persistence.*;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
 @Entity
-@RequiredArgsConstructor
 @Accessors(chain = true)
-@Table(name = "kontextwork_role_member")
+@Table(name = "subject_role_member")
 public class RoleMember
 {
   @Id
@@ -17,8 +15,14 @@ public class RoleMember
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
-  private final Role role;
+  private Role role;
 
   @OneToOne(fetch = FetchType.LAZY)
-  private final Subject subject;
+  private Subject subject;
+
+  public RoleMember(final Role role, final Subject subject)
+  {
+    this.role = role;
+    this.subject = subject;
+  }
 }
