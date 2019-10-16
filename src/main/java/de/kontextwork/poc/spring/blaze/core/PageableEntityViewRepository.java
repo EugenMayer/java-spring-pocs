@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
+@SuppressWarnings({"unused"})
 public class PageableEntityViewRepository<E>
 {
   private final EntityManager entityManager;
@@ -28,40 +29,34 @@ public class PageableEntityViewRepository<E>
    * {@link Pageable} object.
    *
    * @param entityClass Class representing the root entity
-   * @param entityViewClass Class representing the result set
    * @param setting Preconfigured {@link EntityViewSetting}
    * @param pageable Provided paging restrictions
    */
   public <V> Page<V> findAll(
     Class<E> entityClass,
-    Class<V> entityViewClass,
     EntityViewSetting<V, PaginatedCriteriaBuilder<V>> setting,
     Pageable pageable
   )
   {
-    return findAll(entityClass, entityViewClass, setting, defaultCriteriaBuilder(entityClass), pageable);
+    return findAll(setting, defaultCriteriaBuilder(entityClass), pageable);
   }
 
   /**
    * Returns a {@link EntityViewPage} of entity views meeting the paging restriction provided in the
    * {@link Pageable} object.
    *
-   * @param entityClass Class representing the root entity
-   * @param entityViewClass Class representing the result set
    * @param setting Preconfigured {@link EntityViewSetting}
    * @param criteriaBuilder Preconfigured {@link CriteriaBuilder}
    * @param pageable Provided paging restrictions
    */
   public <V> Page<V> findAll(
-    Class<E> entityClass,
-    Class<V> entityViewClass,
     EntityViewSetting<V, PaginatedCriteriaBuilder<V>> setting,
     CriteriaBuilder<E> criteriaBuilder,
     Pageable pageable
   )
   {
-    Assert.notNull(entityClass.getAnnotation(Entity.class));
-    Assert.notNull(entityViewClass.getAnnotation(EntityView.class));
+    Assert.notNull(criteriaBuilder.getResultType().getAnnotation(Entity.class));
+    Assert.notNull(setting.getEntityViewClass().getAnnotation(EntityView.class));
 
     return EntityViewPage.of(entityViewManager.applySetting(setting, criteriaBuilder).getResultList(), pageable);
   }

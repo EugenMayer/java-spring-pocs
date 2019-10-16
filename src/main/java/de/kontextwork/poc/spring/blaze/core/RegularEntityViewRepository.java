@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
-@SuppressWarnings("squid:S00119")
+@SuppressWarnings({"squid:S00119", "unused"})
 public class RegularEntityViewRepository<E, ID>
 {
   private final EntityManager entityManager;

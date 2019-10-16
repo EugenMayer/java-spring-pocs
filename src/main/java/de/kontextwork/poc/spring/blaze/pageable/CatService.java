@@ -44,7 +44,7 @@ public class CatService
   public Page<CatExcerptView> getAll(Pageable pageable)
   {
     var setting = EntityViewSettingFactory.create(CatExcerptView.class, pageable);
-    return pageableEntityViewRepository.findAll(Cat.class, CatExcerptView.class, setting, pageable);
+    return pageableEntityViewRepository.findAll(Cat.class, setting, pageable);
   }
 
   @Transactional
@@ -53,7 +53,7 @@ public class CatService
     Pageable pageable
   )
   {
-    return pageableEntityViewRepository.findAll(Cat.class, CatExcerptView.class, setting, pageable);
+    return pageableEntityViewRepository.findAll(Cat.class, setting, pageable);
   }
 
   @Transactional
@@ -65,6 +65,6 @@ public class CatService
     final CriteriaBuilder<Cat> catCriteriaBuilder = criteriaBuilderFactory.create(entityManager, Cat.class);
     catCriteriaBuilder.where("color").eq("black");
 
-    return pageableEntityViewRepository.findAll(Cat.class, CatExcerptView.class, setting, catCriteriaBuilder, pageable);
+    return pageableEntityViewRepository.findAll(setting, catCriteriaBuilder, pageable);
   }
 }

@@ -34,7 +34,7 @@ class CatServiceTest
 {
   private final Faker faker = new Faker(new Random(0));
 
-  private final String color[] = {"black", "white", "brown"};
+  private final String[] color = {"black", "white", "brown"};
 
   private final IntFunction<Cat> randomCat = id -> (new Cat())
     .setId((long) id)

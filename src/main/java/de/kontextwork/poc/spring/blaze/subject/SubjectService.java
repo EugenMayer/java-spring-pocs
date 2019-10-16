@@ -53,27 +53,24 @@ public class SubjectService
     EntityViewSetting<UserSubjectView, PaginatedCriteriaBuilder<UserSubjectView>> setting, Pageable pageable
   )
   {
-    Class<UserSubjectView> viewClass = setting.getEntityViewClass();
     CriteriaBuilder<User> criteriaBuilder = criteriaBuilderFactory.create(entityManager, User.class);
-    return userViewRepository.findAll(User.class, viewClass, setting, criteriaBuilder, pageable);
+    return userViewRepository.findAll(setting, criteriaBuilder, pageable);
   }
 
   public Page<GroupSubjectView> getGroups(
     EntityViewSetting<GroupSubjectView, PaginatedCriteriaBuilder<GroupSubjectView>> setting, Pageable pageable
   )
   {
-    Class<GroupSubjectView> viewClass = setting.getEntityViewClass();
     CriteriaBuilder<Group> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Group.class);
-    return groupViewRepository.findAll(Group.class, viewClass, setting, criteriaBuilder, pageable);
+    return groupViewRepository.findAll(setting, criteriaBuilder, pageable);
   }
 
   public Page<SubjectView> getSubjects(
     EntityViewSetting<SubjectView, PaginatedCriteriaBuilder<SubjectView>> setting, Pageable pageable
   )
   {
-    Class<SubjectView> viewClass = setting.getEntityViewClass();
     CriteriaBuilder<Subject> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Subject.class);
-    return subjectViewRepository.findAll(Subject.class, viewClass, setting, criteriaBuilder, pageable);
+    return subjectViewRepository.findAll(setting, criteriaBuilder, pageable);
   }
 
   public Set<SubjectView> getSubjects(
