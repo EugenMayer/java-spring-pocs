@@ -5,9 +5,10 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
+@Entity
 @Accessors(chain = true)
 @DiscriminatorColumn(name = "TYPE")
-@Entity(name = "kontextwork_subject")
+@Table(name = "kontextwork_subject")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Subject
 {

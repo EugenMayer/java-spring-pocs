@@ -8,10 +8,11 @@ import org.hibernate.annotations.Generated;
 import static org.hibernate.annotations.GenerationTime.INSERT;
 
 @Data
+@Entity
 @Accessors(chain = true)
 @RequiredArgsConstructor
 @DiscriminatorValue("USER")
-@Entity(name = "kontextwork_user")
+@Table(name = "kontextwork_user")
 @EqualsAndHashCode(callSuper = true)
 public class User extends Subject
 {

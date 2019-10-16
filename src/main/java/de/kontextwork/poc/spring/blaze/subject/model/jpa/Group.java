@@ -6,10 +6,11 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 @Data
+@Entity
 @Accessors(chain = true)
 @RequiredArgsConstructor
 @DiscriminatorValue("GROUP")
-@Entity(name = "kontextwork_group")
+@Table(name = "kontextwork_group")
 @EqualsAndHashCode(callSuper = true)
 public class Group extends Subject
 {

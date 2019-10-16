@@ -6,9 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
+@Entity
 @RequiredArgsConstructor
 @Accessors(chain = true)
-@Entity(name = "kontextwork_role")
+@Table(name = "kontextwork_role")
 public class Role
 {
   @Id
