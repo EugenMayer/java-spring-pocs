@@ -1,5 +1,6 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa;
 
+import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,7 +11,7 @@ import static org.hibernate.annotations.GenerationTime.INSERT;
 @Data
 @Entity
 @Accessors(chain = true)
-@DiscriminatorValue("USER")
+@DiscriminatorValue("0")
 @Table(name = "subject_user")
 @EqualsAndHashCode(callSuper = true)
 public class User extends Subject
@@ -25,6 +26,9 @@ public class User extends Subject
 
   private String firstName;
   private String lastName;
+
+  @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+  private Set<Group> groups;
 
   public User(final String firstName, final String lastName)
   {

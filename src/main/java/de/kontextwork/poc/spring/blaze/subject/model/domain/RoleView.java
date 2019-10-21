@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.blaze.subject.model.domain.role;
+package de.kontextwork.poc.spring.blaze.subject.model.domain;
 
 import com.blazebit.persistence.view.*;
 import com.blazebit.persistence.view.filter.EqualFilter;

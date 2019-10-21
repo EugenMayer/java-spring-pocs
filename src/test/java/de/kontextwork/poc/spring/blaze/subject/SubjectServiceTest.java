@@ -3,9 +3,8 @@ package de.kontextwork.poc.spring.blaze.subject;
 import com.blazebit.persistence.view.EntityViewSetting;
 import com.github.javafaker.Faker;
 import de.kontextwork.poc.spring.blaze.core.*;
-import de.kontextwork.poc.spring.blaze.subject.model.domain.group.GroupSubjectView;
-import de.kontextwork.poc.spring.blaze.subject.model.domain.subject.SubjectView;
-import de.kontextwork.poc.spring.blaze.subject.model.domain.user.UserSubjectView;
+import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
+import de.kontextwork.poc.spring.blaze.subject.model.domain.filter.UserInRoleFilter;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
@@ -43,6 +42,35 @@ class SubjectServiceTest
   @Autowired
   private SubjectService subjectService;
 
+  /**
+   * This creates the data basis containing 3 {@link Role}, 6 {@link Group} and 23 {@link User} entities that act as
+   * our default test scenario:
+   *
+   * <ul>
+   *   <li>Group "Admins" containing 5 randomly generated members</li>
+   *   <li>Group "Moderators" containing 5 randomly generated members</li>
+   *   <li>User "Bob Smith" in global "USER" role</li>
+   *   <li>User "Tim Smith" in global "MODERATOR" role</li>
+   *   <li>User "Jim Smith" in global "ADMINISTRATOR" role</li>
+   *   <li>Role "ADMINISTRATOR"</li>
+   *   <li>Role "MODERATOR"</li>
+   *   <li>Role "USER"</li>
+   * </ul>
+   * <ul>
+   *   <li>Realm "Red"</li>
+   *   <ul>
+   *     <li>User "Tim Smith" in realm "ADMINISTRATOR" role</li>
+   *   </ul>
+   *   <li>Realm "Green"</li>
+   *   <ul>
+   *     <li>Group "Realm Green Admins" containing 5 randomly generated members in realm "ADMINISTRATOR" role</li>
+   *   </ul>
+   *   <li>Realm "Green"</li>
+   *   <ul>
+   *     <li>Group "Realm Blue Users" containing 5 randomly generated members in realm "USER" role</li>
+   *   </ul>
+   * </ul>
+   */
   @BeforeEach
   public void setup()
   {
@@ -54,15 +82,27 @@ class SubjectServiceTest
     final User userJim = subjectService.create(new User("Jim", "Smith"));
 
     final Role roleUser = subjectService.create(new Role("ROLE_USER"));
-    final Role roleAdmin = subjectService.create(new Role("ROLE_ADMIN"));
+    final Role roleAdmin = subjectService.create(new Role("ROLE_ADMINISTRATOR"));
     final Role roleModerator = subjectService.create(new Role("ROLE_MODERATOR"));
 
+    final Realm realmRed = subjectService.create(new Realm("Red"));
+    final Realm realmGreen = subjectService.create(new Realm("Green"));
+    final Realm realmBlue = subjectService.create(new Realm("Blue"));
+
     subjectService.assign(roleUser, userBob);
-    subjectService.assign(roleAdmin, userJim);
     subjectService.assign(roleModerator, userTim);
+    subjectService.assign(roleAdmin, userJim);
 
     subjectService.assign(roleAdmin, groupAdmins);
     subjectService.assign(roleModerator, groupModerators);
+
+    subjectService.assign(realmRed, roleAdmin, userTim);
+
+    final Group realmGreenAdminGroup = subjectService.create(new Group("Realm Green Admins", randomTeam()));
+    final Group realmBlueUserGroup = subjectService.create(new Group("Realm Blue Users", randomTeam()));
+
+    subjectService.assign(realmGreen, roleModerator, realmGreenAdminGroup);
+    subjectService.assign(realmBlue, roleUser, realmBlueUserGroup);
   }
 
   @Test
@@ -75,18 +115,19 @@ class SubjectServiceTest
   {
     // Should resolve paged Users
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
-    var userSetting = EntityViewSettingFactory.create(UserSubjectView.class, userPageRequest);
-    final Page<UserSubjectView> users = subjectService.getUsers(userSetting, userPageRequest);
+    var userSetting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
+    final Page<SubjectUserView> users = subjectService.getSubjectUsers(userSetting, userPageRequest);
 
-    // 3 Test Users + 10 Group members
-    assertThat(users.getNumberOfElements()).isEqualTo(13);
+    // Σ(3 Users, 4 * 5 random group members)
+    assertThat(users.getNumberOfElements()).isEqualTo(23);
 
     // Should resolve paged Groups
     PageRequest groupPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "name");
-    var groupSetting = EntityViewSettingFactory.create(GroupSubjectView.class, groupPageRequest);
-    final Page<GroupSubjectView> groups = subjectService.getGroups(groupSetting, groupPageRequest);
+    var groupSetting = EntityViewSettingFactory.create(SubjectGroupView.class, groupPageRequest);
+    final Page<SubjectGroupView> groups = subjectService.getSubjectGroups(groupSetting, groupPageRequest);
 
-    assertThat(groups.getNumberOfElements()).isEqualTo(2);
+    // Σ(4 Groups)
+    assertThat(groups.getNumberOfElements()).isEqualTo(4);
   }
 
   @Test
@@ -100,7 +141,8 @@ class SubjectServiceTest
     var subjectSetting = EntityViewSetting.create(SubjectView.class);
     final Set<SubjectView> subjects = subjectService.getSubjects(subjectSetting);
 
-    assertThat(subjects).hasSize(15);
+    // Σ(3 Users, 4 * 5 Group members, 4 Groups)
+    assertThat(subjects).hasSize(27);
   }
 
   @Test
@@ -115,24 +157,25 @@ class SubjectServiceTest
     var subjectSetting = EntityViewSettingFactory.create(SubjectView.class, pageRequest);
     final Page<SubjectView> subjects = subjectService.getSubjects(subjectSetting, pageRequest);
 
-    assertThat(subjects.getNumberOfElements()).isEqualTo(15);
+    // Σ(3 Users, 4 * 5 Group members, 4 Groups)
+    assertThat(subjects.getNumberOfElements()).isEqualTo(27);
   }
 
   @Test
-  @DisplayName("Should resolve Subjects with given Role")
+  @DisplayName("Should resolve Users in Role Administrator")
   @Sql(
     statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
-  void shouldResolveSubjectsWithGivenRole()
+  void shouldResolveUsersInRoleAdministrator()
   {
-    PageRequest pageRequest = PageRequest.of(0, 50, Direction.DESC, "id");
+    PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
+    var setting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
+    setting.addViewFilter(UserInRoleFilter.Administrator.NAME);
+    final Page<SubjectUserView> users = subjectService.getSubjectUsers(setting, userPageRequest);
 
-    var userRoleSetting = EntityViewSettingFactory.create(SubjectView.class, pageRequest);
-    userRoleSetting.addViewFilter("userRoleFiler");
-
-    final Page<SubjectView> subjects = subjectService.getSubjects(userRoleSetting, pageRequest);
-    assertThat(subjects.getNumberOfElements()).isEqualTo(1);
+    // Σ(1 Global Admin, 5 Members of Group "Realm Green Admins")
+    assertThat(users.getNumberOfElements()).isEqualTo(6);
   }
 
   private Set<User> randomTeam()

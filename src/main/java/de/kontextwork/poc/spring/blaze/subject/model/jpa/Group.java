@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-@DiscriminatorValue("GROUP")
+@DiscriminatorValue("1")
 @Table(name = "subject_group")
 @EqualsAndHashCode(callSuper = true)
 public class Group extends Subject

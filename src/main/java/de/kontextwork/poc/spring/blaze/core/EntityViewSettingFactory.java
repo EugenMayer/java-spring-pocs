@@ -2,15 +2,17 @@ package de.kontextwork.poc.spring.blaze.core;
 
 import com.blazebit.persistence.PaginatedCriteriaBuilder;
 import com.blazebit.persistence.view.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.NullHandling;
-import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.domain.Sort.*;
 
 /**
  * Factory class that utilizes the creation of {@link EntityViewSetting} for domain specific use cases.
  *
  * @author Sebastian Ullrich
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EntityViewSettingFactory
 {
   /**
@@ -41,10 +43,5 @@ public class EntityViewSettingFactory
     }
 
     return setting;
-  }
-
-  private EntityViewSettingFactory()
-  {
-    // Static util class -> therefore no instantiation desired
   }
 }

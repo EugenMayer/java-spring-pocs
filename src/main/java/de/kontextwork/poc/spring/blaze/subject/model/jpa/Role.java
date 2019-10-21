@@ -1,5 +1,6 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa;
 
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RoleMember;
 import javax.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
