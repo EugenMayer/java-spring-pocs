@@ -32,6 +32,7 @@ public class User extends Subject
 
   public User(final String firstName, final String lastName)
   {
+    this.uid = uid;
     this.firstName = firstName;
     this.lastName = lastName;
   }

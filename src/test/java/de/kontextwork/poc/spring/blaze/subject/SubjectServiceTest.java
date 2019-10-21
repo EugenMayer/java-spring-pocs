@@ -4,7 +4,6 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import com.github.javafaker.Faker;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
-import de.kontextwork.poc.spring.blaze.subject.model.domain.filter.UserInRoleFilter;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
@@ -19,6 +18,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
@@ -47,8 +47,8 @@ class SubjectServiceTest
    * our default test scenario:
    *
    * <ul>
-   *   <li>Group "Admins" containing 5 randomly generated members</li>
-   *   <li>Group "Moderators" containing 5 randomly generated members</li>
+   *   <li>Group "Admins" containing 5 randomly generated members in global "ADMINISTRATOR" role</li>
+   *   <li>Group "Moderators" containing 5 randomly generated members in global "MODERATOR" role</li>
    *   <li>User "Bob Smith" in global "USER" role</li>
    *   <li>User "Tim Smith" in global "MODERATOR" role</li>
    *   <li>User "Jim Smith" in global "ADMINISTRATOR" role</li>
@@ -106,6 +106,7 @@ class SubjectServiceTest
   }
 
   @Test
+  @Rollback
   @DisplayName("Should create Users and Groups as Subjects")
   @Sql(
     statements = "alter table subject_user modify uid bigint auto_increment;",
@@ -171,11 +172,45 @@ class SubjectServiceTest
   {
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
     var setting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
-    setting.addViewFilter(UserInRoleFilter.Administrator.NAME);
+    setting.addViewFilter("USER_IN_GLOBAL_ROLE_ADMINISTRATOR");
     final Page<SubjectUserView> users = subjectService.getSubjectUsers(setting, userPageRequest);
 
-    // Σ(1 Global Admin, 5 Members of Group "Realm Green Admins")
+    // Σ(1 Global Admin, 5 Members of Group "Admins")
     assertThat(users.getNumberOfElements()).isEqualTo(6);
+  }
+
+  @Test
+  @DisplayName("Should resolve Users in Role Moderator")
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void shouldResolveUsersInRoleModerator()
+  {
+    PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
+    var setting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
+    setting.addViewFilter("USER_IN_GLOBAL_ROLE_MODERATOR");
+    final Page<SubjectUserView> users = subjectService.getSubjectUsers(setting, userPageRequest);
+
+    // Σ(1 Global Moderator, 5 Members of Group "Moderators")
+    assertThat(users.getNumberOfElements()).isEqualTo(6);
+  }
+
+  @Test
+  @DisplayName("Should resolve Users in Role User")
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void shouldResolveUsersInRoleUser()
+  {
+    PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
+    var setting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
+    setting.addViewFilter("USER_IN_GLOBAL_ROLE_USER");
+    final Page<SubjectUserView> users = subjectService.getSubjectUsers(setting, userPageRequest);
+
+    // Σ(1 Global User)
+    assertThat(users.getNumberOfElements()).isEqualTo(1);
   }
 
   private Set<User> randomTeam()

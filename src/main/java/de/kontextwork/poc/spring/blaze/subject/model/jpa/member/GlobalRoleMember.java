@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
-@DiscriminatorValue(RoleMember.GLOBAL)
+@DiscriminatorValue(RoleMember.GLOBAL_ROLE_DISCRIMINATOR)
 public class GlobalRoleMember extends RoleMember
 {
   public GlobalRoleMember(final Role role, final Subject subject)

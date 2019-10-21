@@ -15,8 +15,14 @@ public class Role
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /**
+   * The roles name in uppercase.
+   */
   private String name;
 
+  /**
+   * Owner of this {@link Role}.
+   */
   @OneToOne(mappedBy = "role", fetch = FetchType.LAZY)
   private RoleMember roleMember;
 

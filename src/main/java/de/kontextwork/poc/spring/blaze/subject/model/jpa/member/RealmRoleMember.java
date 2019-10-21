@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
-@DiscriminatorValue(RoleMember.REALM)
+@DiscriminatorValue(RoleMember.REALM_ROLE_DISCRIMINATOR)
 public class RealmRoleMember extends RoleMember
 {
   @OneToOne(fetch = FetchType.LAZY)

@@ -14,8 +14,8 @@ import lombok.experimental.Accessors;
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public abstract class RoleMember
 {
-  public static final String GLOBAL = "GLOBAL";
-  public static final String REALM = "REALM";
+  public static final String GLOBAL_ROLE_DISCRIMINATOR = "GLOBAL";
+  public static final String REALM_ROLE_DISCRIMINATOR = "REALM";
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
