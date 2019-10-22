@@ -5,6 +5,11 @@ import com.github.javafaker.Faker;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.GlobalPrivilege;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.RealmPrivilege;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.*;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Group;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Realm;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
 import java.util.*;
@@ -74,35 +79,62 @@ class SubjectServiceTest
   @BeforeEach
   public void setup()
   {
-    final Group groupAdmins = subjectService.create(new Group("Admins", randomTeam()));
-    final Group groupModerators = subjectService.create(new Group("Moderators", randomTeam()));
+    final Group groupGlobalAdmins = subjectService.create(new Group("Global Admins", randomTeam()));
+    final Group groupGlobalModerators = subjectService.create(new Group("Global Moderators", randomTeam()));
 
     final User userBob = subjectService.create(new User("Bob", "Smith"));
     final User userTim = subjectService.create(new User("Tim", "Smith"));
     final User userJim = subjectService.create(new User("Jim", "Smith"));
 
-    final Role roleUser = subjectService.create(new Role("ROLE_USER"));
-    final Role roleAdmin = subjectService.create(new Role("ROLE_ADMINISTRATOR"));
-    final Role roleModerator = subjectService.create(new Role("ROLE_MODERATOR"));
+    final GlobalPrivilege someGlobalPrivilege =
+      subjectService.create(new GlobalPrivilege("SOME_GLOBAL_PRIVILEGE"));
+
+    final GlobalPrivilege anotherGlobalPrivilege =
+      subjectService.create(new GlobalPrivilege("ANOTHER_GLOBAL_PRIVILEGE"));
+
+    final GlobalRole globalRoleUser =
+      subjectService.create(new GlobalRole("ROLE_USER", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
+
+    final GlobalRole globalRoleAdmin =
+      subjectService.create(new GlobalRole("ROLE_ADMINISTRATOR", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
+
+    final GlobalRole globalRoleModerator =
+      subjectService.create(new GlobalRole("ROLE_MODERATOR", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
+
+    subjectService.assign(globalRoleUser, userBob);
+    subjectService.assign(globalRoleModerator, userTim);
+    subjectService.assign(globalRoleAdmin, userJim);
+
+    subjectService.assign(globalRoleAdmin, groupGlobalAdmins);
+    subjectService.assign(globalRoleModerator, groupGlobalModerators);
+
+    /// Realm Init ///
+
+    final Group groupRealmAdmins = subjectService.create(new Group("Realm Admins", randomTeam()));
+    final Group groupRealmModerators = subjectService.create(new Group("Realm Moderators", randomTeam()));
 
     final Realm realmRed = subjectService.create(new Realm("Red"));
     final Realm realmGreen = subjectService.create(new Realm("Green"));
     final Realm realmBlue = subjectService.create(new Realm("Blue"));
 
-    subjectService.assign(roleUser, userBob);
-    subjectService.assign(roleModerator, userTim);
-    subjectService.assign(roleAdmin, userJim);
+    final RealmPrivilege someRealmPrivilege = subjectService.create(new RealmPrivilege("SOME_REALM_PRIVILEGE"));
+    final RealmPrivilege anotherRealmPrivilege = subjectService.create(new RealmPrivilege("ANOTHER_REALM_PRIVILEGE"));
 
-    subjectService.assign(roleAdmin, groupAdmins);
-    subjectService.assign(roleModerator, groupModerators);
+    final RealmRole realmRoleUser =
+      subjectService.create(new RealmRole("ROLE_USER", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
 
-    subjectService.assign(realmRed, roleAdmin, userTim);
+    final RealmRole realmRoleAdmin =
+      subjectService.create(new RealmRole("ROLE_ADMINISTRATOR", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
 
-    final Group realmGreenAdminGroup = subjectService.create(new Group("Realm Green Admins", randomTeam()));
-    final Group realmBlueUserGroup = subjectService.create(new Group("Realm Blue Users", randomTeam()));
+    final RealmRole realmRoleModerator =
+      subjectService.create(new RealmRole("ROLE_MODERATOR", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
 
-    subjectService.assign(realmGreen, roleModerator, realmGreenAdminGroup);
-    subjectService.assign(realmBlue, roleUser, realmBlueUserGroup);
+    subjectService.assign(realmRed, realmRoleUser, userTim);
+    subjectService.assign(realmGreen, realmRoleUser, userBob);
+    subjectService.assign(realmBlue, realmRoleUser, userJim);
+
+    subjectService.assign(realmRoleAdmin, groupRealmAdmins);
+    subjectService.assign(realmRoleModerator, groupRealmModerators);
   }
 
   @Test

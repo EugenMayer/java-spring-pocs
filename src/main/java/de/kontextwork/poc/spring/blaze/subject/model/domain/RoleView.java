@@ -2,7 +2,7 @@ package de.kontextwork.poc.spring.blaze.subject.model.domain;
 
 import com.blazebit.persistence.view.*;
 import com.blazebit.persistence.view.filter.EqualFilter;
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.Role;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.Role;
 
 @EntityView(Role.class)
 public interface RoleView

@@ -1,5 +1,7 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa;
 
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Group;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Subject;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.*;
@@ -32,7 +34,6 @@ public class User extends Subject
 
   public User(final String firstName, final String lastName)
   {
-    this.uid = uid;
     this.firstName = firstName;
     this.lastName = lastName;
   }

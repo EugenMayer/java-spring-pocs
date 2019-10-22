@@ -8,6 +8,10 @@ import de.kontextwork.poc.spring.blaze.subject.model.RealmRoleMemberRepository;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.*;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.*;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.RealmRole;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.Role;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.*;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,7 @@ public class SubjectService
   private final RoleRepository roleRepository;
   private final RealmRepository realmRepository;
   private final SubjectRepository subjectRepository;
+  private final PrivilegeRepository privilegeRepository;
   private final RoleMemberRepository roleMemberRepository;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
   private final RealmRoleMemberRepository realmRoleMemberRepository;
@@ -34,23 +39,15 @@ public class SubjectService
   /**
    * Creates new {@link User}.
    */
-  public User create(final User user)
+  public <S extends Subject> S create(final S user)
   {
     return subjectRepository.save(user);
   }
 
   /**
-   * Creates new {@link Group}.
-   */
-  public Group create(final Group group)
-  {
-    return subjectRepository.save(group);
-  }
-
-  /**
    * Creates new {@link Role}.
    */
-  public Role create(final Role role)
+  public <R extends Role> R create(final R role)
   {
     return roleRepository.save(role);
   }
@@ -64,19 +61,27 @@ public class SubjectService
   }
 
   /**
-   * Creates new {@link GlobalRoleMember} from provided {@code role} and {@code subject}.
+   * Creates new {@link Privilege}.
    */
-  public void assign(final Role role, final Subject subject)
+  public <P extends Privilege> P create(final P privilege)
   {
-    roleMemberRepository.save(new GlobalRoleMember(role, subject));
+    return privilegeRepository.save(privilege);
   }
 
   /**
-   * Creates new {@link RealmRoleMember} from provided {@code realm}, {@code role} and {@code subject}.
+   * Creates new {@link GlobalRoleMembership} from provided {@code role} and {@code subject}.
    */
-  public void assign(final Realm realm, final Role role, final Subject subject)
+  public void assign(final Role role, final Subject subject)
   {
-    realmRoleMemberRepository.save(new RealmRoleMember(realm, role, subject));
+    roleMemberRepository.save(new GlobalRoleMembership(role, subject));
+  }
+
+  /**
+   * Creates new {@link RealmRoleMembership} from provided {@code realm}, {@code role} and {@code subject}.
+   */
+  public void assign(final Realm realm, final RealmRole role, final Subject subject)
+  {
+    realmRoleMemberRepository.save(new RealmRoleMembership(realm, role, subject));
   }
 
   /**

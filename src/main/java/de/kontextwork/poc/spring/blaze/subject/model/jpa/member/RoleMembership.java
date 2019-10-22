@@ -1,7 +1,7 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa.member;
 
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.Role;
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.Subject;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Subject;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.Role;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Table(name = "subject_role_member")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-public abstract class RoleMember
+public abstract class RoleMembership
 {
   public static final String GLOBAL_ROLE_DISCRIMINATOR = "GLOBAL";
   public static final String REALM_ROLE_DISCRIMINATOR = "REALM";
@@ -27,7 +27,7 @@ public abstract class RoleMember
   @OneToOne(fetch = FetchType.LAZY)
   private Subject subject;
 
-  RoleMember(final Role role, final Subject subject)
+  RoleMembership(final Role role, final Subject subject)
   {
     this.role = role;
     this.subject = subject;

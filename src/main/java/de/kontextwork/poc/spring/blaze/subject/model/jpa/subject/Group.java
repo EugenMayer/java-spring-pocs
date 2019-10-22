@@ -1,5 +1,6 @@
-package de.kontextwork.poc.spring.blaze.subject.model.jpa;
+package de.kontextwork.poc.spring.blaze.subject.model.jpa.subject;
 
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.User;
 import java.util.*;
 import javax.persistence.*;
 import lombok.*;

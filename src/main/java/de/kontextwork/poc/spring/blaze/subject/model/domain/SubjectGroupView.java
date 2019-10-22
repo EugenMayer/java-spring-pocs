@@ -1,7 +1,7 @@
 package de.kontextwork.poc.spring.blaze.subject.model.domain;
 
 import com.blazebit.persistence.view.EntityView;
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.Group;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Group;
 import java.util.Set;
 
 @EntityView(Group.class)

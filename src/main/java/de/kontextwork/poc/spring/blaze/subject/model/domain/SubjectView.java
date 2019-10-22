@@ -2,7 +2,7 @@ package de.kontextwork.poc.spring.blaze.subject.model.domain;
 
 import com.blazebit.persistence.view.*;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.SubjectFilter.GlobalRoleFilter;
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.Subject;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Subject;
 
 @EntityView(Subject.class)
 @EntityViewInheritance

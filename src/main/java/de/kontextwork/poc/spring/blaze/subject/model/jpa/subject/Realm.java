@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.blaze.subject.model.jpa;
+package de.kontextwork.poc.spring.blaze.subject.model.jpa.subject;
 
 import java.util.UUID;
 import javax.persistence.*;
