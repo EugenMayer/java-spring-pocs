@@ -1,6 +1,7 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa.role;
 
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RoleMembership;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.GlobalRoleMembership;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RealmRoleMembership;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.Privilege;
 import java.util.Set;
 import javax.persistence.*;
@@ -38,7 +39,13 @@ public abstract class Role
    * Owner of this {@link Role}.
    */
   @OneToOne(mappedBy = "role", fetch = FetchType.LAZY)
-  private RoleMembership roleMembership;
+  private GlobalRoleMembership globalRoleMembership;
+
+  /**
+   * Owner of this {@link Role}.
+   */
+  @OneToOne(mappedBy = "role", fetch = FetchType.LAZY)
+  private RealmRoleMembership realmRoleMembership;
 
   public Role(final String name, Set<Privilege> privileges)
   {

@@ -138,7 +138,6 @@ class SubjectServiceTest
   }
 
   @Test
-  @Rollback
   @DisplayName("Should create Users and Groups as Subjects")
   @Sql(
     statements = "alter table subject_user modify uid bigint auto_increment;",

@@ -5,20 +5,29 @@ import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Realm;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Subject;
 import javax.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(callSuper = true)
-@DiscriminatorValue(RoleMembership.REALM_ROLE_DISCRIMINATOR)
-public class RealmRoleMembership extends RoleMembership
+@Table(name = "subject_realm_role_memberships")
+public class RealmRoleMembership
 {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  private Role role;
+
+  @OneToOne(fetch = FetchType.LAZY)
+  private Subject subject;
+
   @OneToOne(fetch = FetchType.LAZY)
   private Realm realm;
 
   public RealmRoleMembership(final Realm realm, final Role role, final Subject subject)
   {
-    super(role, subject);
     this.realm = realm;
+    this.role = role;
+    this.subject = subject;
   }
 }

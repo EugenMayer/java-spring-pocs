@@ -4,7 +4,6 @@ import com.blazebit.persistence.*;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
-import de.kontextwork.poc.spring.blaze.subject.model.RealmRoleMemberRepository;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.*;
@@ -28,12 +27,12 @@ public class SubjectService
   private final RealmRepository realmRepository;
   private final SubjectRepository subjectRepository;
   private final PrivilegeRepository privilegeRepository;
-  private final RoleMemberRepository roleMemberRepository;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
-  private final RealmRoleMemberRepository realmRoleMemberRepository;
   private final PageableEntityViewRepository<User> userViewRepository;
   private final PageableEntityViewRepository<Group> groupViewRepository;
   private final PageableEntityViewRepository<Subject> subjectViewRepository;
+  private final RealmRoleMembershipRepository realmRoleMembershipRepository;
+  private final GlobalRoleMembershipRepository globalRoleMembershipRepository;
   private final RegularEntityViewRepository<Subject, Long> regularEntityViewRepository;
 
   /**
@@ -73,7 +72,7 @@ public class SubjectService
    */
   public void assign(final Role role, final Subject subject)
   {
-    roleMemberRepository.save(new GlobalRoleMembership(role, subject));
+    globalRoleMembershipRepository.save(new GlobalRoleMembership(role, subject));
   }
 
   /**
@@ -81,7 +80,7 @@ public class SubjectService
    */
   public void assign(final Realm realm, final RealmRole role, final Subject subject)
   {
-    realmRoleMemberRepository.save(new RealmRoleMembership(realm, role, subject));
+    realmRoleMembershipRepository.save(new RealmRoleMembership(realm, role, subject));
   }
 
   /**

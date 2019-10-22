@@ -1,6 +1,7 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa.subject;
 
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RoleMembership;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.GlobalRoleMembership;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RealmRoleMembership;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,5 +19,8 @@ public abstract class Subject
   private Long id;
 
   @OneToOne(mappedBy = "subject", fetch = FetchType.LAZY)
-  private RoleMembership roleMembership;
+  private GlobalRoleMembership globalRoleMembership;
+
+  @OneToOne(mappedBy = "subject", fetch = FetchType.LAZY)
+  private RealmRoleMembership realmRoleMembership;
 }
