@@ -4,24 +4,35 @@ import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.Role;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Realm;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Subject;
 import javax.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "subject_realm_role_memberships")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class RealmRoleMembership
 {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @EmbeddedId
+  @EqualsAndHashCode.Include
+  private RealmRoleMembershipId id;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @MapsId("roleId")
+  @EqualsAndHashCode.Include
+  @JoinColumn(name = "role_id", columnDefinition = "INT(10) UNSIGNED")
+  @ManyToOne(fetch = FetchType.LAZY)
   private Role role;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @MapsId("subjectId")
+  @EqualsAndHashCode.Include
+  @JoinColumn(name = "subject_id", columnDefinition = "INT(10) UNSIGNED")
+  @ManyToOne(fetch = FetchType.LAZY)
   private Subject subject;
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @MapsId("realmId")
+  @EqualsAndHashCode.Include
+  @JoinColumn(name = "realm_id", columnDefinition = "INT(10) UNSIGNED")
+  @ManyToOne(fetch = FetchType.LAZY)
   private Realm realm;
 
   public RealmRoleMembership(final Realm realm, final Role role, final Subject subject)
@@ -29,5 +40,6 @@ public class RealmRoleMembership
     this.realm = realm;
     this.role = role;
     this.subject = subject;
+    this.id = new RealmRoleMembershipId(this);
   }
 }

@@ -38,9 +38,9 @@ public class SubjectService
   /**
    * Creates new {@link User}.
    */
-  public <S extends Subject> S create(final S user)
+  public <S extends Subject> S create(final S subject)
   {
-    return subjectRepository.save(user);
+    return subjectRepository.save(subject);
   }
 
   /**
