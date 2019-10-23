@@ -1,5 +1,7 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege;
 
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.Role;
+import java.util.Set;
 import javax.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -18,6 +20,9 @@ public abstract class Privilege
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @ManyToMany(mappedBy = "privileges", fetch = FetchType.LAZY)
+  private Set<Role> roles;
 
   /**
    * The privilege name.

@@ -2,6 +2,7 @@ package de.kontextwork.poc.spring.blaze.subject;
 
 import com.blazebit.persistence.view.EntityViewSetting;
 import com.github.javafaker.Faker;
+import com.google.common.base.Stopwatch;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
@@ -12,7 +13,10 @@ import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Group;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Realm;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.IntFunction;
 import java.util.stream.*;
 import org.junit.jupiter.api.*;
@@ -46,6 +50,24 @@ class SubjectServiceTest
   @Autowired
   private SubjectService subjectService;
 
+  private RealmPrivilege someRealmPrivilege;
+  private RealmPrivilege anotherRealmPrivilege;
+
+  private GlobalPrivilege anotherGlobalPrivilege;
+  private GlobalPrivilege someGlobalPrivilege;
+  private GlobalPrivilege adminUniqueGlobalPrivilege;
+
+  private GlobalRole globalRoleUser;
+  private GlobalRole globalRoleAdmin;
+  private GlobalRole globalRoleModerator;
+
+  private User userBob;
+  private User userTim;
+  private User userJim;
+
+  private Group groupGlobalAdmins;
+  private Group groupGlobalModerators;
+
   /**
    * This creates the data basis containing 3 {@link Role}, 6 {@link Group} and 23 {@link User} entities that act as
    * our default test scenario:
@@ -78,27 +100,26 @@ class SubjectServiceTest
   @BeforeEach
   public void setup()
   {
-    final Group groupGlobalAdmins = subjectService.create(new Group("Global Admins", randomTeam()));
-    final Group groupGlobalModerators = subjectService.create(new Group("Global Moderators", randomTeam()));
+    groupGlobalAdmins = subjectService.create(new Group("Global Admins", randomTeam()));
+    groupGlobalModerators = subjectService.create(new Group("Global Moderators", randomTeam()));
 
-    final User userBob = subjectService.create(new User("Bob", "Smith"));
-    final User userTim = subjectService.create(new User("Tim", "Smith"));
-    final User userJim = subjectService.create(new User("Jim", "Smith"));
+    userBob = subjectService.create(new User("Bob", "Smith"));
+    userTim = subjectService.create(new User("Tim", "Smith"));
+    userJim = subjectService.create(new User("Jim", "Smith"));
 
-    final GlobalPrivilege someGlobalPrivilege =
-      subjectService.create(new GlobalPrivilege("SOME_GLOBAL_PRIVILEGE"));
+    someGlobalPrivilege = subjectService.create(new GlobalPrivilege("SOME_GLOBAL_PRIVILEGE"));
+    anotherGlobalPrivilege = subjectService.create(new GlobalPrivilege("ANOTHER_GLOBAL_PRIVILEGE"));
+    adminUniqueGlobalPrivilege = subjectService.create(new GlobalPrivilege("ADMIN_UNIQUE_PRIVILEGE"));
 
-    final GlobalPrivilege anotherGlobalPrivilege =
-      subjectService.create(new GlobalPrivilege("ANOTHER_GLOBAL_PRIVILEGE"));
+    globalRoleUser = subjectService.create(
+      new GlobalRole("ROLE_USER", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
 
-    final GlobalRole globalRoleUser =
-      subjectService.create(new GlobalRole("ROLE_USER", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
+    globalRoleAdmin = subjectService.create(
+      new GlobalRole("ROLE_ADMINISTRATOR",
+        Set.of(someGlobalPrivilege, anotherGlobalPrivilege, adminUniqueGlobalPrivilege)));
 
-    final GlobalRole globalRoleAdmin =
-      subjectService.create(new GlobalRole("ROLE_ADMINISTRATOR", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
-
-    final GlobalRole globalRoleModerator =
-      subjectService.create(new GlobalRole("ROLE_MODERATOR", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
+    globalRoleModerator = subjectService.create(
+      new GlobalRole("ROLE_MODERATOR", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
 
     subjectService.assign(globalRoleUser, userBob);
     subjectService.assign(globalRoleModerator, userTim);
@@ -116,8 +137,8 @@ class SubjectServiceTest
     final Realm realmGreen = subjectService.create(new Realm("Green"));
     final Realm realmBlue = subjectService.create(new Realm("Blue"));
 
-    final RealmPrivilege someRealmPrivilege = subjectService.create(new RealmPrivilege("SOME_REALM_PRIVILEGE"));
-    final RealmPrivilege anotherRealmPrivilege = subjectService.create(new RealmPrivilege("ANOTHER_REALM_PRIVILEGE"));
+    someRealmPrivilege = subjectService.create(new RealmPrivilege("SOME_REALM_PRIVILEGE"));
+    anotherRealmPrivilege = subjectService.create(new RealmPrivilege("ANOTHER_REALM_PRIVILEGE"));
 
     final RealmRole realmRoleUser =
       subjectService.create(new RealmRole("ROLE_USER", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
@@ -241,6 +262,43 @@ class SubjectServiceTest
 
     // Σ(1 Global User)
     assertThat(users.getNumberOfElements()).isEqualTo(1);
+  }
+
+  @Test
+  @DisplayName("Should approve that user Jim has Privilege '@ParameterizedTest' granted")
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void shouldApproveThatUserJimHasPrivilegeAdminUniquePrivilegeGranted()
+  {
+    // Jim is member of "Global Admins" Group which inherits the "ADMIN_UNIQUE_PRIVILEGE"
+
+    Stopwatch stopwatch = Stopwatch.createUnstarted();
+
+    stopwatch.start();
+    for (int i = 0; i < 100; i++) {
+      assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE"))
+        .isTrue();
+    }
+    stopwatch.stop();
+    System.out.println(String.format("Variant from Privilege took %d ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+
+    stopwatch.start();
+    for (int i = 0; i < 100; i++) {
+      assertThat(subjectService.hasSubjectPrivilege_fromGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE"))
+        .isTrue();
+    }
+    stopwatch.stop();
+    System.out.println(String.format("Variant from Role Membership took %d ms.",
+      stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+
+    stopwatch.start();
+    for (int i = 0; i < 100; i++) {
+      assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    }
+    stopwatch.stop();
+    System.out.println(String.format("Variant from Subject took %d ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS)));
   }
 
   private Set<User> randomTeam()

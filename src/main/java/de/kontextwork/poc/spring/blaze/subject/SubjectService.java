@@ -11,6 +11,7 @@ import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.RealmRole;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.Role;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.*;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +29,13 @@ public class SubjectService
   private final SubjectRepository subjectRepository;
   private final PrivilegeRepository privilegeRepository;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
-  private final PageableEntityViewRepository<User> userViewRepository;
-  private final PageableEntityViewRepository<Group> groupViewRepository;
-  private final PageableEntityViewRepository<Subject> subjectViewRepository;
+  private final PageableEntityViewRepository<User> userPageableViewRepository;
+  private final PageableEntityViewRepository<Group> groupPageableViewRepository;
+  private final PageableEntityViewRepository<Subject> subjectPageableViewRepository;
   private final RealmRoleMembershipRepository realmRoleMembershipRepository;
   private final GlobalRoleMembershipRepository globalRoleMembershipRepository;
-  private final RegularEntityViewRepository<Subject, Long> regularEntityViewRepository;
+  private final RegularEntityViewRepository<Subject, Long> subjectViewRepository;
+  private final RegularEntityViewRepository<Privilege, Long> privilegeViewRepository;
 
   /**
    * Creates new {@link User}.
@@ -91,18 +93,16 @@ public class SubjectService
   )
   {
     CriteriaBuilder<Subject> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Subject.class);
-    return subjectViewRepository.findAll(setting, criteriaBuilder, pageable);
+    return subjectPageableViewRepository.findAll(setting, criteriaBuilder, pageable);
   }
 
   /**
    * @return {@link Set} of {@link SubjectView} matching provided {@code setting}.
    */
-  public Set<SubjectView> getSubjects(
-    EntityViewSetting<SubjectView, CriteriaBuilder<SubjectView>> setting
-  )
+  public Set<SubjectView> getSubjects(EntityViewSetting<SubjectView, CriteriaBuilder<SubjectView>> setting)
   {
-    CriteriaBuilder<Subject> criteriaBuilder = regularEntityViewRepository.entityCriteriaBuilder(Subject.class);
-    return regularEntityViewRepository.findAll(setting, criteriaBuilder);
+    CriteriaBuilder<Subject> criteriaBuilder = subjectViewRepository.entityCriteriaBuilder(Subject.class);
+    return subjectViewRepository.findAll(setting, criteriaBuilder);
   }
 
   /**
@@ -113,7 +113,7 @@ public class SubjectService
   )
   {
     CriteriaBuilder<User> criteriaBuilder = criteriaBuilderFactory.create(entityManager, User.class);
-    return userViewRepository.findAll(setting, criteriaBuilder, pageable);
+    return userPageableViewRepository.findAll(setting, criteriaBuilder, pageable);
   }
 
   /**
@@ -124,6 +124,42 @@ public class SubjectService
   )
   {
     CriteriaBuilder<Group> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Group.class);
-    return groupViewRepository.findAll(setting, criteriaBuilder, pageable);
+    return groupPageableViewRepository.findAll(setting, criteriaBuilder, pageable);
+  }
+
+  public boolean hasSubjectPrivilege_fromPrivilege(Subject subject, String privilege)
+  {
+    return !criteriaBuilderFactory.create(entityManager, Integer.class)
+      .from(Privilege.class, "privilege")
+      .select("1")
+      .where("privilege.name").eq(privilege)
+      .where("privilege.roles.globalRoleMembership.subject.id").eq(subject.getId())
+      .setMaxResults(1)
+      .getResultList()
+      .isEmpty(); // expression is negated!!!
+  }
+
+  public boolean hasSubjectPrivilege_fromGlobalRoleMembership(Subject subject, String privilege)
+  {
+    return !criteriaBuilderFactory.create(entityManager, Integer.class)
+      .from(GlobalRoleMembership.class, "globalRoleMembership")
+      .select("1")
+      .where("globalRoleMembership.subject.id").eq(subject.getId())
+      .where("globalRoleMembership.role.privileges.name").eq(privilege)
+      .setMaxResults(1)
+      .getResultList()
+      .isEmpty(); // expression is negated!!!
+  }
+
+  public boolean hasSubjectPrivilege_fromSubject(Subject subject, String privilege)
+  {
+    return !criteriaBuilderFactory.create(entityManager, Integer.class)
+      .from(Subject.class, "subject")
+      .select("1")
+      .where("subject.id").eq(subject.getId())
+      .where("subject.globalRoleMembership.role.privileges.name").eq(privilege)
+      .setMaxResults(1)
+      .getResultList()
+      .isEmpty(); // expression is negated!!!
   }
 }

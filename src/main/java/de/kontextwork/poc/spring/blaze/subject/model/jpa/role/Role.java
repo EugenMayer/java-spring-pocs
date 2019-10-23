@@ -30,7 +30,6 @@ public abstract class Role
 
   /**
    * Set of {@link Privilege} assigned to this {@link Role}.
-   * ON SPECIFICATION: THIS CAN BE ONE2MANY
    */
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<Privilege> privileges;
