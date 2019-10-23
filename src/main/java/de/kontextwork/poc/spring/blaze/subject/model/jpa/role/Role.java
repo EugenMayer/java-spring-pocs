@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Table(name = "subject_role")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Role
+public abstract class Role<P extends Privilege>
 {
   public static final String REALM_ROLE_DISCRIMINATOR = "REALM";
   public static final String GLOBAL_ROLE_DISCRIMINATOR = "GLOBAL";
@@ -31,8 +31,9 @@ public abstract class Role
   /**
    * Set of {@link Privilege} assigned to this {@link Role}.
    */
+  //@Setter(AccessLevel.NONE)
   @ManyToMany(fetch = FetchType.LAZY)
-  private Set<Privilege> privileges;
+  protected Set<P> privileges;
 
   /**
    * Owner of this {@link Role}.
@@ -46,7 +47,7 @@ public abstract class Role
   @OneToOne(mappedBy = "role", fetch = FetchType.LAZY)
   private RealmRoleMembership realmRoleMembership;
 
-  public Role(final String name, Set<Privilege> privileges)
+  public Role(final String name, Set<P> privileges)
   {
     this.name = name;
     this.privileges = privileges;

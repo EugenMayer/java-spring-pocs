@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -129,7 +131,7 @@ public class SubjectService
 
   public boolean hasSubjectPrivilege_fromPrivilege(Subject subject, String privilege)
   {
-    return !criteriaBuilderFactory.create(entityManager, Integer.class)
+    return criteriaBuilderFactory.create(entityManager, Integer.class)
       .from(Privilege.class, "privilege")
       .select("1")
       .where("privilege.name").eq(privilege)

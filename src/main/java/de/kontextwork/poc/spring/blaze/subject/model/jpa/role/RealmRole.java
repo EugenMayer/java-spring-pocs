@@ -1,6 +1,6 @@
 package de.kontextwork.poc.spring.blaze.subject.model.jpa.role;
 
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.Privilege;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.*;
 import java.util.Set;
 import javax.persistence.*;
 import lombok.Data;
@@ -10,9 +10,9 @@ import lombok.EqualsAndHashCode;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @DiscriminatorValue(Role.REALM_ROLE_DISCRIMINATOR)
-public class RealmRole extends Role
+public class RealmRole extends Role<RealmPrivilege>
 {
-  public RealmRole(String name, Set<Privilege> privileges)
+  public RealmRole(String name, Set<RealmPrivilege> privileges)
   {
     super(name, privileges);
   }

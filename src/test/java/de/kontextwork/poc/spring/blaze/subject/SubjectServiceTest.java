@@ -277,6 +277,13 @@ class SubjectServiceTest
     Stopwatch stopwatch = Stopwatch.createUnstarted();
 
     stopwatch.start();
+    for (int i = 0; i < 1000; i++) {
+      assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    }
+    stopwatch.stop();
+    System.out.println(String.format("Variant from Subject took %d ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+
+    /*stopwatch.start();
     for (int i = 0; i < 100; i++) {
       assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE"))
         .isTrue();
@@ -291,14 +298,7 @@ class SubjectServiceTest
     }
     stopwatch.stop();
     System.out.println(String.format("Variant from Role Membership took %d ms.",
-      stopwatch.elapsed(TimeUnit.MILLISECONDS)));
-
-    stopwatch.start();
-    for (int i = 0; i < 100; i++) {
-      assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
-    }
-    stopwatch.stop();
-    System.out.println(String.format("Variant from Subject took %d ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS)));
+      stopwatch.elapsed(TimeUnit.MILLISECONDS)));*/
   }
 
   private Set<User> randomTeam()

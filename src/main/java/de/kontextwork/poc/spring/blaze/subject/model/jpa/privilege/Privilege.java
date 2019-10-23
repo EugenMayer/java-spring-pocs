@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Table(name = "subject_privilege")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Privilege
+public abstract class Privilege<R extends Role>
 {
   public static final String REALM_PRIVILEGE_DISCRIMINATOR = "REALM";
   public static final String GLOBAL_PRIVILEGE_DISCRIMINATOR = "GLOBAL";
@@ -22,7 +22,7 @@ public abstract class Privilege
   private Long id;
 
   @ManyToMany(mappedBy = "privileges", fetch = FetchType.LAZY)
-  private Set<Role> roles;
+  private Set<R> roles;
 
   /**
    * The privilege name.
