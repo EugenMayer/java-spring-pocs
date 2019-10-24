@@ -22,7 +22,7 @@ public class Group extends Subject
 {
   private String name;
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> members;
 
   public Group(final String name, final Set<User> members)

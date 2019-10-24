@@ -2,7 +2,6 @@ package de.kontextwork.poc.spring.blaze.subject;
 
 import com.blazebit.persistence.view.EntityViewSetting;
 import com.github.javafaker.Faker;
-import com.google.common.base.Stopwatch;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
@@ -13,10 +12,7 @@ import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Group;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Realm;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.function.IntFunction;
 import java.util.stream.*;
 import org.junit.jupiter.api.*;
@@ -273,32 +269,9 @@ class SubjectServiceTest
   void shouldApproveThatUserJimHasPrivilegeAdminUniquePrivilegeGranted()
   {
     // Jim is member of "Global Admins" Group which inherits the "ADMIN_UNIQUE_PRIVILEGE"
-
-    Stopwatch stopwatch = Stopwatch.createUnstarted();
-
-    stopwatch.start();
-    for (int i = 0; i < 1000; i++) {
-      assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
-    }
-    stopwatch.stop();
-    System.out.println(String.format("Variant from Subject took %d ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS)));
-
-    /*stopwatch.start();
-    for (int i = 0; i < 100; i++) {
-      assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE"))
-        .isTrue();
-    }
-    stopwatch.stop();
-    System.out.println(String.format("Variant from Privilege took %d ms.", stopwatch.elapsed(TimeUnit.MILLISECONDS)));
-
-    stopwatch.start();
-    for (int i = 0; i < 100; i++) {
-      assertThat(subjectService.hasSubjectPrivilege_fromGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE"))
-        .isTrue();
-    }
-    stopwatch.stop();
-    System.out.println(String.format("Variant from Role Membership took %d ms.",
-      stopwatch.elapsed(TimeUnit.MILLISECONDS)));*/
+    assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    assertThat(subjectService.hasSubjectPrivilege_fromGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
   }
 
   private Set<User> randomTeam()
