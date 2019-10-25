@@ -3,7 +3,6 @@ package de.kontextwork.poc.spring.blaze.subject.model.domain;
 import com.blazebit.persistence.WhereBuilder;
 import com.blazebit.persistence.WhereOrBuilder;
 import com.blazebit.persistence.view.ViewFilterProvider;
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RealmRoleMembership;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.Subject;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.GlobalRoleMembership;

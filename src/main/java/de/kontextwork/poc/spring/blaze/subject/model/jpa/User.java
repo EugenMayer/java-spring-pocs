@@ -12,6 +12,7 @@ import static org.hibernate.annotations.GenerationTime.INSERT;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Accessors(chain = true)
 @DiscriminatorValue("0")
 @Table(name = "subject_user")

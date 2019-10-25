@@ -3,9 +3,9 @@ package de.kontextwork.poc.spring.blaze.user.model.domain;
 import com.blazebit.persistence.view.*;
 import de.kontextwork.poc.spring.blaze.user.model.jpa.BlazeUser;
 
+@CreatableEntityView
 @SuppressWarnings("unused")
 @EntityView(BlazeUser.class)
-@CreatableEntityView
 public interface BlazeUserCreateView extends BlazeUserIdView
 {
   @PostCreate
