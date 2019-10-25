@@ -131,26 +131,38 @@ public class SubjectService
 
   public boolean hasSubjectPrivilege_fromPrivilege(Subject subject, String privilege)
   {
-    return criteriaBuilderFactory.create(entityManager, Integer.class)
+    CriteriaBuilder<Integer> criteria = criteriaBuilderFactory.create(entityManager, Integer.class)
       .from(Privilege.class, "privilege")
       .select("1")
-      .where("privilege.name").eq(privilege)
-      .where("privilege.roles.globalRoleMembership.subject.id").eq(subject.getId())
-      .setMaxResults(1)
-      .getResultList()
-      .isEmpty(); // expression is negated!!!
+      .where("privilege.name").eq(privilege);
+
+    // We have to handle users differently since user can inherit privileges by their groups
+    if (subject instanceof User) {
+      // Select all groups where user is member of
+      var groupIds = criteriaBuilderFactory.create(entityManager, String.class)
+        .from(Group.class, "grp").select("id")
+        .where("grp.members.id").eq(subject.getId())
+        .getQuery();
+
+      criteria.where("privilege.roles.globalRoleMembership.subject.id").in(groupIds);
+    }
+    else {
+      criteria.where("privilege.roles.globalRoleMembership.subject.id").eq(subject.getId());
+    }
+
+    return !criteria.setMaxResults(1).getResultList().isEmpty(); // Expression is negated!!!
   }
 
   public boolean hasSubjectPrivilege_fromGlobalRoleMembership(Subject subject, String privilege)
   {
-    return !criteriaBuilderFactory.create(entityManager, Integer.class)
+    return criteriaBuilderFactory.create(entityManager, Integer.class)
       .from(GlobalRoleMembership.class, "globalRoleMembership")
       .select("1")
       .where("globalRoleMembership.subject.id").eq(subject.getId())
       .where("globalRoleMembership.role.privileges.name").eq(privilege)
       .setMaxResults(1)
       .getResultList()
-      .isEmpty(); // expression is negated!!!
+      .size() > 0;
   }
 
   public boolean hasSubjectPrivilege_fromSubject(Subject subject, String privilege)
@@ -162,6 +174,6 @@ public class SubjectService
       .where("subject.globalRoleMembership.role.privileges.name").eq(privilege)
       .setMaxResults(1)
       .getResultList()
-      .isEmpty(); // expression is negated!!!
+      .isEmpty(); // Expression is negated!!!
   }
 }

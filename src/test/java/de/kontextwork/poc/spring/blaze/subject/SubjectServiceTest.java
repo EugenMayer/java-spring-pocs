@@ -261,7 +261,7 @@ class SubjectServiceTest
   }
 
   @Test
-  @DisplayName("Should approve that user Jim has Privilege '@ParameterizedTest' granted")
+  @DisplayName("Should approve that user Jim has Privilege 'ADMIN_UNIQUE_PRIVILEGE' granted")
   @Sql(
     statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
@@ -272,6 +272,10 @@ class SubjectServiceTest
     assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
     assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
     assertThat(subjectService.hasSubjectPrivilege_fromGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+
+    assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
+    assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
+    assertThat(subjectService.hasSubjectPrivilege_fromGlobalRoleMembership(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
   }
 
   private Set<User> randomTeam()
