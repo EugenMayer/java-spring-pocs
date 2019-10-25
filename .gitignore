@@ -28,3 +28,4 @@ src/generated
 
 ### VS Code ###
 .vscode/
+/gradle/repositories.gradle
