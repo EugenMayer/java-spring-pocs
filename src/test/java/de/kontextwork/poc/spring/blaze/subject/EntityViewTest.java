@@ -47,7 +47,5 @@ public class EntityViewTest
     entityViewService.createUser(userCreateView);
 
     assertThat(userCreateView.getId()).isGreaterThan(0);
-
-
   }
 }

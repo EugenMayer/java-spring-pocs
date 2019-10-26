@@ -30,7 +30,7 @@ public class BlazeService
   @Transactional
   public BlazeUserIdView create(BlazeUserCreateView createView)
   {
-    entityViewManager.update(entityManager, createView);
+    entityViewManager.save(entityManager, createView);
     return entityViewManager.convert(createView, BlazeUserIdView.class);
   }
 
@@ -51,6 +51,6 @@ public class BlazeService
   @Transactional
   public void updateUserProfile(BlazeUserProfileUpdateView profile)
   {
-    entityViewManager.update(entityManager, profile);
+    entityViewManager.save(entityManager, profile);
   }
 }

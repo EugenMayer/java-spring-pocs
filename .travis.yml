@@ -13,6 +13,7 @@ script:
   - ./gradlew mariadbTest --info
   - ./gradlew mysqlTest --info
   - ./gradlew postgresTest --info
+  - ./gradlew bpTest --info
 
 after_script:
   - docker-compose down -v

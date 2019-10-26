@@ -269,13 +269,13 @@ class SubjectServiceTest
   void shouldApproveThatUserJimHasPrivilegeAdminUniquePrivilegeGranted()
   {
     // Jim is member of "Global Admins" Group which inherits the "ADMIN_UNIQUE_PRIVILEGE"
-    assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
-    assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
-    assertThat(subjectService.hasSubjectPrivilege_fromGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    assertThat(subjectService.hasSubjectPrivilegeFromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    assertThat(subjectService.hasSubjectPrivilegeFromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    assertThat(subjectService.hasSubjectPrivilegeFromGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
 
-    assertThat(subjectService.hasSubjectPrivilege_fromSubject(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
-    assertThat(subjectService.hasSubjectPrivilege_fromPrivilege(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
-    assertThat(subjectService.hasSubjectPrivilege_fromGlobalRoleMembership(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
+    assertThat(subjectService.hasSubjectPrivilegeFromSubject(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
+    assertThat(subjectService.hasSubjectPrivilegeFromPrivilege(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
+    assertThat(subjectService.hasSubjectPrivilegeFromGlobalRoleMembership(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
   }
 
   private Set<User> randomTeam()

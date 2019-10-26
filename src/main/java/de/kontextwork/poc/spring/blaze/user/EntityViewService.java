@@ -6,8 +6,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +17,6 @@ public class EntityViewService
   @Transactional
   public void createUser(final UserCreateView userCreateView)
   {
-    entityViewManager.update(entityManager, userCreateView);
+    entityViewManager.save(entityManager, userCreateView);
   }
 }
