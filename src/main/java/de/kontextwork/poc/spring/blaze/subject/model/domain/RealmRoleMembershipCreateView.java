@@ -7,7 +7,7 @@ import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RealmRoleMembers
 @EntityView(RealmRoleMembership.class)
 public interface RealmRoleMembershipCreateView
 {
-  @IdMapping("this")
+  @IdMapping
   RealmRoleMembershipIdView getId();
 
   void setId(RealmRoleMembershipIdView id);
