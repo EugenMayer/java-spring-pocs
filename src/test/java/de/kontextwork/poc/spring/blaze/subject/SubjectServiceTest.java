@@ -278,6 +278,31 @@ class SubjectServiceTest
     assertThat(subjectService.hasSubjectPrivilegeFromGlobalRoleMembership(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
   }
 
+  @Test
+  @DisplayName("Should create RealmRoleMembership via EntityView")
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void shouldCreateRealmRoleMembershipViaEntityView()
+  {
+    User user = subjectService.create(new User("John", "Doe"));
+    Realm realm = subjectService.create(new Realm("Random"));
+    GlobalRole role = subjectService.create(new GlobalRole("SOME_ROLE", Set.of()));
+
+    RealmRoleMembershipIdView idView = RealmRoleMembershipIdViewDTO.builder()
+      .realmId(realm.getId())
+      .roleId(role.getId())
+      .subjectId(user.getId())
+      .build();
+
+    RealmRoleMembershipCreateView createView = RealmRoleMembershipCreateViewDTO.builder()
+      .id(idView)
+      .build();
+
+    subjectService.createRealmRoleMembership_fromView(createView);
+  }
+
   private Set<User> randomTeam()
   {
     return IntStream.rangeClosed(1, 5)

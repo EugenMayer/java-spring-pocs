@@ -1,6 +1,7 @@
 package de.kontextwork.poc.spring.blaze.subject;
 
 import com.blazebit.persistence.*;
+import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
@@ -26,6 +27,7 @@ public class SubjectService
   private final RoleRepository roleRepository;
   private final RealmRepository realmRepository;
   private final SubjectRepository subjectRepository;
+  private final EntityViewManager entityViewManager;
   private final PrivilegeRepository privilegeRepository;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
   private final PageableEntityViewRepository<User> userPageableViewRepository;
@@ -171,5 +173,10 @@ public class SubjectService
       .setMaxResults(1)
       .getResultList()
       .isEmpty(); // Expression is negated!!!
+  }
+
+  public void createRealmRoleMembership_fromView(RealmRoleMembershipCreateView realmRoleMembershipCreateView)
+  {
+    entityViewManager.save(entityManager, realmRoleMembershipCreateView);
   }
 }
