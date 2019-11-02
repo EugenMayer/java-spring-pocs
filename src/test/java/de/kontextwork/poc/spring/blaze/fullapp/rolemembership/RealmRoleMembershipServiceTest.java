@@ -5,7 +5,6 @@ import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.GlobalRole;
-import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.SubjectService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
@@ -22,7 +21,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -85,6 +83,7 @@ class RealmRoleMembershipServiceTest
     realmRoleMembershipCreateView.setSubject(user);
 
     realmRoleMembershipService.createUntouched(realmRoleMembershipCreateView);
+    assertThat( realmRoleMembershipService.findAll().size()).isNotZero();
   }
 
   @Test
@@ -105,7 +104,8 @@ class RealmRoleMembershipServiceTest
     realmRoleMembershipEmbeddedIdCreateView.setRoleId(role.getId());
     realmRoleMembershipEmbeddedIdCreateView.setSubjectId(user.getId());
 
-    entityViewManager.save(entityManager, realmRoleMembershipEmbeddedIdCreateView);
+    realmRoleMembershipService.createByEmbeddedId(realmRoleMembershipEmbeddedIdCreateView);
+    assertThat( realmRoleMembershipService.findAll().size()).isNotZero();
   }
 //
 //  @Test
