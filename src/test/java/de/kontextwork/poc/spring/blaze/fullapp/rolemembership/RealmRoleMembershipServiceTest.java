@@ -80,7 +80,7 @@ class RealmRoleMembershipServiceTest
     realmRoleMembershipCreateView.getId().setRoleId(role.getId());
     realmRoleMembershipCreateView.getId().setSubjectId(user.getId());
 
-    entityViewManager.save(entityManager, realmRoleMembershipCreateView);
+    realmRoleMembershipService.createUntouched(realmRoleMembershipCreateView);
   }
 
   @Test

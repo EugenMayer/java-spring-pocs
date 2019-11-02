@@ -32,6 +32,12 @@ public class RealmRoleMembershipService
     entityViewManager.save(entityManager, qualifiedCreateView);
   }
 
+@Transactional
+  public void createUntouched(RealmRoleMembershipCreateView realmRoleMembershipCreateView)
+  {
+    entityViewManager.save(entityManager, realmRoleMembershipCreateView);
+  }
+
   /**
    * Creates new {@link RealmRoleMembership} from provided {@code realm}, {@code role} and {@code subject}.
    */
