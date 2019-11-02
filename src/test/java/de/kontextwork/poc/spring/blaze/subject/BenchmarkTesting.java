@@ -146,7 +146,7 @@ public class BenchmarkTesting
   )
   void benchmarkPrivilegeCheckFromSubject()
   {
-    assertThat(subjectService.hasSubjectPrivilegeFromSubject(testSubject, testPrivilege)).isNotNull();
+    assertThat(subjectService.hasPrivilegeViaSubject(testSubject, testPrivilege)).isNotNull();
   }
 
   @Order(3)
@@ -158,7 +158,7 @@ public class BenchmarkTesting
   )
   void benchmarkPrivilegeCheckFromPrivilege()
   {
-    assertThat(subjectService.hasSubjectPrivilegeFromPrivilege(testSubject, testPrivilege)).isNotNull();
+    assertThat(subjectService.hasPrivilegeViaPrivilege(testSubject, testPrivilege)).isNotNull();
   }
 
   @Order(4)
@@ -170,6 +170,6 @@ public class BenchmarkTesting
   )
   void benchmarkPrivilegeCheckFromRoleMembership()
   {
-    assertThat(subjectService.hasSubjectPrivilegeFromGlobalRoleMembership(testSubject, testPrivilege)).isNotNull();
+    assertThat(subjectService.hasPrivilegeViaGlobalRoleMembership(testSubject, testPrivilege)).isNotNull();
   }
 }

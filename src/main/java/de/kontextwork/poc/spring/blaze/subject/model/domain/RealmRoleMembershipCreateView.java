@@ -2,13 +2,11 @@ package de.kontextwork.poc.spring.blaze.subject.model.domain;
 
 import com.blazebit.persistence.view.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RealmRoleMembership;
+import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.RealmRoleMembershipId;
 
-@CreatableEntityView
 @EntityView(RealmRoleMembership.class)
-public interface RealmRoleMembershipCreateView
+@CreatableEntityView
+public interface RealmRoleMembershipCreateView extends RealmRoleMembershipIdView
 {
-  @IdMapping
-  RealmRoleMembershipIdView getId();
-
-  void setId(RealmRoleMembershipIdView id);
+  void setId(RealmRoleMembershipEmbeddedIdView id);
 }

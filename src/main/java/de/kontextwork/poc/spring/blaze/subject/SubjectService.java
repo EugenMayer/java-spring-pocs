@@ -1,15 +1,12 @@
 package de.kontextwork.poc.spring.blaze.subject;
 
 import com.blazebit.persistence.*;
-import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
-import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
+import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.subject.model.domain.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.member.*;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.privilege.*;
-import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.RealmRole;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.role.Role;
 import de.kontextwork.poc.spring.blaze.subject.model.jpa.subject.*;
 import java.util.Set;
@@ -24,19 +21,10 @@ import org.springframework.stereotype.Service;
 public class SubjectService
 {
   private final EntityManager entityManager;
-  private final RoleRepository roleRepository;
-  private final RealmRepository realmRepository;
   private final SubjectRepository subjectRepository;
-  private final EntityViewManager entityViewManager;
-  private final PrivilegeRepository privilegeRepository;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
-  private final PageableEntityViewRepository<User> userPageableViewRepository;
-  private final PageableEntityViewRepository<Group> groupPageableViewRepository;
   private final PageableEntityViewRepository<Subject> subjectPageableViewRepository;
-  private final RealmRoleMembershipRepository realmRoleMembershipRepository;
-  private final GlobalRoleMembershipRepository globalRoleMembershipRepository;
   private final RegularEntityViewRepository<Subject, Long> subjectViewRepository;
-
   /**
    * Creates new {@link User}.
    */
@@ -46,49 +34,9 @@ public class SubjectService
   }
 
   /**
-   * Creates new {@link Role}.
-   */
-  public <R extends Role> R create(final R role)
-  {
-    return roleRepository.save(role);
-  }
-
-  /**
-   * Creates new {@link Realm}.
-   */
-  public Realm create(final Realm realm)
-  {
-    return realmRepository.save(realm);
-  }
-
-  /**
-   * Creates new {@link Privilege}.
-   */
-  public <P extends Privilege> P create(final P privilege)
-  {
-    return privilegeRepository.save(privilege);
-  }
-
-  /**
-   * Creates new {@link GlobalRoleMembership} from provided {@code role} and {@code subject}.
-   */
-  public void assign(final Role role, final Subject subject)
-  {
-    globalRoleMembershipRepository.save(new GlobalRoleMembership(role, subject));
-  }
-
-  /**
-   * Creates new {@link RealmRoleMembership} from provided {@code realm}, {@code role} and {@code subject}.
-   */
-  public void assign(final Realm realm, final RealmRole role, final Subject subject)
-  {
-    realmRoleMembershipRepository.save(new RealmRoleMembership(realm, role, subject));
-  }
-
-  /**
    * @return {@link Page} of {@link SubjectView} matching provided {@code setting}.
    */
-  public Page<SubjectView> getSubjects(
+  public Page<SubjectView> findAll(
     EntityViewSetting<SubjectView, PaginatedCriteriaBuilder<SubjectView>> setting, Pageable pageable
   )
   {
@@ -99,35 +47,16 @@ public class SubjectService
   /**
    * @return {@link Set} of {@link SubjectView} matching provided {@code setting}.
    */
-  public Set<SubjectView> getSubjects(EntityViewSetting<SubjectView, CriteriaBuilder<SubjectView>> setting)
+  public Set<SubjectView> findAll(EntityViewSetting<SubjectView, CriteriaBuilder<SubjectView>> setting)
   {
     CriteriaBuilder<Subject> criteriaBuilder = subjectViewRepository.entityCriteriaBuilder(Subject.class);
     return subjectViewRepository.findAll(setting, criteriaBuilder);
   }
 
   /**
-   * @return {@link Page} of {@link SubjectUserView} matching provided {@code setting}.
+   * privilege lookup ( does subject has privilege ) using the privilege as the base table of the query
    */
-  public Page<SubjectUserView> getSubjectUsers(
-    EntityViewSetting<SubjectUserView, PaginatedCriteriaBuilder<SubjectUserView>> setting, Pageable pageable
-  )
-  {
-    CriteriaBuilder<User> criteriaBuilder = criteriaBuilderFactory.create(entityManager, User.class);
-    return userPageableViewRepository.findAll(setting, criteriaBuilder, pageable);
-  }
-
-  /**
-   * @return {@link Page} of {@link SubjectGroupView} matching provided {@code setting}.
-   */
-  public Page<SubjectGroupView> getSubjectGroups(
-    EntityViewSetting<SubjectGroupView, PaginatedCriteriaBuilder<SubjectGroupView>> setting, Pageable pageable
-  )
-  {
-    CriteriaBuilder<Group> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Group.class);
-    return groupPageableViewRepository.findAll(setting, criteriaBuilder, pageable);
-  }
-
-  public boolean hasSubjectPrivilegeFromPrivilege(Subject subject, String privilege)
+  public boolean hasPrivilegeViaPrivilege(Subject subject, String privilege)
   {
     CriteriaBuilder<Integer> criteria = criteriaBuilderFactory.create(entityManager, Integer.class)
       .from(Privilege.class, "privilege")
@@ -137,12 +66,22 @@ public class SubjectService
     // We have to handle users differently since user can inherit privileges by their groups
     if (subject instanceof User) {
       // Select all groups where user is member of
+      // TODO: using this as a subquery does not really work
+//      var groupIds = criteriaBuilderFactory.create(entityManager, String.class)
+//        .from(Group.class, "grp").select("id")
+//        .where("grp.members.id").eq(subject.getId())
+//        .getQuery();
+
+      // ArrayList of long ids
       var groupIds = criteriaBuilderFactory.create(entityManager, String.class)
         .from(Group.class, "grp").select("id")
         .where("grp.members.id").eq(subject.getId())
-        .getQuery();
+        .getResultList();
 
-      criteria.where("privilege.roles.globalRoleMembership.subject.id").in(groupIds);
+      criteria.whereOr()
+        .where("privilege.roles.globalRoleMembership.subject.id").in(groupIds)
+        .where("privilege.roles.globalRoleMembership.subject.id").in(subject.getId())
+      .endOr();
     }
     else {
       criteria.where("privilege.roles.globalRoleMembership.subject.id").eq(subject.getId());
@@ -151,7 +90,10 @@ public class SubjectService
     return !criteria.setMaxResults(1).getResultList().isEmpty(); // Expression is negated!!!
   }
 
-  public boolean hasSubjectPrivilegeFromGlobalRoleMembership(Subject subject, String privilege)
+  /**
+   * privilege lookup ( does subject has privilege ) using the GlobalRoleMembership as base table
+   */
+  public boolean hasPrivilegeViaGlobalRoleMembership(Subject subject, String privilege)
   {
     return !criteriaBuilderFactory.create(entityManager, Integer.class)
       .from(GlobalRoleMembership.class, "globalRoleMembership")
@@ -163,7 +105,10 @@ public class SubjectService
       .isEmpty(); // Expression is negated!!!
   }
 
-  public boolean hasSubjectPrivilegeFromSubject(Subject subject, String privilege)
+  /**
+   * privilege lookup ( does subject has privilege ) using the subject table as base table
+   */
+  public boolean hasPrivilegeViaSubject(Subject subject, String privilege)
   {
     return !criteriaBuilderFactory.create(entityManager, Integer.class)
       .from(Subject.class, "subject")
@@ -173,10 +118,5 @@ public class SubjectService
       .setMaxResults(1)
       .getResultList()
       .isEmpty(); // Expression is negated!!!
-  }
-
-  public void createRealmRoleMembership_fromView(RealmRoleMembershipCreateView realmRoleMembershipCreateView)
-  {
-    entityViewManager.save(entityManager, realmRoleMembershipCreateView);
   }
 }

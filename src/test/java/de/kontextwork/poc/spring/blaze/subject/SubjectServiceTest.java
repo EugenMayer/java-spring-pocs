@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.function.IntFunction;
 import java.util.stream.*;
 import org.junit.jupiter.api.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -30,10 +31,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Import({
   SubjectService.class,
+  UserSerivce.class,
+  GroupService.class,
+  PrivilegeService.class,
+  RealmService.class,
+  RoleService.class,
+  RealmRoleMembershipService.class,
+  GlobalRoleMembershipService.class,
   JpaBlazeConfiguration.class,
   BlazePersistenceConfiguration.class,
   PageableEntityViewRepository.class,
-  RegularEntityViewRepository.class
+  RegularEntityViewRepository.class,
+  EntityViewDtoConverter.class,
+  ModelMapper.class
 })
 @AutoConfigureDataJdbc
 @DataJpaTest(properties = {"blazepersistance.enabled=true"})
@@ -45,6 +55,27 @@ class SubjectServiceTest
 
   @Autowired
   private SubjectService subjectService;
+
+  @Autowired
+  private RealmRoleMembershipService realmRoleMembershipService;
+
+  @Autowired
+  private GlobalRoleMembershipService globalRoleMembershipService;
+
+  @Autowired
+  private UserSerivce userSerivce;
+
+  @Autowired
+  private GroupService groupService;
+
+  @Autowired
+  private PrivilegeService privilegeService;
+
+  @Autowired
+  private RealmService realmService;
+
+  @Autowired
+  private RoleService roleService;
 
   private RealmPrivilege someRealmPrivilege;
   private RealmPrivilege anotherRealmPrivilege;
@@ -103,54 +134,54 @@ class SubjectServiceTest
     userTim = subjectService.create(new User("Tim", "Smith"));
     userJim = subjectService.create(new User("Jim", "Smith"));
 
-    someGlobalPrivilege = subjectService.create(new GlobalPrivilege("SOME_GLOBAL_PRIVILEGE"));
-    anotherGlobalPrivilege = subjectService.create(new GlobalPrivilege("ANOTHER_GLOBAL_PRIVILEGE"));
-    adminUniqueGlobalPrivilege = subjectService.create(new GlobalPrivilege("ADMIN_UNIQUE_PRIVILEGE"));
+    someGlobalPrivilege = privilegeService.create(new GlobalPrivilege("SOME_GLOBAL_PRIVILEGE"));
+    anotherGlobalPrivilege = privilegeService.create(new GlobalPrivilege("ANOTHER_GLOBAL_PRIVILEGE"));
+    adminUniqueGlobalPrivilege = privilegeService.create(new GlobalPrivilege("ADMIN_UNIQUE_PRIVILEGE"));
 
-    globalRoleUser = subjectService.create(
+    globalRoleUser = roleService.create(
       new GlobalRole("ROLE_USER", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
 
-    globalRoleAdmin = subjectService.create(
+    globalRoleAdmin = roleService.create(
       new GlobalRole("ROLE_ADMINISTRATOR",
         Set.of(someGlobalPrivilege, anotherGlobalPrivilege, adminUniqueGlobalPrivilege)));
 
-    globalRoleModerator = subjectService.create(
+    globalRoleModerator = roleService.create(
       new GlobalRole("ROLE_MODERATOR", Set.of(someGlobalPrivilege, anotherGlobalPrivilege)));
 
-    subjectService.assign(globalRoleUser, userBob);
-    subjectService.assign(globalRoleModerator, userTim);
-    subjectService.assign(globalRoleAdmin, userJim);
+    globalRoleMembershipService.assign(globalRoleUser, userBob);
+    globalRoleMembershipService.assign(globalRoleModerator, userTim);
+    globalRoleMembershipService.assign(globalRoleAdmin, userJim);
 
-    subjectService.assign(globalRoleAdmin, groupGlobalAdmins);
-    subjectService.assign(globalRoleModerator, groupGlobalModerators);
+    globalRoleMembershipService.assign(globalRoleAdmin, groupGlobalAdmins);
+    globalRoleMembershipService.assign(globalRoleModerator, groupGlobalModerators);
 
     /// Realm Init ///
 
     final Group groupRealmAdmins = subjectService.create(new Group("Realm Admins", randomTeam()));
     final Group groupRealmModerators = subjectService.create(new Group("Realm Moderators", randomTeam()));
 
-    final Realm realmRed = subjectService.create(new Realm("Red"));
-    final Realm realmGreen = subjectService.create(new Realm("Green"));
-    final Realm realmBlue = subjectService.create(new Realm("Blue"));
+    final Realm realmRed = realmService.create(new Realm("Red"));
+    final Realm realmGreen = realmService.create(new Realm("Green"));
+    final Realm realmBlue = realmService.create(new Realm("Blue"));
 
-    someRealmPrivilege = subjectService.create(new RealmPrivilege("SOME_REALM_PRIVILEGE"));
-    anotherRealmPrivilege = subjectService.create(new RealmPrivilege("ANOTHER_REALM_PRIVILEGE"));
+    someRealmPrivilege = privilegeService.create(new RealmPrivilege("SOME_REALM_PRIVILEGE"));
+    anotherRealmPrivilege = privilegeService.create(new RealmPrivilege("ANOTHER_REALM_PRIVILEGE"));
 
     final RealmRole realmRoleUser =
-      subjectService.create(new RealmRole("ROLE_USER", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
+      roleService.create(new RealmRole("ROLE_USER", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
 
     final RealmRole realmRoleAdmin =
-      subjectService.create(new RealmRole("ROLE_ADMINISTRATOR", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
+      roleService.create(new RealmRole("ROLE_ADMINISTRATOR", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
 
     final RealmRole realmRoleModerator =
-      subjectService.create(new RealmRole("ROLE_MODERATOR", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
+      roleService.create(new RealmRole("ROLE_MODERATOR", Set.of(someRealmPrivilege, anotherRealmPrivilege)));
 
-    subjectService.assign(realmRed, realmRoleUser, userTim);
-    subjectService.assign(realmGreen, realmRoleUser, userBob);
-    subjectService.assign(realmBlue, realmRoleUser, userJim);
+    realmRoleMembershipService.assign(realmRed, realmRoleUser, userTim);
+    realmRoleMembershipService.assign(realmGreen, realmRoleUser, userBob);
+    realmRoleMembershipService.assign(realmBlue, realmRoleUser, userJim);
 
-    subjectService.assign(realmRoleAdmin, groupRealmAdmins);
-    subjectService.assign(realmRoleModerator, groupRealmModerators);
+    globalRoleMembershipService.assign(realmRoleAdmin, groupRealmAdmins);
+    globalRoleMembershipService.assign(realmRoleModerator, groupRealmModerators);
   }
 
   @Test
@@ -164,7 +195,7 @@ class SubjectServiceTest
     // Should resolve paged Users
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
     var userSetting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
-    final Page<SubjectUserView> users = subjectService.getSubjectUsers(userSetting, userPageRequest);
+    final Page<SubjectUserView> users = userSerivce.findAll(userSetting, userPageRequest);
 
     // Σ(3 Users, 4 * 5 random group members)
     assertThat(users.getNumberOfElements()).isEqualTo(23);
@@ -172,7 +203,7 @@ class SubjectServiceTest
     // Should resolve paged Groups
     PageRequest groupPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "name");
     var groupSetting = EntityViewSettingFactory.create(SubjectGroupView.class, groupPageRequest);
-    final Page<SubjectGroupView> groups = subjectService.getSubjectGroups(groupSetting, groupPageRequest);
+    final Page<SubjectGroupView> groups = groupService.findAll(groupSetting, groupPageRequest);
 
     // Σ(4 Groups)
     assertThat(groups.getNumberOfElements()).isEqualTo(4);
@@ -187,7 +218,7 @@ class SubjectServiceTest
   void shouldResolveSubjectsAsList()
   {
     var subjectSetting = EntityViewSetting.create(SubjectView.class);
-    final Set<SubjectView> subjects = subjectService.getSubjects(subjectSetting);
+    final Set<SubjectView> subjects = subjectService.findAll(subjectSetting);
 
     // Σ(3 Users, 4 * 5 Group members, 4 Groups)
     assertThat(subjects).hasSize(27);
@@ -203,7 +234,7 @@ class SubjectServiceTest
   {
     PageRequest pageRequest = PageRequest.of(0, 50, Direction.DESC, "id");
     var subjectSetting = EntityViewSettingFactory.create(SubjectView.class, pageRequest);
-    final Page<SubjectView> subjects = subjectService.getSubjects(subjectSetting, pageRequest);
+    final Page<SubjectView> subjects = subjectService.findAll(subjectSetting, pageRequest);
 
     // Σ(3 Users, 4 * 5 Group members, 4 Groups)
     assertThat(subjects.getNumberOfElements()).isEqualTo(27);
@@ -220,7 +251,7 @@ class SubjectServiceTest
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
     var setting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
     setting.addViewFilter("USER_IN_GLOBAL_ROLE_ADMINISTRATOR");
-    final Page<SubjectUserView> users = subjectService.getSubjectUsers(setting, userPageRequest);
+    final Page<SubjectUserView> users = userSerivce.findAll(setting, userPageRequest);
 
     // Σ(1 Global Admin, 5 Members of Group "Admins")
     assertThat(users.getNumberOfElements()).isEqualTo(6);
@@ -237,7 +268,7 @@ class SubjectServiceTest
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
     var setting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
     setting.addViewFilter("USER_IN_GLOBAL_ROLE_MODERATOR");
-    final Page<SubjectUserView> users = subjectService.getSubjectUsers(setting, userPageRequest);
+    final Page<SubjectUserView> users = userSerivce.findAll(setting, userPageRequest);
 
     // Σ(1 Global Moderator, 5 Members of Group "Moderators")
     assertThat(users.getNumberOfElements()).isEqualTo(6);
@@ -254,7 +285,7 @@ class SubjectServiceTest
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
     var setting = EntityViewSettingFactory.create(SubjectUserView.class, userPageRequest);
     setting.addViewFilter("USER_IN_GLOBAL_ROLE_USER");
-    final Page<SubjectUserView> users = subjectService.getSubjectUsers(setting, userPageRequest);
+    final Page<SubjectUserView> users = userSerivce.findAll(setting, userPageRequest);
 
     // Σ(1 Global User)
     assertThat(users.getNumberOfElements()).isEqualTo(1);
@@ -268,39 +299,14 @@ class SubjectServiceTest
   )
   void shouldApproveThatUserJimHasPrivilegeAdminUniquePrivilegeGranted()
   {
+    assertThat(subjectService.hasPrivilegeViaPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
     // Jim is member of "Global Admins" Group which inherits the "ADMIN_UNIQUE_PRIVILEGE"
-    assertThat(subjectService.hasSubjectPrivilegeFromSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
-    assertThat(subjectService.hasSubjectPrivilegeFromPrivilege(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
-    assertThat(subjectService.hasSubjectPrivilegeFromGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    assertThat(subjectService.hasPrivilegeViaSubject(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
+    assertThat(subjectService.hasPrivilegeViaGlobalRoleMembership(userJim, "ADMIN_UNIQUE_PRIVILEGE")).isTrue();
 
-    assertThat(subjectService.hasSubjectPrivilegeFromSubject(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
-    assertThat(subjectService.hasSubjectPrivilegeFromPrivilege(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
-    assertThat(subjectService.hasSubjectPrivilegeFromGlobalRoleMembership(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
-  }
-
-  @Test
-  @DisplayName("Should create RealmRoleMembership via EntityView")
-  @Sql(
-    statements = "alter table subject_user modify uid bigint auto_increment;",
-    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
-  )
-  void shouldCreateRealmRoleMembershipViaEntityView()
-  {
-    User user = subjectService.create(new User("John", "Doe"));
-    Realm realm = subjectService.create(new Realm("Random"));
-    GlobalRole role = subjectService.create(new GlobalRole("SOME_ROLE", Set.of()));
-
-    RealmRoleMembershipIdView idView = RealmRoleMembershipIdViewDTO.builder()
-      .realmId(realm.getId())
-      .roleId(role.getId())
-      .subjectId(user.getId())
-      .build();
-
-    RealmRoleMembershipCreateView createView = RealmRoleMembershipCreateViewDTO.builder()
-      .id(idView)
-      .build();
-
-    subjectService.createRealmRoleMembership_fromView(createView);
+    assertThat(subjectService.hasPrivilegeViaSubject(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
+    assertThat(subjectService.hasPrivilegeViaPrivilege(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
+    assertThat(subjectService.hasPrivilegeViaGlobalRoleMembership(userJim, "UNKNOWN_PRIVILEGE")).isFalse();
   }
 
   private Set<User> randomTeam()

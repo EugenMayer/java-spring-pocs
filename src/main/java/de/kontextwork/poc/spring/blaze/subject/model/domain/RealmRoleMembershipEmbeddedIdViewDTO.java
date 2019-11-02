@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RealmRoleMembershipIdViewDTO implements RealmRoleMembershipIdView
+public class RealmRoleMembershipEmbeddedIdViewDTO implements RealmRoleMembershipEmbeddedIdView
 {
   private Long roleId;
   private Long subjectId;

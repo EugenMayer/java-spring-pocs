@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 public class RealmRoleMembershipCreateViewDTO implements RealmRoleMembershipCreateView
 {
-  private RealmRoleMembershipIdView id;
+  private RealmRoleMembershipEmbeddedIdView id;
 }
