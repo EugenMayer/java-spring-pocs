@@ -4,10 +4,12 @@ import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "subject_realm")
+@NoArgsConstructor
 public class Realm
 {
   @Id

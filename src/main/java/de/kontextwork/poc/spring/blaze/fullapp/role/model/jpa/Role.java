@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 @Data
 @Entity
 @Accessors(chain = true)
+@NoArgsConstructor
 @Table(name = "subject_role")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)

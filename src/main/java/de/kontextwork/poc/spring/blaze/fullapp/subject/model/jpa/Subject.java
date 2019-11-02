@@ -4,6 +4,7 @@ import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.GlobalRo
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership;
 import javax.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
@@ -12,6 +13,7 @@ import lombok.experimental.Accessors;
 @Table(name = "subject_subject")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.INTEGER)
+@NoArgsConstructor
 public abstract class Subject
 {
   @Id

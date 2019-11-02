@@ -80,6 +80,10 @@ class RealmRoleMembershipServiceTest
     realmRoleMembershipCreateView.getId().setRoleId(role.getId());
     realmRoleMembershipCreateView.getId().setSubjectId(user.getId());
 
+    realmRoleMembershipCreateView.setRole(role);
+    realmRoleMembershipCreateView.setRealm(realm);
+    realmRoleMembershipCreateView.setSubject(user);
+
     realmRoleMembershipService.createUntouched(realmRoleMembershipCreateView);
   }
 
