@@ -4,9 +4,7 @@ import lombok.*;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class RealmRoleMembershipCreateViewDTO implements RealmRoleMembershipCreateView
 {
-  private RealmRoleMembershipEmbeddedIdView id;
+  private RealmRoleMembershipEmbeddedIdCreateView id;
 }

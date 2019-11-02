@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -61,13 +62,33 @@ class RealmRoleMembershipServiceTest
   @Autowired
   private RealmRoleMembershipService realmRoleMembershipService;
 
-
   @Test
   @Sql(
     statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
   void createMembership()
+  {
+    User user = subjectService.create(new User("John", "Doe"));
+    Realm realm = realmService.create(new Realm("Random"));
+    GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
+
+    final RealmRoleMembershipCreateView realmRoleMembershipCreateView = entityViewManager.create(
+      RealmRoleMembershipCreateView.class);
+
+    realmRoleMembershipCreateView.getId().setRealmId(realm.getId());
+    realmRoleMembershipCreateView.getId().setRoleId(role.getId());
+    realmRoleMembershipCreateView.getId().setSubjectId(user.getId());
+
+    entityViewManager.save(entityManager, realmRoleMembershipCreateView);
+  }
+
+  @Test
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void createMembershipViewEmbeddedId()
   {
     User user = subjectService.create(new User("John", "Doe"));
     Realm realm = realmService.create(new Realm("Random"));
@@ -82,30 +103,30 @@ class RealmRoleMembershipServiceTest
 
     entityViewManager.save(entityManager, realmRoleMembershipEmbeddedIdCreateView);
   }
-
-  @Test
-  @DisplayName("Should create RealmRoleMembership via EntityView")
-  @Sql(
-    statements = "alter table subject_user modify uid bigint auto_increment;",
-    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
-  )
-  void shouldCreateRealmRoleMembershipViaEntityView()
-  {
-    User user = subjectService.create(new User("John", "Doe"));
-    Realm realm = realmService.create(new Realm("Random"));
-    GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
-
-    RealmRoleMembershipEmbeddedIdView idView = RealmRoleMembershipEmbeddedIdViewDTO.builder()
-      .realmId(realm.getId())
-      .roleId(role.getId())
-      .subjectId(user.getId())
-      .build();
-
-    RealmRoleMembershipCreateView createView = RealmRoleMembershipCreateViewDTO.builder()
-      .id(idView)
-      .build();
-
-    realmRoleMembershipService.create(createView);
-  }
+//
+//  @Test
+//  @DisplayName("Should create RealmRoleMembership via EntityView")
+//  @Sql(
+//    statements = "alter table subject_user modify uid bigint auto_increment;",
+//    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+//  )
+//  void shouldCreateRealmRoleMembershipViaEntityView()
+//  {
+//    User user = subjectService.create(new User("John", "Doe"));
+//    Realm realm = realmService.create(new Realm("Random"));
+//    GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
+//
+//    RealmRoleMembershipEmbeddedIdView idView = RealmRoleMembershipEmbeddedIdViewDTO.builder()
+//      .realmId(realm.getId())
+//      .roleId(role.getId())
+//      .subjectId(user.getId())
+//      .build();
+//
+//    RealmRoleMembershipCreateView createView = RealmRoleMembershipCreateViewDTO.builder()
+//      .id(idView)
+//      .build();
+//
+//    realmRoleMembershipService.create(createView);
+//  }
 
 }

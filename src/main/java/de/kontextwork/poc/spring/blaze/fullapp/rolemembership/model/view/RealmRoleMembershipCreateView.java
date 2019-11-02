@@ -7,5 +7,8 @@ import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRol
 @CreatableEntityView
 public interface RealmRoleMembershipCreateView extends RealmRoleMembershipIdView
 {
-  void setId(RealmRoleMembershipEmbeddedIdView id);
+  @IdMapping
+  RealmRoleMembershipEmbeddedIdCreateView getId();
+
+  void setId(RealmRoleMembershipEmbeddedIdCreateView id);
 }
