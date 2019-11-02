@@ -81,10 +81,6 @@ class RealmRoleMembershipServiceTest
     final RealmRoleMembershipCreateView realmRoleMembershipCreateView = entityViewManager.create(
       RealmRoleMembershipCreateView.class);
 
-    realmRoleMembershipCreateView.getId().setSubjectId(user.getId());
-    realmRoleMembershipCreateView.getId().setRealmId(realm.getId());
-    realmRoleMembershipCreateView.getId().setRoleId(role.getId());
-
     realmRoleMembershipCreateView.setSubject(subjectIdView);
     realmRoleMembershipCreateView.setRealm(realmIdView);
     realmRoleMembershipCreateView.setRole(roleIdView);
@@ -92,28 +88,28 @@ class RealmRoleMembershipServiceTest
     realmRoleMembershipService.createUntouched(realmRoleMembershipCreateView);
     assertThat( realmRoleMembershipService.findAll().size()).isNotZero();
   }
-
-  @Test
-  @Sql(
-    statements = "alter table subject_user modify uid bigint auto_increment;",
-    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
-  )
-  void createMembershipViewEmbeddedId()
-  {
-    User user = subjectService.create(new User("John", "Doe"));
-    Realm realm = realmService.create(new Realm("Random"));
-    GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
-
-    final RealmRoleMembershipEmbeddedIdCreateView realmRoleMembershipEmbeddedIdCreateView = entityViewManager.create(
-      RealmRoleMembershipEmbeddedIdCreateView.class);
-
-    realmRoleMembershipEmbeddedIdCreateView.setRealmId(realm.getId());
-    realmRoleMembershipEmbeddedIdCreateView.setRoleId(role.getId());
-    realmRoleMembershipEmbeddedIdCreateView.setSubjectId(user.getId());
-
-    realmRoleMembershipService.createByEmbeddedId(realmRoleMembershipEmbeddedIdCreateView);
-    assertThat( realmRoleMembershipService.findAll().size()).isNotZero();
-  }
+//
+//  @Test
+//  @Sql(
+//    statements = "alter table subject_user modify uid bigint auto_increment;",
+//    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+//  )
+//  void createMembershipViewEmbeddedId()
+//  {
+//    User user = subjectService.create(new User("John", "Doe"));
+//    Realm realm = realmService.create(new Realm("Random"));
+//    GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
+//
+//    final RealmRoleMembershipEmbeddedIdCreateView realmRoleMembershipEmbeddedIdCreateView = entityViewManager.create(
+//      RealmRoleMembershipEmbeddedIdCreateView.class);
+//
+//    realmRoleMembershipEmbeddedIdCreateView.setRealmId(realm.getId());
+//    realmRoleMembershipEmbeddedIdCreateView.setRoleId(role.getId());
+//    realmRoleMembershipEmbeddedIdCreateView.setSubjectId(user.getId());
+//
+//    realmRoleMembershipService.createByEmbeddedId(realmRoleMembershipEmbeddedIdCreateView);
+//    assertThat( realmRoleMembershipService.findAll().size()).isNotZero();
+//  }
 //
 //  @Test
 //  @DisplayName("Should create RealmRoleMembership via EntityView")

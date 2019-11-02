@@ -47,12 +47,6 @@ public class RealmRoleMembershipService
     entityViewManager.save(entityManager, realmRoleMembershipCreateView);
   }
 
-  @Transactional
-  public void createByEmbeddedId(RealmRoleMembershipEmbeddedIdCreateView realmRoleMembershipEmbeddedIdCreateView)
-  {
-    entityViewManager.save(entityManager, realmRoleMembershipEmbeddedIdCreateView);
-  }
-
   /**
    * Creates new {@link RealmRoleMembership} from provided {@code realm}, {@code role} and {@code subject}.
    */
