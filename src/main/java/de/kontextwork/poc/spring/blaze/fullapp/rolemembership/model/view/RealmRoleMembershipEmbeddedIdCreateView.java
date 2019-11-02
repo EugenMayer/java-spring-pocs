@@ -4,11 +4,11 @@ import com.blazebit.persistence.view.EntityView;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembershipId;
 
 @EntityView(RealmRoleMembershipId.class)
-public interface RealmRoleMembershipEmbeddedIdView
+public interface RealmRoleMembershipEmbeddedIdCreateView extends RealmRoleMembershipEmbeddedIdView
 {
-  Long getRoleId();
+  void setSubjectId(Long subjectId);
 
-  void setRoleId(Long roleId);
+  Long getRealmId();
 
-  Long getSubjectId();
+  void setRealmId(Long realmId);
 }

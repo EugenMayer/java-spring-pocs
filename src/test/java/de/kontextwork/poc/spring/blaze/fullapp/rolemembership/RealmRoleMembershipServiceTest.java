@@ -1,9 +1,11 @@
 package de.kontextwork.poc.spring.blaze.fullapp.rolemembership;
 
+import com.blazebit.persistence.view.EntityViewManager;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.GlobalRole;
+import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.SubjectService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
@@ -11,6 +13,7 @@ import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
 import java.util.Set;
+import javax.persistence.EntityManager;
 import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +51,37 @@ class RealmRoleMembershipServiceTest
   @Autowired
   private RoleService roleService;
 
+  @Autowired
+  EntityViewManager entityViewManager;
+
+  @Autowired
+  EntityManager entityManager;
+
 
   @Autowired
   private RealmRoleMembershipService realmRoleMembershipService;
+
+
+  @Test
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void createMembership()
+  {
+    User user = subjectService.create(new User("John", "Doe"));
+    Realm realm = realmService.create(new Realm("Random"));
+    GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
+
+    final RealmRoleMembershipEmbeddedIdCreateView realmRoleMembershipEmbeddedIdCreateView = entityViewManager.create(
+      RealmRoleMembershipEmbeddedIdCreateView.class);
+
+    realmRoleMembershipEmbeddedIdCreateView.setRealmId(realm.getId());
+    realmRoleMembershipEmbeddedIdCreateView.setRoleId(role.getId());
+    realmRoleMembershipEmbeddedIdCreateView.setSubjectId(user.getId());
+
+    entityViewManager.save(entityManager, realmRoleMembershipEmbeddedIdCreateView);
+  }
 
   @Test
   @DisplayName("Should create RealmRoleMembership via EntityView")
@@ -76,4 +107,5 @@ class RealmRoleMembershipServiceTest
 
     realmRoleMembershipService.create(createView);
   }
+
 }
