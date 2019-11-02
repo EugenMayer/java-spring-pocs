@@ -3,10 +3,13 @@ package de.kontextwork.poc.spring.blaze.fullapp.rolemembership;
 import com.blazebit.persistence.view.EntityViewManager;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
+import de.kontextwork.poc.spring.blaze.fullapp.realm.model.view.RealmIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.GlobalRole;
+import de.kontextwork.poc.spring.blaze.fullapp.role.model.view.RoleIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.SubjectService;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.model.view.SubjectIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
@@ -71,16 +74,20 @@ class RealmRoleMembershipServiceTest
     Realm realm = realmService.create(new Realm("Random"));
     GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
 
+    final SubjectIdView subjectIdView = subjectService.getOneAsIdView(user.getId()).orElseThrow();
+    final RealmIdView realmIdView = realmService.getOneAsIdView(realm.getId()).orElseThrow();
+    final RoleIdView roleIdView = roleService.getOneAsIdView(role.getId()).orElseThrow();
+
     final RealmRoleMembershipCreateView realmRoleMembershipCreateView = entityViewManager.create(
       RealmRoleMembershipCreateView.class);
 
+    realmRoleMembershipCreateView.getId().setSubjectId(user.getId());
     realmRoleMembershipCreateView.getId().setRealmId(realm.getId());
     realmRoleMembershipCreateView.getId().setRoleId(role.getId());
-    realmRoleMembershipCreateView.getId().setSubjectId(user.getId());
 
-    realmRoleMembershipCreateView.setRole(role);
-    realmRoleMembershipCreateView.setRealm(realm);
-    realmRoleMembershipCreateView.setSubject(user);
+    realmRoleMembershipCreateView.setSubject(subjectIdView);
+    realmRoleMembershipCreateView.setRealm(realmIdView);
+    realmRoleMembershipCreateView.setRole(roleIdView);
 
     realmRoleMembershipService.createUntouched(realmRoleMembershipCreateView);
     assertThat( realmRoleMembershipService.findAll().size()).isNotZero();

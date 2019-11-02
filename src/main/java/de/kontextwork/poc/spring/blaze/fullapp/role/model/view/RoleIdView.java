@@ -5,8 +5,8 @@ import com.blazebit.persistence.view.filter.EqualFilter;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.Role;
 
 @EntityView(Role.class)
-public interface RoleView extends RoleIdView
+public interface RoleIdView
 {
-  @AttributeFilter(EqualFilter.class)
-  String getName();
+  @IdMapping
+  Long getId();
 }

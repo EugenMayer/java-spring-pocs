@@ -19,6 +19,7 @@ import lombok.experimental.Accessors;
 @DiscriminatorValue("1")
 @Table(name = "subject_group")
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class Group extends Subject
 {
   private String name;

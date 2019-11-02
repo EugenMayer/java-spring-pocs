@@ -1,4 +1,4 @@
-package de.kontextwork.poc.spring.blaze.fullapp.subject.model.domain;
+package de.kontextwork.poc.spring.blaze.fullapp.subject.model.view;
 
 import com.blazebit.persistence.WhereBuilder;
 import com.blazebit.persistence.WhereOrBuilder;

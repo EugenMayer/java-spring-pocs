@@ -11,7 +11,7 @@ import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.GlobalRoleMembersh
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.RealmRoleMembershipService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.GroupService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupView;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.model.domain.*;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.privilege.model.jpa.GlobalPrivilege;
 import de.kontextwork.poc.spring.blaze.fullapp.privilege.model.jpa.RealmPrivilege;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;

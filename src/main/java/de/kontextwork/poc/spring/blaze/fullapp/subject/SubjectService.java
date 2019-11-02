@@ -6,9 +6,10 @@ import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.fullapp.privilege.model.jpa.Privilege;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.GlobalRoleMembership;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.model.domain.*;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.model.jpa.Subject;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
+import java.util.Optional;
 import java.util.Set;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,10 @@ public class SubjectService
   public <S extends Subject> S create(final S subject)
   {
     return subjectRepository.save(subject);
+  }
+
+  public Optional<SubjectIdView> getOneAsIdView(Long id) {
+    return subjectViewRepository.getOne(EntityViewSetting.create(SubjectIdView.class), id);
   }
 
   /**
