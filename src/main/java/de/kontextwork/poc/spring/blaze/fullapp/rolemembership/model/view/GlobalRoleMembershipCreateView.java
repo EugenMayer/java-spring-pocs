@@ -17,7 +17,4 @@ public interface GlobalRoleMembershipCreateView extends GlobalRoleMembershipIdVi
 
   void setRole(RoleIdView role);
   void setSubject(SubjectIdView role);
-
-  RoleIdView getRole();
-  SubjectIdView getSubject();
 }

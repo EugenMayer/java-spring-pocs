@@ -13,14 +13,7 @@ import de.kontextwork.poc.spring.blaze.fullapp.subject.model.view.SubjectIdView;
 @CreatableEntityView
 public interface RealmRoleMembershipCreateView extends RealmRoleMembershipIdView
 {
-  @IdMapping
-  RealmRoleMembershipEmbeddedIdView getId();
-
   void setRole(RoleIdView role);
   void setSubject(SubjectIdView role);
   void setRealm(RealmIdView role);
-
-  RoleIdView getRole();
-  SubjectIdView getSubject();
-  RealmIdView getRealm();
 }
