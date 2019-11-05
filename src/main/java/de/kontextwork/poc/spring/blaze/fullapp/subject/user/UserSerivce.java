@@ -3,7 +3,7 @@ package de.kontextwork.poc.spring.blaze.fullapp.subject.user;
 import com.blazebit.persistence.*;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserView;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserExcerptView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +21,10 @@ public class UserSerivce
 
 
   /**
-   * @return {@link Page} of {@link UserView} matching provided {@code setting}.
+   * @return {@link Page} of {@link UserExcerptView} matching provided {@code setting}.
    */
-  public Page<UserView> findAll(
-    EntityViewSetting<UserView, PaginatedCriteriaBuilder<UserView>> setting, Pageable pageable
+  public Page<UserExcerptView> findAll(
+    EntityViewSetting<UserExcerptView, PaginatedCriteriaBuilder<UserExcerptView>> setting, Pageable pageable
   )
   {
     CriteriaBuilder<User> criteriaBuilder = criteriaBuilderFactory.create(entityManager, User.class);

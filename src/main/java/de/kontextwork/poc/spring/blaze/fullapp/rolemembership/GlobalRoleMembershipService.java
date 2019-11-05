@@ -1,5 +1,6 @@
 package de.kontextwork.poc.spring.blaze.fullapp.rolemembership;
 
+import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.EntityViewDtoConverter;
@@ -71,9 +72,9 @@ public class GlobalRoleMembershipService
   }
 
   @Transactional
-  public Set<GlobalRoleMembershipIdView> findAll() {
+  public <V> Set<V> findAll(EntityViewSetting<V, CriteriaBuilder<V>> setting) {
     return regularEntityViewRepository.findAll(
-      EntityViewSetting.create(GlobalRoleMembershipIdView.class),
+      setting,
       GlobalRoleMembership.class);
   }
 }

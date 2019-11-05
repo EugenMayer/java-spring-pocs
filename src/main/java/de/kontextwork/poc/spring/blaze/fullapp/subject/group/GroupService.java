@@ -3,7 +3,7 @@ package de.kontextwork.poc.spring.blaze.fullapp.subject.group;
 import com.blazebit.persistence.*;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupView;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupExcerptView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +21,10 @@ public class GroupService
 
 
   /**
-   * @return {@link Page} of {@link GroupView} matching provided {@code setting}.
+   * @return {@link Page} of {@link GroupExcerptView} matching provided {@code setting}.
    */
-  public Page<GroupView> findAll(
-    EntityViewSetting<GroupView, PaginatedCriteriaBuilder<GroupView>> setting, Pageable pageable
+  public Page<GroupExcerptView> findAll(
+    EntityViewSetting<GroupExcerptView, PaginatedCriteriaBuilder<GroupExcerptView>> setting, Pageable pageable
   )
   {
     CriteriaBuilder<Group> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Group.class);

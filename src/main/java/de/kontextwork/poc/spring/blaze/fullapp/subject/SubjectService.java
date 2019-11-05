@@ -39,10 +39,10 @@ public class SubjectService
   }
 
   /**
-   * @return {@link Page} of {@link SubjectView} matching provided {@code setting}.
+   * @return {@link Page} of {@link SubjectExcerptView} matching provided {@code setting}.
    */
-  public Page<SubjectView> findAll(
-    EntityViewSetting<SubjectView, PaginatedCriteriaBuilder<SubjectView>> setting, Pageable pageable
+  public Page<SubjectExcerptView> findAll(
+    EntityViewSetting<SubjectExcerptView, PaginatedCriteriaBuilder<SubjectExcerptView>> setting, Pageable pageable
   )
   {
     CriteriaBuilder<Subject> criteriaBuilder = criteriaBuilderFactory.create(entityManager, Subject.class);
@@ -50,9 +50,9 @@ public class SubjectService
   }
 
   /**
-   * @return {@link Set} of {@link SubjectView} matching provided {@code setting}.
+   * @return {@link Set} of {@link SubjectExcerptView} matching provided {@code setting}.
    */
-  public Set<SubjectView> findAll(EntityViewSetting<SubjectView, CriteriaBuilder<SubjectView>> setting)
+  public Set<SubjectExcerptView> findAll(EntityViewSetting<SubjectExcerptView, CriteriaBuilder<SubjectExcerptView>> setting)
   {
     CriteriaBuilder<Subject> criteriaBuilder = subjectViewRepository.entityCriteriaBuilder(Subject.class);
     return subjectViewRepository.findAll(setting, criteriaBuilder);

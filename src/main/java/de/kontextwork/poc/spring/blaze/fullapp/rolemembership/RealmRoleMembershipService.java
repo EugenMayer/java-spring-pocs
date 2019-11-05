@@ -7,9 +7,11 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.EntityViewDtoConverter;
 import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
+import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm_;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.view.RealmIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.view.RoleIdView;
+import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership_;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.RealmRole;
@@ -79,11 +81,21 @@ public class RealmRoleMembershipService
     this.create(realmRoleMembershipCreateView);
   }
 
+  @Transactional
+  public <V> Set<V> findAll(EntityViewSetting<V, CriteriaBuilder<V>> setting) {
+    return regularEntityViewRepository.findAll(
+      setting,
+      RealmRoleMembership.class);
+  }
 
   @Transactional
-  public Set<RealmRoleMembershipIdView> findAll() {
+  public <V> Set<V> findAllByRealm(Long realmId, EntityViewSetting<V, CriteriaBuilder<V>> setting) {
+    CriteriaBuilder<RealmRoleMembership> entityCriteriaBuilder = regularEntityViewRepository
+      .entityCriteriaBuilder(RealmRoleMembership.class);
+    entityCriteriaBuilder.where(RealmRoleMembership_.REALM + "." + Realm_.ID).eq(realmId);
+
     return regularEntityViewRepository.findAll(
-      EntityViewSetting.create(RealmRoleMembershipIdView.class),
-      RealmRoleMembership.class);
+      setting,
+      entityCriteriaBuilder);
   }
 }

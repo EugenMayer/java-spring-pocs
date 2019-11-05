@@ -9,6 +9,6 @@ import de.kontextwork.poc.spring.blaze.fullapp.subject.model.jpa.Subject;
 @ViewFilter(name = "USER_IN_GLOBAL_ROLE_USER", value = GlobalRoleFilter.User.class)
 @ViewFilter(name = "USER_IN_GLOBAL_ROLE_MODERATOR", value = GlobalRoleFilter.Moderator.class)
 @ViewFilter(name = "USER_IN_GLOBAL_ROLE_ADMINISTRATOR", value = GlobalRoleFilter.Administrator.class)
-public interface SubjectView extends SubjectIdView
+public interface SubjectExcerptView extends SubjectIdView
 {
 }

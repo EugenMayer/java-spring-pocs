@@ -1,5 +1,6 @@
 package de.kontextwork.poc.spring.blaze.fullapp.rolemembership;
 
+import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
@@ -69,7 +70,7 @@ class GlobalRoleMembershipServiceTest
       .build();
 
     globalRoleMembershipService.create(globalRoleMembershipCreateViewDTO);
-    assertThat( globalRoleMembershipService.findAll().size() ).isNotZero();
+    assertThat( globalRoleMembershipService.findAll(EntityViewSetting.create(GlobalRoleMembershipIdView.class)).size() ).isNotZero();
   }
 
   @Test
@@ -82,6 +83,6 @@ class GlobalRoleMembershipServiceTest
     User user = subjectService.create(new User("John", "Doe"));
     GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
     globalRoleMembershipService.assign(role,user);
-    assertThat( globalRoleMembershipService.findAll().size() ).isNotZero();
+    assertThat( globalRoleMembershipService.findAll(EntityViewSetting.create(GlobalRoleMembershipIdView.class)).size() ).isNotZero();
   }
 }

@@ -1,6 +1,7 @@
 package de.kontextwork.poc.spring.blaze.fullapp.rolemembership;
 
 import com.blazebit.persistence.view.EntityViewManager;
+import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.view.RealmIdView;
@@ -77,7 +78,7 @@ class RealmRoleMembershipServiceTest
       .build();
 
     realmRoleMembershipService.create(realmRoleMembershipCreateView);
-    assertThat( realmRoleMembershipService.findAll().size() ).isNotZero();
+    assertThat( realmRoleMembershipService.findAll(EntityViewSetting.create(RealmRoleMembershipIdView.class)).size() ).isNotZero();
   }
 
   @Test
@@ -91,6 +92,6 @@ class RealmRoleMembershipServiceTest
     Realm realm = realmService.create(new Realm("Random"));
     RealmRole role = roleService.create(new RealmRole("SOME_ROLE", Set.of()));
     realmRoleMembershipService.assign(realm, role, user);
-    assertThat( realmRoleMembershipService.findAll().size() ).isNotZero();
+    assertThat( realmRoleMembershipService.findAll(EntityViewSetting.create(RealmRoleMembershipIdView.class)).size() ).isNotZero();
   }
 }

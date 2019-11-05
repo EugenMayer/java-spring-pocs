@@ -5,14 +5,12 @@ import com.github.javafaker.Faker;
 import de.kontextwork.poc.spring.blaze.core.*;
 import de.kontextwork.poc.spring.blaze.fullapp.privilege.PrivilegeService;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
-import de.kontextwork.poc.spring.blaze.fullapp.realm.model.view.RealmIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.*;
-import de.kontextwork.poc.spring.blaze.fullapp.role.model.view.RoleIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.GlobalRoleMembershipService;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.RealmRoleMembershipService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.GroupService;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupView;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupExcerptView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.privilege.model.jpa.GlobalPrivilege;
 import de.kontextwork.poc.spring.blaze.fullapp.privilege.model.jpa.RealmPrivilege;
@@ -20,7 +18,7 @@ import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.UserSerivce;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserView;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserExcerptView;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
 import java.util.*;
@@ -205,16 +203,16 @@ class SubjectServiceTest
   {
     // Should resolve paged Users
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
-    var userSetting = EntityViewSettingFactory.create(UserView.class, userPageRequest);
-    final Page<UserView> users = userSerivce.findAll(userSetting, userPageRequest);
+    var userSetting = EntityViewSettingFactory.create(UserExcerptView.class, userPageRequest);
+    final Page<UserExcerptView> users = userSerivce.findAll(userSetting, userPageRequest);
 
     // Σ(3 Users, 4 * 5 random group members)
     assertThat(users.getNumberOfElements()).isEqualTo(23);
 
     // Should resolve paged Groups
     PageRequest groupPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "name");
-    var groupSetting = EntityViewSettingFactory.create(GroupView.class, groupPageRequest);
-    final Page<GroupView> groups = groupService.findAll(groupSetting, groupPageRequest);
+    var groupSetting = EntityViewSettingFactory.create(GroupExcerptView.class, groupPageRequest);
+    final Page<GroupExcerptView> groups = groupService.findAll(groupSetting, groupPageRequest);
 
     // Σ(4 Groups)
     assertThat(groups.getNumberOfElements()).isEqualTo(4);
@@ -228,8 +226,8 @@ class SubjectServiceTest
   )
   void shouldResolveSubjectsAsList()
   {
-    var subjectSetting = EntityViewSetting.create(SubjectView.class);
-    final Set<SubjectView> subjects = subjectService.findAll(subjectSetting);
+    var subjectSetting = EntityViewSetting.create(SubjectExcerptView.class);
+    final Set<SubjectExcerptView> subjects = subjectService.findAll(subjectSetting);
 
     // Σ(3 Users, 4 * 5 Group members, 4 Groups)
     assertThat(subjects).hasSize(27);
@@ -244,8 +242,8 @@ class SubjectServiceTest
   void shouldResolvePaginatedSubjects()
   {
     PageRequest pageRequest = PageRequest.of(0, 50, Direction.DESC, "id");
-    var subjectSetting = EntityViewSettingFactory.create(SubjectView.class, pageRequest);
-    final Page<SubjectView> subjects = subjectService.findAll(subjectSetting, pageRequest);
+    var subjectSetting = EntityViewSettingFactory.create(SubjectExcerptView.class, pageRequest);
+    final Page<SubjectExcerptView> subjects = subjectService.findAll(subjectSetting, pageRequest);
 
     // Σ(3 Users, 4 * 5 Group members, 4 Groups)
     assertThat(subjects.getNumberOfElements()).isEqualTo(27);
@@ -260,9 +258,9 @@ class SubjectServiceTest
   void shouldResolveUsersInRoleAdministrator()
   {
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
-    var setting = EntityViewSettingFactory.create(UserView.class, userPageRequest);
+    var setting = EntityViewSettingFactory.create(UserExcerptView.class, userPageRequest);
     setting.addViewFilter("USER_IN_GLOBAL_ROLE_ADMINISTRATOR");
-    final Page<UserView> users = userSerivce.findAll(setting, userPageRequest);
+    final Page<UserExcerptView> users = userSerivce.findAll(setting, userPageRequest);
 
     // Σ(1 Global Admin, 5 Members of Group "Admins")
     assertThat(users.getNumberOfElements()).isEqualTo(6);
@@ -277,9 +275,9 @@ class SubjectServiceTest
   void shouldResolveUsersInRoleModerator()
   {
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
-    var setting = EntityViewSettingFactory.create(UserView.class, userPageRequest);
+    var setting = EntityViewSettingFactory.create(UserExcerptView.class, userPageRequest);
     setting.addViewFilter("USER_IN_GLOBAL_ROLE_MODERATOR");
-    final Page<UserView> users = userSerivce.findAll(setting, userPageRequest);
+    final Page<UserExcerptView> users = userSerivce.findAll(setting, userPageRequest);
 
     // Σ(1 Global Moderator, 5 Members of Group "Moderators")
     assertThat(users.getNumberOfElements()).isEqualTo(6);
@@ -294,9 +292,9 @@ class SubjectServiceTest
   void shouldResolveUsersInRoleUser()
   {
     PageRequest userPageRequest = PageRequest.of(0, 50, Direction.DESC, "id", "lastName");
-    var setting = EntityViewSettingFactory.create(UserView.class, userPageRequest);
+    var setting = EntityViewSettingFactory.create(UserExcerptView.class, userPageRequest);
     setting.addViewFilter("USER_IN_GLOBAL_ROLE_USER");
-    final Page<UserView> users = userSerivce.findAll(setting, userPageRequest);
+    final Page<UserExcerptView> users = userSerivce.findAll(setting, userPageRequest);
 
     // Σ(1 Global User)
     assertThat(users.getNumberOfElements()).isEqualTo(1);
