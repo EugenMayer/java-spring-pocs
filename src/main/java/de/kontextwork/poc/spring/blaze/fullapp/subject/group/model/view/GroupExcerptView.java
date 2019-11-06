@@ -14,6 +14,7 @@ public interface GroupExcerptView extends SubjectExcerptView, GroupIdView
 
   Set<UserExcerptView> getMembers();
 
-  @Mapping("SIZE(members)")
-  Long getMemberCount();
+  // deactivated dut to https://github.com/Blazebit/blaze-persistence/issues/905 .. until Alpha4 is released
+//  @Mapping("SIZE(members)")
+//  Long getMemberCount();
 }
