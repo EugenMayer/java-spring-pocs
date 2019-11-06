@@ -47,11 +47,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
   PageableEntityViewRepository.class,
   RegularEntityViewRepository.class,
   EntityViewDtoConverter.class,
-  ModelMapper.class
+  ModelMapper.class,
 })
 @AutoConfigureDataJdbc
-@DataJpaTest(properties = {"blazepersistance.enabled=true"})
-public class InheritenceTest
+@DataJpaTest(properties = {"blazepersistance.enabled=true"}, showSql = true)
+public class InheritanceTest
 {
   @Autowired
   private RoleService roleService;
@@ -62,9 +62,6 @@ public class InheritenceTest
 
   @Autowired
   private RealmService realmService;
-
-  @Autowired
-  private GlobalRoleMembershipService globalRoleMembershipService;
 
   @Autowired
   private RealmRoleMembershipService realmRoleMembershipService;
@@ -93,13 +90,27 @@ public class InheritenceTest
 
     Set<RealmRoleMembershipWithUpcastView> memberships =
       realmRoleMembershipService.findAll(EntityViewSetting.create(RealmRoleMembershipWithUpcastView.class));
-    assertTrue(memberships.stream().anyMatch(s -> s.getSubject() instanceof UserExcerptView));
-    assertTrue(memberships.stream().anyMatch(s -> s.getSubject() instanceof GroupExcerptView));
+    assertThat(memberships)
+      .anySatisfy(membership -> assertThat(membership.getSubject()).isInstanceOf(UserExcerptView.class)
+    );
+    assertThat(memberships)
+      .anySatisfy(membership -> assertThat(membership.getSubject()).isInstanceOf(GroupExcerptView.class)
+    );
+
+    assertThat(memberships)
+      .allSatisfy(membership -> {
+          assertThat(membership.getSubject()).hasFieldOrProperty("machine").isNotNull();
+        }
+      );
 
     memberships = realmRoleMembershipService.findAllByRealm(
       realmRed.getId(), EntityViewSetting.create(RealmRoleMembershipWithUpcastView.class)
     );
-    assertTrue(memberships.stream().anyMatch(s -> s.getSubject() instanceof UserExcerptView));
-    assertTrue(memberships.stream().anyMatch(s -> s.getSubject() instanceof GroupExcerptView));
+    assertThat(memberships)
+      .anySatisfy(user -> assertThat(user).isInstanceOf(UserExcerptView.class)
+      );
+    assertThat(memberships)
+      .anySatisfy(user -> assertThat(user).isInstanceOf(GroupExcerptView.class)
+      );
   }
 }

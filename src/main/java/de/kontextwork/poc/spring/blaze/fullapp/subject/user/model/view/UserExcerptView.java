@@ -10,4 +10,6 @@ public interface UserExcerptView extends SubjectExcerptView, UserIdView
   String getFirstName();
 
   String getLastName();
+
+  String getMachine();
 }

@@ -11,6 +11,7 @@ import java.util.Set;
 public interface GroupExcerptView extends SubjectExcerptView, GroupIdView
 {
   String getName();
+  String getMachine();
 
   Set<UserExcerptView> getMembers();
 

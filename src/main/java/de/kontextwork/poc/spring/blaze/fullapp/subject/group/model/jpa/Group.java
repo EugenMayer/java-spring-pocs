@@ -26,10 +26,12 @@ public class Group extends Subject
 
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> members;
+  private String machine;
 
   public Group(final String name, final Set<User> members)
   {
     this.name = name;
     this.members = members;
+    this.machine = UUID.randomUUID().toString();
   }
 }
