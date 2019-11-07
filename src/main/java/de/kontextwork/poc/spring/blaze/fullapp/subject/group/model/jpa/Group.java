@@ -26,12 +26,15 @@ public class Group extends Subject
 
   @ManyToMany(fetch = FetchType.LAZY)
   private Set<User> members;
-  private String machine;
+
+  // We have to rename the actual field name due to https://github.com/Blazebit/blaze-persistence/issues/909
+  @Column(name="machine")
+  private String machineMachine;
 
   public Group(final String name, final Set<User> members)
   {
     this.name = name;
     this.members = members;
-    this.machine = UUID.randomUUID().toString();
+    this.machineMachine = UUID.randomUUID().toString();
   }
 }

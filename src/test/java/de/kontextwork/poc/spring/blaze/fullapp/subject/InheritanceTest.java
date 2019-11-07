@@ -6,7 +6,6 @@ import de.kontextwork.poc.spring.blaze.fullapp.privilege.PrivilegeService;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
 import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
-import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.GlobalRole;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.RealmRole;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.GlobalRoleMembershipService;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.RealmRoleMembershipService;
@@ -102,7 +101,7 @@ public class InheritanceTest
         if(membership.getSubject() instanceof UserExcerptView) {
           assertThat(((UserExcerptView) membership.getSubject()).getUserMachine()).isNotNull();
         } else  if(membership.getSubject() instanceof GroupExcerptView) {
-          assertThat(((GroupExcerptView) membership.getSubject()).getMachine()).isNotNull();
+          assertThat(((GroupExcerptView) membership.getSubject()).getGroupMachine()).isNotNull();
         }
       }
     );
