@@ -30,7 +30,10 @@ public class User extends Subject
 
   private String firstName;
   private String lastName;
-  private String machine;
+
+  // We have to rename the actual field name due to https://github.com/Blazebit/blaze-persistence/issues/909
+  @Column(name="machine")
+  private String userMachine;
 
   @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
   private Set<Group> groups;
@@ -39,6 +42,6 @@ public class User extends Subject
   {
     this.firstName = firstName;
     this.lastName = lastName;
-    this.machine = UUID.randomUUID().toString();
+    this.userMachine = UUID.randomUUID().toString();
   }
 }

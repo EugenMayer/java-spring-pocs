@@ -96,6 +96,7 @@ public class RealmRoleMembershipService
 
     return regularEntityViewRepository.findAll(
       setting,
-      entityCriteriaBuilder);
+      entityCriteriaBuilder
+    );
   }
 }

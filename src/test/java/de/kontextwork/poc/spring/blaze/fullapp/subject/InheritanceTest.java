@@ -99,18 +99,22 @@ public class InheritanceTest
 
     assertThat(memberships)
       .allSatisfy(membership -> {
-          assertThat(membership.getSubject()).hasFieldOrProperty("machine").isNotNull();
+        if(membership.getSubject() instanceof UserExcerptView) {
+          assertThat(((UserExcerptView) membership.getSubject()).getUserMachine()).isNotNull();
+        } else  if(membership.getSubject() instanceof GroupExcerptView) {
+          assertThat(((GroupExcerptView) membership.getSubject()).getMachine()).isNotNull();
         }
-      );
+      }
+    );
 
     memberships = realmRoleMembershipService.findAllByRealm(
       realmRed.getId(), EntityViewSetting.create(RealmRoleMembershipWithUpcastView.class)
     );
     assertThat(memberships)
-      .anySatisfy(user -> assertThat(user).isInstanceOf(UserExcerptView.class)
+      .anySatisfy(membership -> assertThat(membership.getSubject()).isInstanceOf(UserExcerptView.class)
       );
     assertThat(memberships)
-      .anySatisfy(user -> assertThat(user).isInstanceOf(GroupExcerptView.class)
+      .anySatisfy(membership -> assertThat(membership.getSubject()).isInstanceOf(GroupExcerptView.class)
       );
   }
 }
