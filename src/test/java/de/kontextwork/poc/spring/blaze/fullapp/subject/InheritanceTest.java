@@ -99,9 +99,9 @@ public class InheritanceTest
     assertThat(memberships)
       .allSatisfy(membership -> {
         if(membership.getSubject() instanceof UserExcerptView) {
-          assertThat(((UserExcerptView) membership.getSubject()).getUserMachine()).isNotNull();
+          assertThat(((UserExcerptView) membership.getSubject()).getMachine()).isNotNull();
         } else  if(membership.getSubject() instanceof GroupExcerptView) {
-          assertThat(((GroupExcerptView) membership.getSubject()).getGroupMachine()).isNotNull();
+          assertThat(((GroupExcerptView) membership.getSubject()).getMachine()).isNotNull();
         }
       }
     );
