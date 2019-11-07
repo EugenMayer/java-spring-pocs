@@ -29,12 +29,12 @@ public class Group extends Subject
 
   // We have to rename the actual field name due to https://github.com/Blazebit/blaze-persistence/issues/909
   @Column(name="machine")
-  private String machineMachine;
+  private String groupMachine;
 
   public Group(final String name, final Set<User> members)
   {
     this.name = name;
     this.members = members;
-    this.machineMachine = UUID.randomUUID().toString();
+    this.groupMachine = UUID.randomUUID().toString();
   }
 }
