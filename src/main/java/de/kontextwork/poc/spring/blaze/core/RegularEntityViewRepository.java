@@ -30,10 +30,7 @@ public class RegularEntityViewRepository<E, ID>
    * @param id Id of your entity
    * @param setting Preconfigured {@link EntityViewSetting}
    */
-  public <V> Optional<V> getOne(
-    EntityViewSetting<V, CriteriaBuilder<V>> setting,
-    ID id
-  )
+  public <V> Optional<V> getOne(EntityViewSetting<V, CriteriaBuilder<V>> setting, ID id)
   {
     return Optional.ofNullable(entityViewManager.find(entityManager, setting, id));
   }
@@ -44,10 +41,7 @@ public class RegularEntityViewRepository<E, ID>
    * @param setting Preconfigured {@link EntityViewSetting} for filters and representation via {@link EntityView}
    * @param entityClass Class representing the root entity
    */
-  public <V> Optional<V> getOne(
-    EntityViewSetting<V, CriteriaBuilder<V>> setting,
-    Class<E> entityClass
-  )
+  public <V> Optional<V> getOne(EntityViewSetting<V, CriteriaBuilder<V>> setting, Class<E> entityClass)
   {
     CriteriaBuilder<V> entityViewCriteriaBuilder = entityViewManager.applySetting(
       setting,
@@ -82,10 +76,7 @@ public class RegularEntityViewRepository<E, ID>
    * @param setting Preconfigured {@link EntityViewSetting} for filters and representation via {@link EntityView}
    * @param entityClass Class representing the root entity, e.g. User, Group, Space
    */
-  public <V> Set<V> findAll(
-    EntityViewSetting<V, CriteriaBuilder<V>> setting,
-    Class<E> entityClass
-  )
+  public <V> Set<V> findAll(EntityViewSetting<V, CriteriaBuilder<V>> setting, Class<E> entityClass)
   {
     CriteriaBuilder<V> entityViewCriteriaBuilder = entityViewManager.applySetting(
       setting,
@@ -100,10 +91,7 @@ public class RegularEntityViewRepository<E, ID>
    * @param setting Preconfigured {@link EntityViewSetting} for filters and representation via {@link EntityView}
    * @param entityCriteriaBuilder Preconfigured {@link CriteriaBuilder}
    */
-  public <V> Set<V> findAll(
-    EntityViewSetting<V, CriteriaBuilder<V>> setting,
-    CriteriaBuilder<E> entityCriteriaBuilder
-  )
+  public <V> Set<V> findAll(EntityViewSetting<V, CriteriaBuilder<V>> setting, CriteriaBuilder<E> entityCriteriaBuilder)
   {
     Assert.notNull(setting.getEntityViewClass().getAnnotation(EntityView.class));
     CriteriaBuilder<V> entityViewCriteriaBuilder = entityViewManager.applySetting(setting, entityCriteriaBuilder);
@@ -136,7 +124,7 @@ public class RegularEntityViewRepository<E, ID>
    * Updates using saveFull. Especially if you are saving empty sets one can enforce an non "lazy" aka partial mode
    * which might not run deletes on the collection this set is referencing since "the set is empty"
    */
-  public <UV> void updateFull(UV updateView, Class<UV> updateViewClass)
+  public <UV> void updateFull(UV updateView)
   {
     entityViewManager.saveFull(entityManager, updateView);
   }

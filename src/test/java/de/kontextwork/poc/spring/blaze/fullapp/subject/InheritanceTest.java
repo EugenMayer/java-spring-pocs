@@ -1,7 +1,8 @@
 package de.kontextwork.poc.spring.blaze.fullapp.subject;
 
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.core.*;
+import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
+import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.fullapp.privilege.PrivilegeService;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
@@ -9,7 +10,7 @@ import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.RealmRole;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.GlobalRoleMembershipService;
 import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.RealmRoleMembershipService;
-import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.*;
+import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.RealmRoleMembershipWithUpcastView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.GroupService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupExcerptView;
@@ -73,7 +74,7 @@ public class InheritanceTest
     final User userRed = subjectService.create(new User("Bob", "Smith"));
     final Group groupBlue = subjectService.create(new Group("Global Admins", new HashSet<>()));
     final Realm realmRed = realmService.create(new Realm("Red"));
-    final Realm realmBlue = realmService.create(new Realm("Red"));
+    realmService.create(new Realm("Red"));
 
     final RealmRole realmRoleRed =
       roleService.create(new RealmRole("TEST_ROLE1", new HashSet<>()));
