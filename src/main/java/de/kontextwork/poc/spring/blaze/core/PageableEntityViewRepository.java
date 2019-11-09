@@ -2,6 +2,7 @@ package de.kontextwork.poc.spring.blaze.core;
 
 import com.blazebit.persistence.*;
 import com.blazebit.persistence.view.*;
+import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;

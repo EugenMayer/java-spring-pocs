@@ -1,15 +1,22 @@
 package de.kontextwork.poc.spring.blaze.fullapp.subject.user;
 
 import com.blazebit.persistence.*;
+import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserExcerptView;
+import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupCreateView;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupIdView;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +25,22 @@ public class UserSerivce
   private final EntityManager entityManager;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
   private final PageableEntityViewRepository<User> userPageableViewRepository;
+  private final RegularEntityViewRepository<User, Long> regularEntityViewRepository;
+  private final EntityViewManager entityViewManager;
 
+
+  @Transactional
+  public <T extends GroupIdView> Optional<T> getOne(EntityViewSetting<T, CriteriaBuilder<T>> setting, Long id)
+  {
+    return regularEntityViewRepository.getOne(setting, id);
+  }
+
+  @Transactional
+  public UserIdView create(final UserCreateView userCreateView)
+  {
+    final UserCreateView createdView = regularEntityViewRepository.create(userCreateView, UserCreateView.class);
+    return entityViewManager.convert(createdView, UserIdView.class);
+  }
 
   /**
    * @return {@link Page} of {@link UserExcerptView} matching provided {@code setting}.
