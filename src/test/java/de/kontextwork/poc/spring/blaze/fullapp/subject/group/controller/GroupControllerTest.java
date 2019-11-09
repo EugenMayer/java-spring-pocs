@@ -1,17 +1,17 @@
 package de.kontextwork.poc.spring.blaze.fullapp.subject.group.controller;
 
 import com.blazebit.persistence.view.EntityViewManager;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.*;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupIdView;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupMemberUpdateView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.testUtils.scenario.GroupScenarioCreator;
 import de.kontextwork.poc.spring.blaze.fullapp.testUtils.scenario.UserScenarioCreator;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.*;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -51,13 +51,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class GroupControllerTest
 {
   @Autowired
-  private MockMvc mockMvc;
-
-  @Autowired
-  private ObjectMapper objectMapper;
-
-  @Autowired
   EntityViewManager entityViewManager;
+  @Autowired
+  GroupScenarioCreator groupScenarioCreator;
+  @Autowired
+  UserScenarioCreator userScenarioCreator;
 
 //  @MockBean
 //  private GroupService groupService;
@@ -76,12 +74,10 @@ class GroupControllerTest
 //      .andDo(print())
 //      .andExpect(status().isOk());
 //  }
-
   @Autowired
-  GroupScenarioCreator groupScenarioCreator;
-
+  private MockMvc mockMvc;
   @Autowired
-  UserScenarioCreator userScenarioCreator;
+  private ObjectMapper objectMapper;
 
   @Test
   @Sql(
@@ -108,13 +104,15 @@ class GroupControllerTest
   {
     final GroupIdView groupIdView = groupScenarioCreator.createGroup("test", "testMachine");
     final UserIdView userRed = userScenarioCreator.createUser("Max", "Mustermann");
+    final UserIdView userBlue = userScenarioCreator.createUser("Dax", "Daxmann");
 
     // our update view we are going to use a the payload
     GroupMemberUpdateView groupMemberUpdateView = entityViewManager.getReference(
       GroupMemberUpdateView.class,
       groupIdView.getId()
     );
-    groupMemberUpdateView.setMembers(Sets.newHashSet(userRed));
+    groupMemberUpdateView.setMembers(Sets.newHashSet(userRed, userBlue));
+
     mockMvc
       .perform(
         put(String.format("/entity/group/%d/member", groupIdView.getId()))
@@ -123,5 +121,6 @@ class GroupControllerTest
       )
       .andDo(print())
       .andExpect(status().isOk());
+    // we might add an assert on the content
   }
 }

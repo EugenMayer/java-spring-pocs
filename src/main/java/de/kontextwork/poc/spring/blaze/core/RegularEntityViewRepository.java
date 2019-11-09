@@ -25,7 +25,6 @@ public class RegularEntityViewRepository<E, ID>
   private final EntityManager entityManager;
   private final EntityViewManager entityViewManager;
   private final CriteriaBuilderFactory criteriaBuilderFactory;
-  private final EntityViewDtoConverter entityViewDtoConverter;
 
   /**
    * @param id Id of your entity
@@ -111,49 +110,38 @@ public class RegularEntityViewRepository<E, ID>
     return new HashSet<>(entityViewCriteriaBuilder.getResultList());
   }
 
-
   /**
    * Creates a {@link Collection} of given {@code createViews}.
    *
    * @param createViews {@link Collection} of {@code createViews}
-   * @param createViewClass Class of {@code createViews}
    */
-  public <CV> Collection<CV> create(final Collection<CV> createViews, final Class<CV> createViewClass)
+  public <CV> Collection<CV> create(final Collection<CV> createViews)
   {
-    createViews.forEach(createView -> create(createView, createViewClass));
+    createViews.forEach(this::create);
     return createViews;
   }
 
-  public <CV> CV create(CV createView, Class<CV> createViewClass)
+  public <CV> CV create(CV createView)
   {
-    // if a DTO us passed in as CreateView, which can happens since a DTO implements the CreateView interface
-    // it will miss the proper `EntityViewProxy` interface and EVM will fail processing it - so qualify it first
-    CV qualifiedCreateView = entityViewDtoConverter.qualifyEntityCreateView(createView, createViewClass);
-    entityViewManager.save(entityManager, qualifiedCreateView);
-    return qualifiedCreateView;
+    entityViewManager.save(entityManager, createView);
+    return createView;
   }
 
-  public <ID, UV> void update(ID id, UV updateView, Class<UV> updateViewClass)
+  public <UV> void update(UV updateView)
   {
-    // if a DTO us passed in as CreateView, which can happens since a DTO implements the CreateView interface
-    // it will miss the proper `EntityViewProxy` interface and EVM will fail processing it - so qualify it first
-    UV qualifiedUpdateView = entityViewDtoConverter.qualifyEntityUpdateView(id, updateView, updateViewClass);
-    entityViewManager.save(entityManager, qualifiedUpdateView);
+    entityViewManager.save(entityManager, updateView);
   }
 
   /**
    * Updates using saveFull. Especially if you are saving empty sets one can enforce an non "lazy" aka partial mode
    * which might not run deletes on the collection this set is referencing since "the set is empty"
    */
-  public <ID, UV> void updateFull(ID id, UV updateView, Class<UV> updateViewClass)
+  public <UV> void updateFull(UV updateView, Class<UV> updateViewClass)
   {
-    // if a DTO us passed in as CreateView, which can happens since a DTO implements the CreateView interface
-    // it will miss the proper `EntityViewProxy` interface and EVM will fail processing it - so qualify it first
-    UV qualifiedUpdateView = entityViewDtoConverter.qualifyEntityUpdateView(id, updateView, updateViewClass);
-    entityViewManager.saveFull(entityManager, qualifiedUpdateView);
+    entityViewManager.saveFull(entityManager, updateView);
   }
 
-  public <ID, V> void delete(ID id, Class<V> idViewClass)
+  public <EID, V> void delete(EID id, Class<V> idViewClass)
   {
     // due to the way EVM works with the L1 cache we should flush it out ( whatever there is ) and clear the L1 cache
     // so nothing relies on the "L1 cache" or rather the L1 cache is empty after deleting and everything needs to be

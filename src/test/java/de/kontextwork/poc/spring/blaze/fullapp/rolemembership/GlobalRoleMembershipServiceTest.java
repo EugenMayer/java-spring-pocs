@@ -34,7 +34,6 @@ import static org.assertj.core.api.Assertions.assertThat;
   BlazePersistenceConfiguration.class,
   PageableEntityViewRepository.class,
   RegularEntityViewRepository.class,
-  EntityViewDtoConverter.class,
   ModelMapper.class
 })
 @AutoConfigureDataJdbc
@@ -50,28 +49,6 @@ class GlobalRoleMembershipServiceTest
 
   @Autowired
   private GlobalRoleMembershipService globalRoleMembershipService;
-
-  @Test
-  @Sql(
-    statements = "alter table subject_user modify uid bigint auto_increment;",
-    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
-  )
-  void createMembershipViaDTO()
-  {
-    User user = subjectService.create(new User("John", "Doe"));
-    GlobalRole role = roleService.create(new GlobalRole("SOME_ROLE", Set.of()));
-
-    final SubjectIdView subjectIdView = subjectService.getOneAsIdView(user.getId()).orElseThrow();
-    final RoleIdView roleIdView = roleService.getOneAsIdView(role.getId()).orElseThrow();
-
-    final GlobalRoleMembershipCreateViewDTO globalRoleMembershipCreateViewDTO = GlobalRoleMembershipCreateViewDTO.builder()
-      .subject(subjectIdView)
-      .role(roleIdView)
-      .build();
-
-    globalRoleMembershipService.create(globalRoleMembershipCreateViewDTO);
-    assertThat( globalRoleMembershipService.findAll(EntityViewSetting.create(GlobalRoleMembershipIdView.class)).size() ).isNotZero();
-  }
 
   @Test
   @Sql(

@@ -6,11 +6,10 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserIdView;
 import java.util.*;
-import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +36,7 @@ public class GroupService
   /**
    * @return {@link Page} of {@link GroupExcerptView} matching provided {@code setting}.
    */
+  @Transactional
   public Page<GroupExcerptView> findAll(
     EntityViewSetting<GroupExcerptView, PaginatedCriteriaBuilder<GroupExcerptView>> setting, Pageable pageable
   )
@@ -48,30 +48,16 @@ public class GroupService
   @Transactional
   public GroupIdView create(final GroupCreateView groupCreateView)
   {
-    final GroupCreateView createdView = regularEntityViewRepository.create(groupCreateView, GroupCreateView.class);
+    final GroupCreateView createdView = regularEntityViewRepository.create(groupCreateView);
     return entityViewManager.convert(createdView, GroupIdView.class);
   }
 
-  public void limitMembersTo(Long id, GroupMemberUpdateView groupMemberUpdateView)
+  @Transactional
+  public void limitMembersTo(GroupMemberUpdateView groupMemberUpdateView)
   {
     // Why this flush?
     entityManager.flush();
-
-    // we need to create a new real update view here already and not let RegularEntityViewRepository
-    // care about it, since we need to set a set of UserIdView's while a GroupMemberUpdateViewDTO does only take
-    // UserIdViewDTO
-    GroupMemberUpdateView groupMemberUpdateViewQualified = entityViewManager.getReference(
-      GroupMemberUpdateView.class, id
-    );
-    // Ensure all our nested EntityViews are actual EntityViews and not any other classes just deriving from it,
-    // like RoleId or SpaceId - during persistence of a Space SpaceRoleMembershipCreateView those need to be
-    // proper EVs, so BP / EVM does understand which Entity they belong too.
-    final Set<UserIdView> membersAsRealEntityViews = groupMemberUpdateView.getMembers().stream()
-      .map(userDto -> entityViewManager.getReference(UserIdView.class, userDto.getId()))
-      .collect(Collectors.toSet());
-    groupMemberUpdateViewQualified.setMembers(membersAsRealEntityViews);
-
-    regularEntityViewRepository.update(id, groupMemberUpdateViewQualified, GroupMemberUpdateView.class);
+    regularEntityViewRepository.update(groupMemberUpdateView);
   }
 
 
@@ -92,7 +78,7 @@ public class GroupService
 
     if (groupMemberUpdateView.getMembers() != null) {
       groupMemberUpdateView.getMembers().removeAll(membersToBeRemoved);
-      limitMembersTo(id, groupMemberUpdateView);
+      limitMembersTo(groupMemberUpdateView);
     }
   }
 }

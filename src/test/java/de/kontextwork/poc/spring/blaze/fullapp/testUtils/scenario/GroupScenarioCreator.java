@@ -5,7 +5,6 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import com.google.common.collect.Sets;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.GroupService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.*;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserCreateView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserIdView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class GroupScenarioCreator
       groupIdView.getId()
     );
     groupMemberUpdateView.setMembers(Sets.newHashSet(newMembers));
-    groupService.limitMembersTo(groupIdView.getId(), groupMemberUpdateView);
+    groupService.limitMembersTo(groupMemberUpdateView);
   }
 
   public  GroupEntireView getFullGroup(GroupIdView groupIdView) {

@@ -1,26 +1,23 @@
 package de.kontextwork.poc.spring.blaze.fullapp.rolemembership;
 
 import com.blazebit.persistence.CriteriaBuilder;
-import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
-import de.kontextwork.poc.spring.blaze.core.EntityViewDtoConverter;
 import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.RealmService;
+import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm_;
 import de.kontextwork.poc.spring.blaze.fullapp.realm.model.view.RealmIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.role.RoleService;
-import de.kontextwork.poc.spring.blaze.fullapp.role.model.view.RoleIdView;
-import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership_;
-import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.*;
-import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership;
 import de.kontextwork.poc.spring.blaze.fullapp.role.model.jpa.RealmRole;
-import de.kontextwork.poc.spring.blaze.fullapp.realm.model.jpa.Realm;
+import de.kontextwork.poc.spring.blaze.fullapp.role.model.view.RoleIdView;
+import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership;
+import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.jpa.RealmRoleMembership_;
+import de.kontextwork.poc.spring.blaze.fullapp.rolemembership.model.view.RealmRoleMembershipCreateView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.SubjectService;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.model.jpa.Subject;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.model.view.SubjectIdView;
 import java.util.Set;
-import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RealmRoleMembershipService
 {
-  private final EntityViewDtoConverter entityViewDtoConverter;
   private final EntityViewManager entityViewManager;
-  private final EntityManager entityManager;
   private final RegularEntityViewRepository<RealmRoleMembership, Long> regularEntityViewRepository;
 
   // Those are only needed because we did not migrate
@@ -43,12 +38,7 @@ public class RealmRoleMembershipService
   @Transactional
   public void create(RealmRoleMembershipCreateView realmRoleMembershipCreateView)
   {
-    final RealmRoleMembershipCreateView qualifiedCreateView = entityViewDtoConverter.qualifyEntityCreateView(
-      realmRoleMembershipCreateView,
-      RealmRoleMembershipCreateView.class
-    );
-
-    entityViewManager.save(entityManager, qualifiedCreateView);
+    regularEntityViewRepository.create(realmRoleMembershipCreateView);
   }
 
   /**

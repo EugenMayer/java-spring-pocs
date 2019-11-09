@@ -35,7 +35,7 @@ public class GroupController
   )
   {
     // just ensure
-    groupService.limitMembersTo(id, groupMemberUpdateView);
+    groupService.limitMembersTo(groupMemberUpdateView);
     return ResponseEntity.ok(
       groupService.getOne(EntityViewSetting.create(GroupEntireView.class), id).orElseThrow()
     );

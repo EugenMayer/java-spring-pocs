@@ -37,7 +37,6 @@ import static org.assertj.core.api.Assertions.assertThat;
   BlazePersistenceConfiguration.class,
   PageableEntityViewRepository.class,
   RegularEntityViewRepository.class,
-  EntityViewDtoConverter.class,
   ModelMapper.class
 })
 @AutoConfigureDataJdbc
@@ -46,6 +45,9 @@ class RealmRoleMembershipServiceTest
 {
   @Autowired
   private SubjectService subjectService;
+
+  @Autowired
+  EntityViewManager entityViewManager;
 
   @Autowired
   private RealmService realmService;
@@ -61,7 +63,7 @@ class RealmRoleMembershipServiceTest
     statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
-  void createMembershipViaDTO()
+  void createMembership()
   {
     User user = subjectService.create(new User("John", "Doe"));
     Realm realm = realmService.create(new Realm("Random"));
@@ -71,13 +73,12 @@ class RealmRoleMembershipServiceTest
     final RealmIdView realmIdView = realmService.getOneAsIdView(realm.getId()).orElseThrow();
     final RoleIdView roleIdView = roleService.getOneAsIdView(role.getId()).orElseThrow();
 
-    final RealmRoleMembershipCreateView realmRoleMembershipCreateView = RealmRoleMembershipCreateViewDTO.builder()
-      .subject(subjectIdView)
-      .realm(realmIdView)
-      .role(roleIdView)
-      .build();
+    RealmRoleMembershipCreateView createView = entityViewManager.create(RealmRoleMembershipCreateView.class);
+    createView.setRealm(realmIdView);
+    createView.setRole(roleIdView);
+    createView.setSubject(subjectIdView);
 
-    realmRoleMembershipService.create(realmRoleMembershipCreateView);
+    realmRoleMembershipService.create(createView);
     assertThat( realmRoleMembershipService.findAll(EntityViewSetting.create(RealmRoleMembershipIdView.class)).size() ).isNotZero();
   }
 

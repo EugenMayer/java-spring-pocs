@@ -44,7 +44,6 @@ import static org.assertj.core.api.Assertions.assertThat;
   BlazePersistenceConfiguration.class,
   PageableEntityViewRepository.class,
   RegularEntityViewRepository.class,
-  EntityViewDtoConverter.class,
   ModelMapper.class,
 })
 @AutoConfigureDataJdbc

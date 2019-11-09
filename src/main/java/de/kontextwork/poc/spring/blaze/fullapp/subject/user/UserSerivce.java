@@ -5,11 +5,9 @@ import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.core.PageableEntityViewRepository;
 import de.kontextwork.poc.spring.blaze.core.RegularEntityViewRepository;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.jpa.Group;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupCreateView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupIdView;
-import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.jpa.User;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.*;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +36,7 @@ public class UserSerivce
   @Transactional
   public UserIdView create(final UserCreateView userCreateView)
   {
-    final UserCreateView createdView = regularEntityViewRepository.create(userCreateView, UserCreateView.class);
+    final UserCreateView createdView = regularEntityViewRepository.create(userCreateView);
     return entityViewManager.convert(createdView, UserIdView.class);
   }
 
