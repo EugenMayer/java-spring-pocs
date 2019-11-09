@@ -39,7 +39,7 @@ buildscript {
         // @see // https://mvnrepository.com/artifact/com.blazebit/blaze-persistence-core-api
         //blazePersistence = '1.4.0-Alpha3'
         blazePersistence = '1.4.0-SNAPSHOT'
-
+        //blazePersistence = '9.21-SNAPSHOT'
         // @see https://mvnrepository.com/artifact/org.hibernate/hibernate-jpamodelgen
         hibernateJpaModelGen = '5.4.5.Final'
 
@@ -162,6 +162,7 @@ task postgresTest(type: Test) {
 dependencies {
     implementation(
             "com.blazebit:blaze-persistence-integration-spring-data-2.1:${blazePersistence}",
+            "com.blazebit:blaze-persistence-integration-spring-data-rest:${blazePersistence}",
             "com.blazebit:blaze-persistence-integration-hibernate-5.4:${blazePersistence}"
     )
 

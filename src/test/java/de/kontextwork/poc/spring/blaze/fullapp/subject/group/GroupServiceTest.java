@@ -14,11 +14,14 @@ import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.*;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.UserSerivce;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserCreateView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserIdView;
+import de.kontextwork.poc.spring.blaze.fullapp.testUtils.scenario.GroupScenarioCreator;
+import de.kontextwork.poc.spring.blaze.fullapp.testUtils.scenario.UserScenarioCreator;
 import de.kontextwork.poc.spring.configuration.BlazePersistenceConfiguration;
 import de.kontextwork.poc.spring.configuration.JpaBlazeConfiguration;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.autoconfigure.data.jdbc.AutoConfigureDataJdbc;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
@@ -29,20 +32,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("SameParameterValue")
 @Import({
-  SubjectService.class,
   UserSerivce.class,
   GroupService.class,
-  PrivilegeService.class,
-  RealmService.class,
-  RoleService.class,
-  RealmRoleMembershipService.class,
-  GlobalRoleMembershipService.class,
   JpaBlazeConfiguration.class,
   BlazePersistenceConfiguration.class,
   PageableEntityViewRepository.class,
   RegularEntityViewRepository.class,
   EntityViewDtoConverter.class,
   ModelMapper.class,
+  GroupScenarioCreator.class,
+  UserScenarioCreator.class
 })
 @AutoConfigureDataJdbc
 @DataJpaTest(properties = {"blazepersistance.enabled=true"}, showSql = true)
@@ -54,6 +53,11 @@ class GroupServiceTest
   @Autowired
   UserSerivce userService;
 
+  @Autowired
+  GroupScenarioCreator groupScenarioCreator;
+
+  @Autowired
+  UserScenarioCreator userScenarioCreator;
 
   @Autowired
   EntityViewManager entityViewManager;
@@ -65,9 +69,9 @@ class GroupServiceTest
   )
   void create()
   {
-    GroupIdView groupIdView = createGroup("TestGroup", "testMachine");
+    GroupIdView groupIdView = groupScenarioCreator.createGroup("TestGroup", "testMachine");
 
-    GroupEntireView groupEntireView = getFullGroup(groupIdView);
+    GroupEntireView groupEntireView = groupScenarioCreator.getFullGroup(groupIdView);
     assertThat(groupEntireView.getName()).isEqualTo("TestGroup");
     assertThat(groupEntireView.getMachine()).isEqualTo("testMachine");
   }
@@ -79,12 +83,12 @@ class GroupServiceTest
   )
   void limitMembersTo()
   {
-    GroupIdView groupIdView = createGroup("TestGroup", "testMachine");
-    UserIdView userIdView = createUser("Max", "Mustermann");
+    GroupIdView groupIdView = groupScenarioCreator.createGroup("TestGroup", "testMachine");
+    UserIdView userIdView = userScenarioCreator.createUser("Max", "Mustermann");
 
-    limitUsersTo(groupIdView, userIdView);
+    groupScenarioCreator.limitUsersTo(groupIdView, userIdView);
 
-    GroupEntireView groupEntireView = getFullGroup(groupIdView);
+    GroupEntireView groupEntireView = groupScenarioCreator.getFullGroup(groupIdView);
     assertThat(groupEntireView.getMembers()).hasSize(1);
   }
 
@@ -95,50 +99,19 @@ class GroupServiceTest
   )
   void removeMember()
   {
-    GroupIdView groupIdView = createGroup("TestGroup", "testMachine");
-    UserIdView userMax = createUser("Max", "Mustermann");
-    UserIdView userDax = createUser("Dax", "Daxmann");
+    GroupIdView groupIdView = groupScenarioCreator.createGroup("TestGroup", "testMachine");
+    UserIdView userMax = userScenarioCreator.createUser("Max", "Mustermann");
+    UserIdView userDax = userScenarioCreator.createUser("Dax", "Daxmann");
 
-    limitUsersTo(groupIdView, userMax, userDax);
+    groupScenarioCreator.limitUsersTo(groupIdView, userMax, userDax);
 
-    assertThat(getFullGroup(groupIdView).getMembers()).hasSize(2);
+    assertThat(groupScenarioCreator.getFullGroup(groupIdView).getMembers()).hasSize(2);
 
     groupService.removeMember(groupIdView.getId(), userMax);
-    assertThat(getFullGroup(groupIdView).getMembers()).hasSize(1);
+    assertThat(groupScenarioCreator.getFullGroup(groupIdView).getMembers()).hasSize(1);
 
 
     groupService.removeMember(groupIdView.getId(), userDax);
-    assertThat(getFullGroup(groupIdView).getMembers()).hasSize(0);
-  }
-
-  GroupIdView createGroup(String name, String machine) {
-    GroupCreateView groupCreateView = entityViewManager.create(GroupCreateView.class);
-    groupCreateView.setName(name);
-    groupCreateView.setGroupMachine(machine);
-
-    return groupService.create(groupCreateView);
-  }
-
-  UserIdView createUser(String firstName, String lastName) {
-    UserCreateView userCreateView = entityViewManager.create(UserCreateView.class);
-    userCreateView.setFirstName(firstName);
-    userCreateView.setLastName(lastName);
-
-    return userService.create(userCreateView);
-  }
-
-  void limitUsersTo(GroupIdView groupIdView, UserIdView... newMembers) {
-    GroupMemberUpdateView groupMemberUpdateView = entityViewManager.getReference(
-      GroupMemberUpdateView.class,
-      groupIdView.getId()
-    );
-    groupMemberUpdateView.setMembers(Sets.newHashSet(newMembers));
-    groupService.limitMembersTo(groupIdView.getId(), groupMemberUpdateView);
-  }
-
-  GroupEntireView getFullGroup(GroupIdView groupIdView) {
-    return groupService.getOne(
-      EntityViewSetting.create(GroupEntireView.class), groupIdView.getId()
-    ).orElseThrow();
+    assertThat(groupScenarioCreator.getFullGroup(groupIdView).getMembers()).hasSize(0);
   }
 }
