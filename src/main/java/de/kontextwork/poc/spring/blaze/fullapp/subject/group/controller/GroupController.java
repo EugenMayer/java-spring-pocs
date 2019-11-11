@@ -2,8 +2,10 @@ package de.kontextwork.poc.spring.blaze.fullapp.subject.group.controller;
 
 import com.blazebit.persistence.view.EntityViewSetting;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.GroupService;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.api.TestDTO;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupEntireView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupMemberUpdateView;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +41,13 @@ public class GroupController
     return ResponseEntity.ok(
       groupService.getOne(EntityViewSetting.create(GroupEntireView.class), id).orElseThrow()
     );
+  }
+
+  @PostMapping("/testdto")
+  public ResponseEntity<Void> testDTOs(
+    @RequestBody List<TestDTO> DTOs
+  )
+  {
+    return ResponseEntity.noContent().build();
   }
 }

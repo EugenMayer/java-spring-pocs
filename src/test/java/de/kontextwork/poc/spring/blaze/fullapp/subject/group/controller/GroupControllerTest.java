@@ -3,11 +3,14 @@ package de.kontextwork.poc.spring.blaze.fullapp.subject.group.controller;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Sets;
+import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.api.TestDTO;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.group.model.view.GroupMemberUpdateView;
 import de.kontextwork.poc.spring.blaze.fullapp.subject.user.model.view.UserIdView;
 import de.kontextwork.poc.spring.blaze.fullapp.testUtils.scenario.GroupScenarioCreator;
 import de.kontextwork.poc.spring.blaze.fullapp.testUtils.scenario.UserScenarioCreator;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -118,6 +120,28 @@ class GroupControllerTest
         put(String.format("/entity/group/%d/member", groupIdView.getId()))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(groupMemberUpdateView))
+      )
+      .andDo(print())
+      .andExpect(status().isOk());
+    // we might add an assert on the content
+  }
+
+  @Test
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void testDto() throws Exception
+  {
+    List<TestDTO> payload = new ArrayList<>();
+    payload.add(TestDTO.builder().name("test1").build());
+    payload.add(TestDTO.builder().name("test2").build());
+
+    mockMvc
+      .perform(
+        post("/entity/group/testdto")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(payload))
       )
       .andDo(print())
       .andExpect(status().isOk());

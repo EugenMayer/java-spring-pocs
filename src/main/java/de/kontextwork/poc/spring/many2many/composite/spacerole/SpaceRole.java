@@ -16,6 +16,7 @@ public class SpaceRole
   @Id
   @Column(length = 10)
   private String name;
+
   @OneToMany(mappedBy = "spaceRole")
   private Set<SpaceRoleMembership> spaceRoleMemberships = new HashSet<>();
 
