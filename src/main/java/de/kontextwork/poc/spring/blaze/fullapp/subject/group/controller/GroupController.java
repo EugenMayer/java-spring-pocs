@@ -43,9 +43,17 @@ public class GroupController
     );
   }
 
-  @PostMapping("/testdto")
+  @PostMapping("/testdtos")
   public ResponseEntity<Void> testDTOs(
     @RequestBody List<TestDTO> DTOs
+  )
+  {
+    return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/testdto")
+  public ResponseEntity<Void> testDTOs(
+    @RequestBody TestDTO DTO
   )
   {
     return ResponseEntity.noContent().build();

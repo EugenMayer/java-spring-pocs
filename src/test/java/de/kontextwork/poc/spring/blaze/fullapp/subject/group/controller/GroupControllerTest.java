@@ -131,11 +131,31 @@ class GroupControllerTest
     statements = "alter table subject_user modify uid bigint auto_increment;",
     executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
   )
-  void testDto() throws Exception
+  void testDtos() throws Exception
   {
     List<TestDTO> payload = new ArrayList<>();
     payload.add(TestDTO.builder().name("test1").build());
     payload.add(TestDTO.builder().name("test2").build());
+
+    mockMvc
+      .perform(
+        post("/entity/group/testdtos")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(payload))
+      )
+      .andDo(print())
+      .andExpect(status().isOk());
+    // we might add an assert on the content
+  }
+
+  @Test
+  @Sql(
+    statements = "alter table subject_user modify uid bigint auto_increment;",
+    executionPhase = ExecutionPhase.BEFORE_TEST_METHOD
+  )
+  void testDto() throws Exception
+  {
+    TestDTO payload = TestDTO.builder().name("test1").build();
 
     mockMvc
       .perform(
@@ -145,6 +165,5 @@ class GroupControllerTest
       )
       .andDo(print())
       .andExpect(status().isOk());
-    // we might add an assert on the content
   }
 }
