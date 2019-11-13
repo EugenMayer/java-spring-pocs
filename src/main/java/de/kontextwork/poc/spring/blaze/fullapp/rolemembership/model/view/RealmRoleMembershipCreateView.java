@@ -14,6 +14,8 @@ import de.kontextwork.poc.spring.blaze.fullapp.subject.model.view.SubjectIdView;
 public interface RealmRoleMembershipCreateView extends RealmRoleMembershipIdView
 {
   void setRole(RoleIdView role);
+
   void setSubject(SubjectIdView role);
+
   void setRealm(RealmIdView role);
 }
