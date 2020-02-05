@@ -97,12 +97,9 @@ class BasePermissionServiceTest
   }
 
   @Test
-  @DisplayName("Should foo")
-  public void shouldFoo()
+  @DisplayName("Should persist CompositePermissions")
+  public void shouldPersisCompositePermissions()
   {
-    permissionService
-      .saveFull(buildCompositePermission("Test Composite", "__test_composite", Scope.SYSTEM, false, Sets.newHashSet()));
-
     permissionService
       .saveFull(buildCompositePermission("Administer System", "__administer_system", Scope.SYSTEM, false,
         Sets.newHashSet(
@@ -114,11 +111,12 @@ class BasePermissionServiceTest
         )));
 
     permissionService
-      .saveFull(buildCompositePermission("Administer Space", "__administer_space", Scope.SPACE, true, Sets.newHashSet(
-        buildPermission("Create Space Topic", "__create_space_topic", Scope.SPACE, true),
-        buildPermission("Delete Space Topic", "__delete_space_topic", Scope.SPACE, true),
-        buildPermission("NonPublic Space Permission", "__nonpublic_space_permission", Scope.SPACE, false)
-      )));
+      .saveFull(buildCompositePermission("Administer Space", "__administer_space", Scope.SPACE, true,
+        Sets.newHashSet(
+          buildPermission("Create Space Topic", "__create_space_topic", Scope.SPACE, true),
+          buildPermission("Delete Space Topic", "__delete_space_topic", Scope.SPACE, true),
+          buildPermission("NonPublic Space Permission", "__nonpublic_space_permission", Scope.SPACE, false)
+        )));
 
     permissionService.saveFull(buildAuthRole("System Role Red", "__system_role_red", Scope.SPACE, true));
     permissionService.saveFull(buildAuthRole("System Role Blue", "__system_role_blue", Scope.SYSTEM, true));
