@@ -34,7 +34,7 @@ public abstract class BasePermission implements Serializable
 
   @NaturalId
   @EqualsAndHashCode.Include
-  @Column(name = "perm", unique = true, nullable = true, columnDefinition = "VARCHAR(200)")
+  @Column(name = "perm", unique = true, nullable = false, columnDefinition = "VARCHAR(200)")
   private String machineName;
 
   private boolean isVisible;
