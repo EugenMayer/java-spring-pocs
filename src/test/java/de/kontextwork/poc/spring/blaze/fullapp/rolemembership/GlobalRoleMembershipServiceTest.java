@@ -40,7 +40,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest(properties = {"blazepersistance.enabled=true"})
 class GlobalRoleMembershipServiceTest
 {
-
   @Autowired
   private SubjectService subjectService;
 

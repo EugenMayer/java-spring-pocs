@@ -29,8 +29,10 @@ class ParentBothNonPkRepositoryTest
 {
   @Autowired
   ParentBothNonPkRepository parentBothNonPkRepository;
+
   @Autowired
   JdbcTemplate jdbcTemplate;
+
   @Autowired
   EntityManager entityManager;
 
